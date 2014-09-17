@@ -10,3 +10,7 @@ function footman( x, y, layer )
   layer:insertProp( prop )
   return prop
 end
+
+function move()
+  
+end

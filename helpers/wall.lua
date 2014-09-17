@@ -12,7 +12,7 @@ function wall( x, y, height, layer )
     prop:setDeck( wallTexture )
     prop:setLoc( x, y + ( 64 * (i-1) ) )
     layer:insertProp( prop )
-    print( 'Placing wall at' .. tostring(64 * (i-1)) )
+    --print( 'Placing wall at' .. tostring(64 * (i-1)) )
   end
   
   local wallTopProp = MOAIProp2D.new()

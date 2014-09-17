@@ -1,5 +1,5 @@
-require 'helpers/footman'
-require 'helpers/wall'
+require "helpers.footman"
+require "helpers.wall"
 
 --=============================================
 -- Setup
@@ -9,7 +9,6 @@ require 'helpers/wall'
 gameName = "Stronghold"
 gameWidth = 800
 gameHeight = 460
-textureTotalAmount = 3
 MOAISim.openWindow(gameName, gameWidth, gameHeight)
 
 --Viewport for the game
@@ -35,13 +34,21 @@ MOAIRenderMgr.pushRenderPass(userLayer)
 --=============================================
 -- Enemies
 --=============================================
+footmanArray = {}
 
-footman1 = footman( 0, -160, activeLayer )
-footman2 = footman( 32, -160, activeLayer )
-footman3 = footman( 64, -160, activeLayer )
+function footmanSpawn()
+  table.insert(footmanArray, footman(360, -160, activeLayer))
+end
+
+function footmanMove()
+  for i = 1, table.getn(footmanArray), 1 do
+    footman:move()
+end
+
+--footman1 = footman(360, -160, activeLayer)
 
 --=============================================
--- Wall
+-- Walls
 --=============================================
 
 wall( -200, -160, 1, activeLayer )
@@ -53,14 +60,3 @@ wall( -312, -160, 3, activeLayer )
 --=============================================
 
 MOAIGfxDevice.getFrameBuffer():setClearColor(1,1,1,1)
-
-function setBackground()
-  activeBackground = MOAIGfxQuad2D.new()
-  activeBackground:setTexture(MOAITexture:load(''))
-end
-
-function textureLoad()
-  for i=1, i == textureTotalAmount, 1 do
-    --print "Loading: " + (i/textureTotalAmount)
-  end
-end
