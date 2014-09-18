@@ -3,7 +3,7 @@ local class = require 'libs/middleclass'
 Wall = class('wall')
 local WORLDHEIGHT_HEALTH_RATIO = 1
 
-function Wall:initialize( height, position )
+function Wall:initialize( height, position, layer )
   local x, y = unpack( position )
   self.health = height * 50
   self.baseX, self.baseY = x, y
@@ -19,6 +19,7 @@ function Wall:initialize( height, position )
   self.baseProp = MOAIGfxQuad2D.new()
   self.baseProp:setDeck( self.baseDeck )
   self.baseProp:setParent( self.tower )
+  layer:insertProp( self.baseProp )
   
   self.midProps = { }
   
@@ -27,11 +28,13 @@ function Wall:initialize( height, position )
     midProp:setDeck( self.midDeck )
     midProp:setParent( self.prop )
     midProp:setLoc( 0, 16 * ( height - 1 ) )
+    layer:insertProp( midProp )
     table.insert( self.midProps, midProp )
   end
   
   self.topProp = MOAIGfxQuad2D.new()
   self.topProp:setDeck( self.topDeck )
+  layer:insertProp( self.topProp )
   self.topProp:setParent( self.tower )
   self.topProp:setLoc( 0, 16 * height )
   
