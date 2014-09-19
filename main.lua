@@ -1,8 +1,8 @@
 require "helpers/footman"
-require "helpers/wall"
 require "resource_definitions"
 require "resource_manager"
 require "helpers/wall"
+require "helpers/sorcerer"
 
 --=============================================
 -- Setup
@@ -90,6 +90,14 @@ timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(10) e
 timer:start()
 
 -- // wall demo
+
+--=============================================
+-- Sorcerer
+--=============================================
+
+sorcerer1 = Sorcerer:new( wall4:getTransform(), { wall4:getTopLoc() }, activeLayer )
+
+-- // sorcerer end
 
 function footmanSpawn()
   table.insert(footmanArray, footman(360, -160, activeLayer))

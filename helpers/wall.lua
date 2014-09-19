@@ -48,3 +48,11 @@ function Wall:damage( damage )
     print( "this wall is destroyed" )
   end
 end
+
+function Wall:getTransform()
+  return self.transform
+end
+
+function Wall:getTopLoc()
+  return self.topProp:getLoc()
+end
