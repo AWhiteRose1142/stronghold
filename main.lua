@@ -35,27 +35,28 @@ userLayer:setViewport(gameViewport)
 MOAIRenderMgr.pushRenderPass(userLayer)
 
 --=============================================
--- Enemies
---=============================================
-footmanArray = {}
-
---=============================================
 -- Resource definitions
 --=============================================
 
 local resource_definitions = {
   wallTop = {
     type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'wall_top.png', 
+    fileName = 'img/wall_top.png', 
+    width = 16, height = 16,
+  },
+  wallMiddle = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/wall_middle.png', 
+    width = 16, height = 16,
+  },
+  wallBase = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/wall_base.png', 
     width = 16, height = 16,
   },
   background = {
     type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'wall_middle.png', 
-    width = 16, height = 16,
-  },background = {
-    type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'img/wall_base.png', 
+    fileName = 'img/background.png', 
     width = 16, height = 16,
   },
   archer = {
@@ -67,10 +68,27 @@ local resource_definitions = {
 }
 
 --=============================================
--- Game start
+-- Enemies
+--=============================================
+footmanArray = {}
+
+--=============================================
+-- Wall demo
 --=============================================
 
 ResourceDefinitions:setDefinitions ( resource_definitions )
+wall1 = Wall:new( 1, { 0, 0 }, activeLayer )
+wall2 = Wall:new( 2, { -16, 0 }, activeLayer )
+wall3 = Wall:new( 3, { -32, 0 }, activeLayer )
+wall4 = Wall:new( 10, { -48, 0 }, activeLayer )
+
+timer = MOAITimer.new()
+timer:setMode( MOAITimer.LOOP )
+timer:setSpan( .3 )
+timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(2) end )
+timer:start()
+
+-- // wall demo
 
 function footmanSpawn()
   table.insert(footmanArray, footman(360, -160, activeLayer))

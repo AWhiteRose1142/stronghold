@@ -9,41 +9,41 @@ function Wall:initialize( height, position, layer )
   self.baseX, self.baseY = x, y
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
-  self.baseDeck = ResourceManager:get( 'wall_base' )
-  self.topDeck = ResourceManager:get( 'wall_top' )
-  self.midDeck = ResourceManager:get( 'wall_middle' )
+  self.baseDeck = ResourceManager:get( 'wallBase' )
+  self.topDeck = ResourceManager:get( 'wallTop' )
+  self.midDeck = ResourceManager:get( 'wallMiddle' )
   
-  self.prop = MOAITransform2D.new()
+  self.transform = MOAITransform2D.new()
   
   -- Move these props to the right offset
-  self.baseProp = MOAIGfxQuad2D.new()
+  self.baseProp = MOAIProp2D.new()
   self.baseProp:setDeck( self.baseDeck )
-  self.baseProp:setParent( self.tower )
   layer:insertProp( self.baseProp )
+  self.baseProp:setParent( self.transform )
   
   self.midProps = { }
   
-  for i = 1, i < height, i + 1 do
-    local midProp = MOAIGfxQuad2D.new()
+  for i = 1, ( height - 1 ) do
+    local midProp = MOAIProp2D.new()
     midProp:setDeck( self.midDeck )
-    midProp:setParent( self.prop )
-    midProp:setLoc( 0, 16 * ( height - 1 ) )
+    midProp:setLoc( 0, 16 * i )
     layer:insertProp( midProp )
+    midProp:setParent( self.transform )
     table.insert( self.midProps, midProp )
   end
   
-  self.topProp = MOAIGfxQuad2D.new()
+  self.topProp = MOAIProp2D.new()
   self.topProp:setDeck( self.topDeck )
   layer:insertProp( self.topProp )
-  self.topProp:setParent( self.tower )
   self.topProp:setLoc( 0, 16 * height )
+  self.topProp:setParent( self.transform )
   
-  self.prop:setLoc( x, y )
+  self.transform:setLoc( x, y )
 end
 
 function Wall:damage( damage )
   self.health = self.health - damage
-  self.prop:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
+  self.transform:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
   if self.health <= 0 then
     print( "this wall is destroyed" )
   end
