@@ -1,11 +1,11 @@
 local class = require 'libs/middleclass'
 
 Wall = class('wall')
-local WORLDHEIGHT_HEALTH_RATIO = 1
+local WORLDHEIGHT_HEALTH_RATIO = 3.125
 
 function Wall:initialize( height, position, layer )
   local x, y = unpack( position )
-  self.health = height * 50
+  self.health = 32 + ( height * 50 )
   self.baseX, self.baseY = x, y
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom

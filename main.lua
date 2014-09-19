@@ -70,6 +70,7 @@ local resource_definitions = {
 --=============================================
 -- Enemies
 --=============================================
+
 footmanArray = {}
 
 --=============================================
@@ -85,7 +86,7 @@ wall4 = Wall:new( 10, { -48, 0 }, activeLayer )
 timer = MOAITimer.new()
 timer:setMode( MOAITimer.LOOP )
 timer:setSpan( .3 )
-timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(2) end )
+timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(10) end )
 timer:start()
 
 -- // wall demo
