@@ -87,6 +87,7 @@ timer = MOAITimer.new()
 timer:setMode( MOAITimer.LOOP )
 timer:setSpan( .3 )
 timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(10) end )
+timer:setListener( MOAITimer.EVENT_TIMER_BEGIN_SPAN, function() sorcerer1:clicked() end )
 timer:start()
 
 -- // wall demo

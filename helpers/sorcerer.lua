@@ -20,5 +20,17 @@ end
 
 function Sorcerer:clicked()
   self.curve = MOAIAnimCurve.new()
-  curve:setKey(1, 0.5, 1 )
+  self.curve:reserveKeys(4)
+  
+  for i=1,4,1 do
+    -- keynumber, tijd waarop het moet plaatsvinden, value van de key (om welk plaatje gaat het dus)
+    self.curve:setKey(i, 0.075 * i, i)
+  end
+  
+  self.anim = MOAIAnim:new()
+  self.anim:reserveLinks(1)
+  self.anim:setLink(1, self.curve, self.prop, MOAIProp2D.ATTR_INDEX)
+  self.anim:setMode(MOAITimer.LOOP)
+  self.anim:setSpan(4 * 0.075)
+  self.anim:start()
 end
