@@ -1,4 +1,5 @@
 local class = require 'libs/middleclass'
+require 'helpers/bolt'
 
 Sorcerer = class('sorcerer')
 
@@ -18,7 +19,7 @@ function Sorcerer:initialize( parent, position, layer )
   return self.prop
 end
 
-function Sorcerer:clicked()
+function Sorcerer:clicked( layer )
   self.curve = MOAIAnimCurve.new()
   self.curve:reserveKeys(4)
   
@@ -33,4 +34,6 @@ function Sorcerer:clicked()
   self.anim:setMode(MOAITimer.LOOP)
   self.anim:setSpan(4 * 0.075)
   self.anim:start()
+  
+  self.bolt = Bolt.new( {prop:getLoc()}, layer )
 end
