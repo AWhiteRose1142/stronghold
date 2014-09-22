@@ -1,34 +1,6 @@
 module( "Game", package.seeall )
 
--- Resource definition of the tilesheet
-local resource_definitions = {
-  wallTop = {
-    type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'img/wall_top.png', 
-    width = 16, height = 16,
-  },
-  wallMiddle = {
-    type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'img/wall_middle.png', 
-    width = 16, height = 16,
-  },
-  wallBase = {
-    type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'img/wall_base.png', 
-    width = 16, height = 16,
-  },
-  background = {
-    type = RESOURCE_TYPE_IMAGE, 
-    fileName = 'img/background.png', 
-    width = 16, height = 16,
-  },
-  archer = {
-    type = RESOURCE_TYPE_TILED_IMAGE,
-    fileName = 'img/archer_sheet.png',
-    tileMapSize = {4, 1},
-    width = 16, height = 16,
-  },
-}
+require "index"
 
 -- Start function, is called from main, also contains the gameloop
 function Game:start()
@@ -44,11 +16,14 @@ end
 function Game:initialize()
   print( GAMENAME .. " is initializing" )
   
+  -- Load the resource definitions
+  Index:loadDefinitions()
+  
   self.camera = MOAICamera2D.new() -- Make a new camera
   self:setupLayers()
+  PhysicsManager:initialize( self.layers.active )
   
-  ResourceDefinitions:setDefinitions( resource_definitions )
-  self:setupDemo()
+  Level:initialize( 1 )
   
 end
 
@@ -102,6 +77,8 @@ function Game:setupDemo()
   )
   ]=]
   timer:start()
+  
+  
   
 end
 
