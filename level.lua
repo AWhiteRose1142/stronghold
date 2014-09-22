@@ -38,8 +38,10 @@ function Level:loadEntities()
   self.entities.wall1 = Wall:new( 1 , { startX     , GROUND_LEVEL }, Game.layers.active )
   self.entities.wall2 = Wall:new( 2 , { startX - 16, GROUND_LEVEL }, Game.layers.active )
   self.entities.wall3 = Wall:new( 3 , { startX - 32, GROUND_LEVEL }, Game.layers.active )
+  self.entities.wall4 = Wall:new( 4 , { startX - 48, GROUND_LEVEL }, Game.layers.active )
   self.entities.footman = Footman:new( { 0, GROUND_LEVEL }, Game.layers.active )
   self.entities.footman:move( -1 )
+  self.entities.sorcerer = Sorcerer:new( self.entities.wall4:getTransform(), { self.entities.wall4:getTopLoc() }, Game.layers.active, Game.partitions.active )
   
   --[=[
   timer = MOAITimer.new()

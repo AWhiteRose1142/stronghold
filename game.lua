@@ -27,6 +27,8 @@ function Game:initialize()
   
 end
 
+-- setup of layers and partitions
+
 function Game:setupLayers()  
   
   self.layers = {}
@@ -47,10 +49,17 @@ function Game:setupLayers()
     self.layers.user
   }
   
+  -- Set up partitions
+  self.partitions = {}
+  self.partitions.active = MOAIPartition.new()
+  self.layers.active:setPartition( self.partitions.active )
+  
   -- And pass them to the render manager
   MOAIRenderMgr.setRenderTable( renderTable )
 end
 
+
+-- DEPRECATED, use level.lua's :loadEntities()
 function Game:setupDemo()
   startX = -170
   startY = -100
@@ -58,6 +67,8 @@ function Game:setupDemo()
   wall2 = Wall:new( 2 , { startX - 16, startY }, self.layers.active )
   wall3 = Wall:new( 3 , { startX - 32, startY }, self.layers.active )
   wall4 = Wall:new( 10, { startX - 48, startY }, self.layers.active )
+  
+  
   
   timer = MOAITimer.new()
   timer:setMode( MOAITimer.LOOP )
@@ -101,4 +112,33 @@ function footmanMove()
   for i = 1, table.getn(footmanArray), 1 do
     footman:move()
   end
+end
+
+--================================================
+-- Gesture stuff
+--================================================
+
+function terms()
+    --checks to see if sorcerer is 'dead'
+    local x, y = Level.entities.sorcerer:getLoc()
+    if(y < 0) then
+      print "Tower took wizard down."
+    end
+end
+
+--checks for mouseclick
+    if MOAIInputMgr.device.pointer then
+      MOAIInputMgr.device.mouseLeft:setCallback(
+      function(isMouseDown)
+        if(isMouseDown) then
+          print "click"
+          handleClickorTouch(MOAIInputMgr.device.pointer:getLoc())
+        end
+        -- Do nothing on mouseUp
+      end)
+    end
+
+function handleClickorTouch(x, y)
+  local obj = Game.partitions.active.propForPoint( Game.partitions.active, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
+  print (Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
 end
