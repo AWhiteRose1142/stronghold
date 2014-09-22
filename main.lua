@@ -122,7 +122,7 @@ end
       end)
     end
 
-function handleClickorTouch(x, y, prop)
-  local pickedProp = activePartition.propForPoint(x, y)
-  pickedProp:action()
+function handleClickorTouch(x, y)
+  local obj = activePartition.propForPoint( activePartition, activeLayer:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
+  print (activeLayer:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
 end
