@@ -99,30 +99,30 @@ sorcerer1 = Sorcerer:new( wall4:getTransform(), { wall4:getTopLoc() }, activeLay
 timer = MOAITimer.new()
 timer:setMode( MOAITimer.LOOP )
 timer:setSpan( 1 )
-timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() gameloop() end )
+timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(10) end ) 
 timer:start()
 
-function gameloop()
-  --checks to see if sorcerer is 'dead'
-  local x, y = sorcerer1:getLoc()
-  if(y < 0) then
-    print "Tower took wizard down."
-    timer:stop()
-  end
-  
-  --checks for mouseclick
-  if MOAIInputMgr.device.pointer then
-    mouseX, mouseY = activeLayer:wndToWorld (MOAIInputMgr.device.pointer:getLoc())
-  end
-  
-  if MOAIInputMgr.device.mouseLeft:down() then
-    local pickedProp = activePartition.propForPoint(mouseX, mouseY)
-    
-    if pickedProp then
-      print "wizard clicked"
+function terms()
+    --checks to see if sorcerer is 'dead'
+    local x, y = sorcerer1:getLoc()
+    if(y < 0) then
+      print "Tower took wizard down."
     end
-  end
-  
-  --damages wall (for visibility)
-  wall4:damage(10)
+end
+
+--checks for mouseclick
+    if MOAIInputMgr.device.pointer then
+      MOAIInputMgr.device.mouseLeft:setCallback(
+      function(isMouseDown)
+        if(isMouseDown) then
+          print "click"
+          handleClickorTouch(MOAIInputMgr.device.pointer:getLoc())
+        end
+        -- Do nothing on mouseUp
+      end)
+    end
+
+function handleClickorTouch(x, y, prop)
+  local pickedProp = activePartition.propForPoint(x, y)
+  pickedProp:action()
 end
