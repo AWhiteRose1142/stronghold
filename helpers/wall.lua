@@ -38,12 +38,12 @@ function Wall:initialize( height, position, layer )
   self.topProp:setLoc( 0, 16 * height )
   self.topProp:setParent( self.transform )
   
-  self.transform:setLoc( x, y )
+  self:initializePhysics( position, height )
 end
 
 function Wall:damage( damage )
   self.health = self.health - damage
-  self.transform:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
+  self.physics.body:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
   if self.health <= 0 then
     print( "this wall is destroyed" )
   end
@@ -55,4 +55,13 @@ end
 
 function Wall:getTopLoc()
   return self.topProp:getLoc()
+end
+
+function Wall:initializePhysics( position, height )
+  self.physics = {}
+  self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
+  self.physics.body:setTransform( unpack( position ) )
+  self.physics.fixture = self.physics.body:addRect( -8, -8, 8, 16 * height )
+  self.transform:setParent( self.physics.body )
+  self.physics.fixture:setCollisionHandler( onCollide, MOAIBox2DArbiter.BEGIN )
 end

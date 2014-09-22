@@ -2,6 +2,8 @@
 require "resource_definitions"
 require "resource_manager"
 require "config"
+require "physics_manager"
+require "level"
 require "helpers/wall"
 require "helpers/footman"
 require "helpers/sorcerer"
@@ -10,10 +12,10 @@ require "helpers/sorcerer"
 -- Resource types
 --=============================================
 
-RESTYPE_IMAGE     = 1
-RESTYPE_TILESHEET = 2
-RESTYPE_FONT      = 3
-RESTYPE_SOUND     = 4
+RESOURCE_TYPE_IMAGE     = 1
+RESOURCE_TYPE_TILESHEET = 2
+RESOURCE_TYPE_FONT      = 3
+RESOURCE_TYPE_SOUND     = 4
 
 --=============================================
 -- Setup
