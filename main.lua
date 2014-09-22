@@ -29,6 +29,9 @@ activeLayer = MOAILayer2D.new()
 activeLayer:setViewport(gameViewport)
 MOAIRenderMgr.pushRenderPass(activeLayer)
 
+activePartition = MOAIPartition.new()
+activeLayer:setPartition(activePartition)
+
 --User (interface) layer, meant for player control
 userLayer = MOAILayer2D.new()
 userLayer:setViewport(gameViewport)
@@ -68,52 +71,58 @@ local resource_definitions = {
 }
 
 --=============================================
--- Enemies
+-- Gameloop ( in the future )
 --=============================================
 
-footmanArray = {}
+MOAIGfxDevice.getFrameBuffer():setClearColor(1,1,1,1)
 
 --=============================================
--- Wall demo
+-- Walls
 --=============================================
 
-ResourceDefinitions:setDefinitions ( resource_definitions )
+ResourceDefinitions:setDefinitions( resource_definitions )
 wall1 = Wall:new( 1, { 0, 0 }, activeLayer )
 wall2 = Wall:new( 2, { -16, 0 }, activeLayer )
 wall3 = Wall:new( 3, { -32, 0 }, activeLayer )
 wall4 = Wall:new( 10, { -48, 0 }, activeLayer )
 
+--=============================================
+-- Units
+--=============================================
+
+sorcerer1 = Sorcerer:new( wall4:getTransform(), { wall4:getTopLoc() }, activeLayer, activePartition )
+
+--=============================================
+-- Loop
+--=============================================
+
 timer = MOAITimer.new()
 timer:setMode( MOAITimer.LOOP )
-timer:setSpan( .3 )
-timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() wall4:damage(10) end )
-timer:setListener( MOAITimer.EVENT_TIMER_BEGIN_SPAN, function() sorcerer1:clicked() end )
+timer:setSpan( 1 )
+timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() gameloop() end )
 timer:start()
 
--- // wall demo
-
---=============================================
--- Sorcerer
---=============================================
-
-sorcerer1 = Sorcerer:new( wall4:getTransform(), { wall4:getTopLoc() }, activeLayer )
-
--- // sorcerer end
-
-function footmanSpawn()
-  table.insert(footmanArray, footman(360, -160, activeLayer))
-end
-
-function footmanMove()
-  for i = 1, table.getn(footmanArray), 1 do
-    footman:move()
+function gameloop()
+  --checks to see if sorcerer is 'dead'
+  local x, y = sorcerer1:getLoc()
+  if(y < 0) then
+    print "Tower took wizard down."
+    timer:stop()
   end
+  
+  --checks for mouseclick
+  if MOAIInputMgr.device.pointer then
+    mouseX, mouseY = activeLayer:wndToWorld (MOAIInputMgr.device.pointer:getLoc())
+  end
+  
+  if MOAIInputMgr.device.mouseLeft:down() then
+    local pickedProp = activePartition.propForPoint(mouseX, mouseY)
+    
+    if pickedProp then
+      print "wizard clicked"
+    end
+  end
+  
+  --damages wall (for visibility)
+  wall4:damage(10)
 end
-
---footman1 = footman(360, -160, activeLayer)
-
---=============================================
--- Gameloop ( in the future )
---=============================================
-
-MOAIGfxDevice.getFrameBuffer():setClearColor(1,1,1,1)
