@@ -126,37 +126,50 @@ function terms()
     end
 end
 
+--================================================
+-- Gesture idea:
+-- When left mouse down is called, start a timer.
+-- let timer compare mouse location.
+-- store type of movement somewhere.
+-- if movements match up to set pattern,
+-- execute the right function for that pattern.
+--================================================
+
 --checks for mouseclick
-local clickEntity
-local targetEntity
-local a, b, c, d
+local a, b, c, d, e, f
+
+local swipeTimer = MOAITimer.new()
+swipeTimer:setSpan(1)
+swipeTimer:setMode(MOAITimer.LOOP)
+swipeTimer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
+  function()
+    e, f = Gesture:getMouseLocation()
+  end)
+swipeTimer:setListener(MOAITimer.EVENT_TIMER_END_SPAN, 
+  function() 
+    Gesture:storeSwipe(e, f) 
+  end)
 
     if MOAIInputMgr.device.pointer then
       MOAIInputMgr.device.mouseLeft:setCallback(
       function(isMouseDown)
         if MOAIInputMgr.device.mouseLeft:isDown() then
-          a, b = Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc())
-          print "mouse down" 
+          -- Left mouse button is down, mark coordinates
+          a, b = Gesture:getMouseLocation(Game.layers.active)
+          swipeTimer:start()
         end
         if MOAIInputMgr.device.mouseLeft:isUp() then
-          if Gesture:mouseMoved(a, b, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc())) then
-            c, d = Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc())
+          swipeTimer:stop()
+          
+          
+          
+          -- left mouse button went up. the if/else determines if mouse moved in between down and up
+          if Gesture:mouseMoved(a, b, Gesture:getMouseLocation(Game.layers.active)) then
+            c, d = Gesture:getMouseLocation(Game.layers.active)
             Gesture:targetLine(a, b, c, d)
-            print "we moved"
           else
             Gesture:click()
-            print "we didnt move"
           end
         end
       end)
     end
-
-function pickEntity(x, y)
-  local obj = Game.partitions.active.propForPoint( Game.partitions.active, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
-  for key, entity in pairs(Level.entities) do
-    if entity.prop == obj then
-      return entity
-    end
-  end
-  return nil
-end

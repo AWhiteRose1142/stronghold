@@ -1,5 +1,4 @@
 local class = require 'libs/middleclass'
-require 'helpers/bolt'
 
 Sorcerer = class('sorcerer')
 
@@ -32,7 +31,7 @@ function Sorcerer:initialize( parent, position, layer, partition )
   self.anim:setMode(MOAITimer.NORMAL)
   self.anim:setSpan(6 * 0.12)
   
-  -- ability score (for now)
+  -- ability scores (for now)
   self.health = 15
   self.damage = 10
   
@@ -49,5 +48,3 @@ function Sorcerer:action()
   self.anim:start()
   print"sorcerer attacks"
 end
-
-  --self.bolt = Bolt.new( {prop:getLoc()}, layer )
