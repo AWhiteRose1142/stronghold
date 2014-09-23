@@ -7,6 +7,7 @@ require "level"
 require "helpers/wall"
 require "helpers/footman"
 require "helpers/sorcerer"
+require "gesture"
 
 --=============================================
 -- Resource types

@@ -127,18 +127,25 @@ function terms()
 end
 
 --checks for mouseclick
+local clickEntity
+local targetEntity
+
     if MOAIInputMgr.device.pointer then
       MOAIInputMgr.device.mouseLeft:setCallback(
       function(isMouseDown)
         if(isMouseDown) then
-          print "click"
-          handleClickorTouch(MOAIInputMgr.device.pointer:getLoc())
+          Gesture:click()
         end
         -- Do nothing on mouseUp
       end)
     end
 
-function handleClickorTouch(x, y)
+function pickEntity(x, y)
   local obj = Game.partitions.active.propForPoint( Game.partitions.active, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
-  print (Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
+  for key, entity in pairs(Level.entities) do
+    if entity.prop == obj then
+      return entity
+    end
+  end
+  return nil
 end
