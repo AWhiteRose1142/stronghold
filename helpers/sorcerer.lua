@@ -32,7 +32,10 @@ function Sorcerer:initialize( parent, position, layer, partition )
   self.anim:setMode(MOAITimer.NORMAL)
   self.anim:setSpan(6 * 0.12)
   
-  --layer:insertProp( self.prop )
+  -- ability score (for now)
+  self.health = 15
+  self.damage = 10
+  
   return self.prop
 end
 
@@ -44,7 +47,7 @@ end
 
 function Sorcerer:action()
   self.anim:start()
-  print("shooting bolt")
+  print"sorcerer attacks"
 end
 
   --self.bolt = Bolt.new( {prop:getLoc()}, layer )

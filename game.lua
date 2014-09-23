@@ -129,14 +129,25 @@ end
 --checks for mouseclick
 local clickEntity
 local targetEntity
+local a, b, c, d
 
     if MOAIInputMgr.device.pointer then
       MOAIInputMgr.device.mouseLeft:setCallback(
       function(isMouseDown)
-        if(isMouseDown) then
-          Gesture:click()
+        if MOAIInputMgr.device.mouseLeft:isDown() then
+          a, b = Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc())
+          print "mouse down" 
         end
-        -- Do nothing on mouseUp
+        if MOAIInputMgr.device.mouseLeft:isUp() then
+          if Gesture:mouseMoved(a, b, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc())) then
+            c, d = Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc())
+            Gesture:targetLine(a, b, c, d)
+            print "we moved"
+          else
+            Gesture:click()
+            print "we didnt move"
+          end
+        end
       end)
     end
 
