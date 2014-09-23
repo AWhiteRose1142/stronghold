@@ -5,6 +5,7 @@ require "index"
 -- Start function, is called from main, also contains the gameloop
 function Game:start()
   -- Do the initial setup
+  
   self:initialize()
   
   
@@ -12,6 +13,7 @@ function Game:start()
     if Level.initialized then
       Level:update()
     end
+    --PhysicsManager.update()
     coroutine.yield() -- Andere threads laten draaien
   end
 end
@@ -24,6 +26,9 @@ function Game:initialize()
   
   self.camera = MOAICamera2D.new() -- Make a new camera
   self:setupLayers()
+  
+  --self.corout = MOAICoroutine.new()
+  
   PhysicsManager:initialize( self.layers.active )
   
   Level:initialize( 1 )

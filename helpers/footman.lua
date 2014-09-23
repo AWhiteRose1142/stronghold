@@ -28,6 +28,7 @@ function Footman:initialize( position, layer )
   self.type = "footman"
   self.timer = nil
   self.target = nil
+  self.layer = layer
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'footman' )
@@ -56,7 +57,9 @@ function Footman:initialize( position, layer )
 end
 
 function Footman:update()
-  
+  if self.health <= 0 then
+    self:destroy()
+  end
 end
 
 function Footman:damage( damage )
@@ -94,6 +97,7 @@ function Footman:attack( )
   if self.target.health >= 0 then
     if self.timer ~= nil then
       self.target:damage( 5 )
+      self.health = self.health - 1
     else
       self.timer = MOAITimer.new()
       self.timer:setMode( MOAITimer.LOOP )
@@ -113,6 +117,10 @@ function Footman:attack( )
     self.timer = nil
     self.target = nil
   end
+end
+
+function Footman:die()
+  -- Speel de electrocute anim, later komen hier passender anims bij?
 end
 
 --===========================================
@@ -155,6 +163,17 @@ end
 --===========================================
 -- Utility functions, consider these private
 --===========================================
+
+function Footman:destroy()
+  -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  if self.timer then self.timer:stop() end
+  self.layer:removeProp( self.prop )
+  --PhysicsHandler:sceduleForRemoval( self.physics.body )
+  --self.physics.body:destroy()
+  -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
+  self.physics.body:setTransform( 0, -1000 )
+  Level.entities[self] = nil
+end
 
 function Footman:initializePhysics( position )
   self.physics = {}

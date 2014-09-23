@@ -35,4 +35,27 @@ function PhysicsManager:initialize ( layer )
     layer:setBox2DWorld ( self.world )
   end
   
+  --self.corout = MOAICoroutine.new()
+  --self.corout.run( PhysicsManager:update() )
+  --self.killList = nil
+  --Game.corout.attach( self.world )
+  
+end
+
+-- NOT USED, SHIT DOESNT WORK
+function PhysicsManager:sceduleForRemoval( body )
+  if self.killList then
+    table.insert( self.killList, body )
+  else
+    self.killList = {}
+    table.insert( self.killList, body )
+  end
+end
+
+function PhysicsManager:update()
+  if self.killList ~= nil then
+    for key, kill in pairs( self.killList ) do
+      kill.physics.body.destroy()
+    end
+  end
 end
