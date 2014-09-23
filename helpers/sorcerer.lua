@@ -5,6 +5,7 @@ Sorcerer = class('sorcerer')
 
 function Sorcerer:initialize( parent, position, layer, partition )
   local x, y = unpack( position )
+  self.type = "sorcerer"
   self.spriteSheet = MOAITileDeck2D.new()
   self.spriteSheet:setTexture('res/img/Wizard.png')
   self.spriteSheet:setSize( 4, 1 )
@@ -33,7 +34,12 @@ function Sorcerer:initialize( parent, position, layer, partition )
   self.anim:setSpan(4 * 0.25)
   
   --layer:insertProp( self.prop )
+  self:initializePhysics()
   return self.prop
+end
+
+function Sorcerer:update()
+  
 end
 
 function Sorcerer:getLoc()
@@ -44,6 +50,11 @@ end
 
 function Sorcerer:action()
   self.anim:start()
+end
+
+function Sorcerer:initializePhysics()
+  self.physics = {}
+  self.physics.fixture = nil
 end
 
   --self.bolt = Bolt.new( {prop:getLoc()}, layer )

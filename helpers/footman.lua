@@ -13,7 +13,7 @@ local animationDefinitions = {
     startFrame = 3,
     frameCount = 3,
     time = 0.2,
-    mode = MOAITimer.NORMAL
+    mode = MOAITimer.LOOP
   },
   attack = {
     startFrame = 6,
@@ -25,6 +25,9 @@ local animationDefinitions = {
 
 function Footman:initialize( position, layer )
   self.health = 6
+  self.type = "footman"
+  self.timer = nil
+  self.target = nil
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'footman' )
@@ -49,6 +52,11 @@ function Footman:initialize( position, layer )
     
   -- Code for testing
   --self:startAnimation( "attack" )
+  self:move( -1 )
+end
+
+function Footman:update()
+  
 end
 
 function Footman:damage( damage )
@@ -81,10 +89,30 @@ function Footman:stopMoving()
   self:stopCurrentAnimation()
 end
 
-function Footman:attack()
-  -- Find a wall to attack, does Box2D have some sort of raytracing? Then call damage on the wall
+function Footman:attack( )
   
-  self:startAnimation( "attack" )
+  if self.target.health >= 0 then
+    if self.timer ~= nil then
+      self.target:damage( 5 )
+    else
+      self.timer = MOAITimer.new()
+      self.timer:setMode( MOAITimer.LOOP )
+      self.timer:setSpan( 0.6 )
+      self.timer:setListener( 
+        MOAITimer.EVENT_TIMER_END_SPAN,
+        bind( self, "attack" )
+      )
+      self.timer:start()
+      self:stopMoving()
+      self.target:damage( 5 )
+      self:startAnimation( "piss" )
+    end
+  else
+    self:move( -1 )
+    self.timer:stop()
+    self.timer = nil
+    self.target = nil
+  end
 end
 
 --===========================================
@@ -112,8 +140,16 @@ end
 -- Event handlers
 --===========================================
 
-function onCollide( phase, fixtureA, fixtureB, arbiter )
+function Footman:onCollide( phase, fixtureA, fixtureB, arbiter )
   print( "boop!" )
+  local entityB = Level:getEntityFromFixture( fixtureB )
+  if entityB ~= nil then
+    if entityB.type == "wall" then
+      print( "boop! into a wall" )
+      self.target = entityB
+      self:attack( )
+    end
+  end
 end
 
 --===========================================
@@ -124,9 +160,10 @@ function Footman:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -8, -8, 8, 8 )
+  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
   self.prop:setParent( self.physics.body )
-  self.physics.fixture:setCollisionHandler( onCollide, MOAIBox2DArbiter.BEGIN )
+
+  self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
 end
 
 function Footman:addAnimation( name, startFrame, frameCount, time, mode )

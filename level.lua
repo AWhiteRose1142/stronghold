@@ -1,6 +1,7 @@
 module( "Level", package.seeall )
 
 GROUND_LEVEL = -100
+initialized = false
 
 --==================================================
 -- Basic objects that are the same for every level
@@ -18,6 +19,7 @@ local base_objects = {
 function Level:initialize( difficulty )
   self:loadScene()
   self:loadEntities()
+  self.initialized = true
 end
 
 --=============================================================
@@ -26,6 +28,9 @@ end
 
 function Level:update()
   -- Doet nu nog niets.
+  for key, entity in pairs( self.entities ) do
+    entity:update()
+  end
 end
 
 --==================================================
@@ -34,14 +39,22 @@ end
 
 function Level:loadEntities()
   self.entities = {}
-  startX = -170
-  self.entities.wall1 = Wall:new( 1 , { startX     , GROUND_LEVEL }, Game.layers.active )
-  self.entities.wall2 = Wall:new( 2 , { startX - 16, GROUND_LEVEL }, Game.layers.active )
-  self.entities.wall3 = Wall:new( 3 , { startX - 32, GROUND_LEVEL }, Game.layers.active )
-  self.entities.wall4 = Wall:new( 4 , { startX - 48, GROUND_LEVEL }, Game.layers.active )
-  self.entities.footman = Footman:new( { 0, GROUND_LEVEL }, Game.layers.active )
-  self.entities.footman:move( -1 )
-  self.entities.sorcerer = Sorcerer:new( self.entities.wall4:getTransform(), { self.entities.wall4:getTopLoc() }, Game.layers.active, Game.partitions.active )
+  self.walls = {}
+  startX = -170  
+  
+  for i = 0, 3 do
+    local wall = Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Game.layers.active )
+    table.insert( self.entities, wall )
+    table.insert( self.walls, wall )
+  end
+  
+  table.insert( self.entities, Sorcerer:new( 
+      Level.walls[3]:getTransform(), 
+      { Level.walls[3]:getTopLoc() }, 
+      Game.layers.active, 
+      Game.partitions.active )
+  )
+  table.insert( self.entities, Footman:new( { -80, GROUND_LEVEL }, Game.layers.active ) )
   
   --[=[
   timer = MOAITimer.new()
@@ -70,5 +83,14 @@ function Level:loadScene()
 end
 
 --====================================================
--- Maybe a spawner here?
+-- Utility functions
 --====================================================
+
+function Level:getEntityFromFixture( fixture )
+  for key, entity in pairs( self.entities ) do
+    if entity.physics.fixture == fixture then
+      return entity
+    end
+  end
+  return nil
+end

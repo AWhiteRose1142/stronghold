@@ -5,8 +5,10 @@ local WORLDHEIGHT_HEALTH_RATIO = 3.125
 
 function Wall:initialize( height, position, layer )
   local x, y = unpack( position )
+  self.height = height
   self.health = 32 + ( height * 50 )
   self.baseX, self.baseY = x, y
+  self.type = "wall"
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.baseDeck = ResourceManager:get( 'wallBase' )
@@ -41,9 +43,16 @@ function Wall:initialize( height, position, layer )
   self:initializePhysics( position, height )
 end
 
+function Wall:update()
+  if self.health <= 0 then
+    x, y = self.physics.body:getPosition()
+    self.physics.body:setTransform( x, y - ( 17 + ( self.height * 16 ) ) )
+  end
+end
+
 function Wall:damage( damage )
-  self.health = self.health - damage
-  self.physics.body:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
+  self.health = ( self.health - damage )
+  self.transform:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
   if self.health <= 0 then
     print( "this wall is destroyed" )
   end
@@ -64,4 +73,8 @@ function Wall:initializePhysics( position, height )
   self.physics.fixture = self.physics.body:addRect( -8, -8, 8, 16 * height )
   self.transform:setParent( self.physics.body )
   self.physics.fixture:setCollisionHandler( onCollide, MOAIBox2DArbiter.BEGIN )
+end
+
+function onCollide( phase, fixtureA, fixtureB, arbiter )
+  print( "boop! says a wall" )
 end

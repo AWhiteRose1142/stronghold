@@ -9,6 +9,9 @@ function Game:start()
   
   
   while ( true ) do
+    if Level.initialized then
+      Level:update()
+    end
     coroutine.yield() -- Andere threads laten draaien
   end
 end
@@ -56,41 +59,6 @@ function Game:setupLayers()
   
   -- And pass them to the render manager
   MOAIRenderMgr.setRenderTable( renderTable )
-end
-
-
--- DEPRECATED, use level.lua's :loadEntities()
-function Game:setupDemo()
-  startX = -170
-  startY = -100
-  wall1 = Wall:new( 1 , { startX     , startY }, self.layers.active )
-  wall2 = Wall:new( 2 , { startX - 16, startY }, self.layers.active )
-  wall3 = Wall:new( 3 , { startX - 32, startY }, self.layers.active )
-  wall4 = Wall:new( 10, { startX - 48, startY }, self.layers.active )
-  
-  
-  
-  timer = MOAITimer.new()
-  timer:setMode( MOAITimer.LOOP )
-  timer:setSpan( .3 )
-  timer:setListener( 
-    MOAITimer.EVENT_TIMER_END_SPAN, 
-    function() 
-      wall4:damage(10) 
-    end
-  )
-  --[=[
-  timer:setListener( 
-    MOAITimer.EVENT_TIMER_BEGIN_SPAN, 
-    function() 
-      sorcerer1:clicked() 
-    end 
-  )
-  ]=]
-  timer:start()
-  
-  
-  
 end
 
 --===============================================
