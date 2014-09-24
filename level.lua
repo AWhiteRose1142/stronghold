@@ -1,6 +1,6 @@
 module( "Level", package.seeall )
 
-GROUND_LEVEL = -100
+GROUND_LEVEL = -120
 initialized = false
 
 --==================================================
@@ -17,6 +17,7 @@ local base_objects = {
 }
 
 function Level:initialize( difficulty )
+  self:loadBackground()
   self:loadScene()
   self:loadEntities()
   self.initialized = true
@@ -69,6 +70,17 @@ function Level:loadEntities()
   )
   timer:start()
   ]=]
+end
+
+-- Hier wordt nog ook de grond ingeladen.
+function Level:loadBackground()
+  self.backgroundDeck = ResourceManager:get( 'background' )
+  
+  -- Make the prop
+  self.backgroundProp = MOAIProp2D.new()
+  self.backgroundProp:setDeck( self.backgroundDeck )
+  self.backgroundProp:setScl( 2.5, 2.5 )
+  Game.layers.background:insertProp( self.backgroundProp )
 end
 
 function Level:loadScene()
