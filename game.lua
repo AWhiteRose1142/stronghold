@@ -112,6 +112,13 @@ end
     end
 
 function handleClickorTouch(x, y)
+  -- This is an electrocution test
+  for key, entity in pairs( Level:getEntitiesNearPos( { x, y }, { 50, 50 } ) ) do
+    if entity.electrocute ~= nil then
+      entity:electrocute()
+    end
+  end
+  
   local obj = Game.partitions.active.propForPoint( Game.partitions.active, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
   print (Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
 end

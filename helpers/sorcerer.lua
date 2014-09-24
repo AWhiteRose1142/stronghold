@@ -42,6 +42,16 @@ function Sorcerer:update()
   
 end
 
+function Sorcerer:getPosition()
+  local thisX, thisY = self.transform:getLoc()
+  return { thisX, thisY }
+end
+
+function Sorcerer:getTransform()
+  --print( self.physics.body:getPosition() )
+  return self.transform
+end
+
 function Sorcerer:getLoc()
   local x1, y1 = self.transform:getLoc()
   local x2, y2 = self.prop:getLoc()

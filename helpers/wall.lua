@@ -58,6 +58,11 @@ function Wall:damage( damage )
   end
 end
 
+function Wall:getPosition()
+  local thisX, thisY = self.physics.body:getPosition()
+  return { thisX, thisY }
+end
+
 function Wall:getTransform()
   return self.transform
 end

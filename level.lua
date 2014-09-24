@@ -54,7 +54,8 @@ function Level:loadEntities()
       Game.layers.active, 
       Game.partitions.active )
   )
-  table.insert( self.entities, Footman:new( { -80, GROUND_LEVEL }, Game.layers.active ) )
+  table.insert( self.entities, Footman:new( { -150, GROUND_LEVEL }, Game.layers.active ) )
+  
   
   --[=[
   timer = MOAITimer.new()
@@ -86,6 +87,20 @@ end
 -- Utility functions
 --====================================================
 
+-- Takes { x, y }, { x, y }
+function Level:getEntitiesNearPos( position, tolerance )
+  posX, posY = unpack( position  )
+  tolX, tolY = unpack( tolerance )
+  local closeEntities = {}
+  for key, entity in pairs( self.entities ) do
+    local entityX, entityY = unpack( entity:getPosition() )
+    if entityX - posX <= tolX and entityY - posY <= tolY then
+      table.insert( closeEntities, entity )
+    end
+  end
+  return closeEntities
+end
+
 function Level:getEntityFromFixture( fixture )
   for key, entity in pairs( self.entities ) do
     if entity.physics.fixture == fixture then
@@ -93,4 +108,12 @@ function Level:getEntityFromFixture( fixture )
     end
   end
   return nil
+end
+
+function Level:removeEntity( killMe )
+  for i = 1, table.getn( self.entities ) do
+    if self.entities[i] == killMe then
+      self.entities[i] = nil
+    end
+  end
 end

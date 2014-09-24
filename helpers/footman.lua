@@ -58,7 +58,7 @@ function Footman:initialize( position, layer )
   self:initializePhysics( position )
     
   -- Code for testing
-  --self:startAnimation( "attack" )
+  --self:startAnimation( "electrocute" )
   self:move( -1 )
 end
 
@@ -68,25 +68,9 @@ function Footman:update()
   end
 end
 
-function Footman:damage( damage )
-  self.health = self.health - damage
-  if self.health <= 0 then
-    print( "the footman is dead" )
-  end
-end
-
-function Footman:electrocute()
-  self:stopMoving()
-  self:startAnimation("electrocute")
-  if self.timer ~= nil then self.timer:stop() end
-  self.timer = MOAITimer.new()
-  self.timer:setMode( MOAITimer.NORMAL )
-  self.timer:setSpan( 2 )
-  self.timer:setListener( 
-    MOAITimer.EVENT_TIMER_END_SPAN,
-    bind( self, "destroy" )
-  )
-  self.timer:start()
+function Footman:getPosition()
+  local thisX, thisY = self.physics.body:getPosition()
+  return { thisX, thisY }
 end
 
 function Footman:getTransform()
@@ -113,7 +97,6 @@ function Footman:stopMoving()
 end
 
 function Footman:attack( )
-  
   if self.target.health >= 0 then
     if self.timer ~= nil then
       self.target:damage( 5 )
@@ -136,6 +119,31 @@ function Footman:attack( )
     self.timer = nil
     self.target = nil
   end
+end
+
+function Footman:damage( damage )
+  self.health = self.health - damage
+  if self.health <= 0 then
+    print( "the footman is dead" )
+  end
+end
+
+function Footman:electrocute()
+  print( "electrocuting" )
+  self:stopMoving()
+  self:startAnimation("electrocute")
+  if self.timer ~= nil then 
+    self.timer:stop()
+    self.timer = nil
+  end
+  self.timer = MOAITimer.new()
+  self.timer:setMode( MOAITimer.NORMAL )
+  self.timer:setSpan( 2 )
+  self.timer:setListener( 
+    MOAITimer.EVENT_TIMER_END_SPAN,
+    bind( self, "destroy" )
+  )
+  self.timer:start()
 end
 
 --===========================================
@@ -165,6 +173,7 @@ end
 
 function Footman:onCollide( phase, fixtureA, fixtureB, arbiter )
   print( "boop!" )
+  
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
     if entityB.type == "wall" then
@@ -181,6 +190,7 @@ end
 
 function Footman:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  print( "destroying a footman" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
   --PhysicsHandler:sceduleForRemoval( self.physics.body )
@@ -188,7 +198,11 @@ function Footman:destroy()
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
-  Level.entities[self] = nil
+  Level:removeEntity( self )
+  
+  for key, entity in pairs( Level.entities ) do
+    print( entity.type )
+  end
 end
 
 function Footman:initializePhysics( position )
