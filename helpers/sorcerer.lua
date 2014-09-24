@@ -47,4 +47,5 @@ end
 function Sorcerer:action()
   self.anim:start()
   print"sorcerer attacks"
+  return true
 end

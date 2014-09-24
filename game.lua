@@ -136,40 +136,11 @@ end
 --================================================
 
 --checks for mouseclick
-local a, b, c, d, e, f
-
-local swipeTimer = MOAITimer.new()
-swipeTimer:setSpan(1)
-swipeTimer:setMode(MOAITimer.LOOP)
-swipeTimer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
-  function()
-    e, f = Gesture:getMouseLocation()
-  end)
-swipeTimer:setListener(MOAITimer.EVENT_TIMER_END_SPAN, 
-  function() 
-    Gesture:storeSwipe(e, f) 
-  end)
-
     if MOAIInputMgr.device.pointer then
       MOAIInputMgr.device.mouseLeft:setCallback(
       function(isMouseDown)
         if MOAIInputMgr.device.mouseLeft:isDown() then
-          -- Left mouse button is down, mark coordinates
-          a, b = Gesture:getMouseLocation(Game.layers.active)
-          swipeTimer:start()
-        end
-        if MOAIInputMgr.device.mouseLeft:isUp() then
-          swipeTimer:stop()
-          
-          
-          
-          -- left mouse button went up. the if/else determines if mouse moved in between down and up
-          if Gesture:mouseMoved(a, b, Gesture:getMouseLocation(Game.layers.active)) then
-            c, d = Gesture:getMouseLocation(Game.layers.active)
-            Gesture:targetLine(a, b, c, d)
-          else
-            Gesture:click()
-          end
+          Gesture:trackSwipe()
         end
       end)
     end
