@@ -57,19 +57,14 @@ function Level:loadEntities()
   )
   table.insert( self.entities, Footman:new( { -150, GROUND_LEVEL }, Game.layers.active ) )
   
-  
-  --[=[
   timer = MOAITimer.new()
   timer:setMode( MOAITimer.LOOP )
-  timer:setSpan( .3 )
+  timer:setSpan( 4 )
   timer:setListener( 
     MOAITimer.EVENT_TIMER_END_SPAN, 
-    function() 
-      wall4:damage(10) 
-    end
+    function() Level:footmanSpawner( 1 ) end
   )
   timer:start()
-  ]=]
 end
 
 -- Hier wordt nog ook de grond ingeladen.
@@ -97,6 +92,12 @@ function Level:loadScene()
     local fixture = body:addRect( - width / 2, - height / 2, width / 2, height / 2 )
     fixture:setFriction( attr.friction )
     self.objects[key] = { body = body, fixture = fixture }
+  end
+end
+
+function Level:footmanSpawner( amount )
+  for i = 1, amount do
+    table.insert( self.entities, Footman:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active ) )
   end
 end
 
