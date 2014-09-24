@@ -5,10 +5,15 @@ require "index"
 -- Start function, is called from main, also contains the gameloop
 function Game:start()
   -- Do the initial setup
+  
   self:initialize()
   
   
   while ( true ) do
+    if Level.initialized then
+      Level:update()
+    end
+    --PhysicsManager.update()
     coroutine.yield() -- Andere threads laten draaien
   end
 end
@@ -21,8 +26,11 @@ function Game:initialize()
   
   self.camera = MOAICamera2D.new() -- Make a new camera
   self:setupLayers()
-  PhysicsManager:initialize( self.layers.active )
   
+  --self.corout = MOAICoroutine.new()
+  
+  PhysicsManager:initialize( self.layers.active )
+  Gesture:initialize()
   Level:initialize( 1 )
   
 end
@@ -58,41 +66,6 @@ function Game:setupLayers()
   MOAIRenderMgr.setRenderTable( renderTable )
 end
 
-
--- DEPRECATED, use level.lua's :loadEntities()
-function Game:setupDemo()
-  startX = -170
-  startY = -100
-  wall1 = Wall:new( 1 , { startX     , startY }, self.layers.active )
-  wall2 = Wall:new( 2 , { startX - 16, startY }, self.layers.active )
-  wall3 = Wall:new( 3 , { startX - 32, startY }, self.layers.active )
-  wall4 = Wall:new( 10, { startX - 48, startY }, self.layers.active )
-  
-  
-  
-  timer = MOAITimer.new()
-  timer:setMode( MOAITimer.LOOP )
-  timer:setSpan( .3 )
-  timer:setListener( 
-    MOAITimer.EVENT_TIMER_END_SPAN, 
-    function() 
-      wall4:damage(10) 
-    end
-  )
-  --[=[
-  timer:setListener( 
-    MOAITimer.EVENT_TIMER_BEGIN_SPAN, 
-    function() 
-      sorcerer1:clicked() 
-    end 
-  )
-  ]=]
-  timer:start()
-  
-  
-  
-end
-
 --===============================================
 -- Utility functions
 --===============================================
@@ -126,21 +99,16 @@ function terms()
     end
 end
 
---================================================
--- Gesture idea:
--- When left mouse down is called, start a timer.
--- let timer compare mouse location.
--- store type of movement somewhere.
--- if movements match up to set pattern,
--- execute the right function for that pattern.
---================================================
 
---checks for mouseclick
-    if MOAIInputMgr.device.pointer then
-      MOAIInputMgr.device.mouseLeft:setCallback(
-      function(isMouseDown)
-        if MOAIInputMgr.device.mouseLeft:isDown() then
-          Gesture:trackSwipe()
-        end
-      end)
+
+function handleClickorTouch(x, y)
+  -- This is an electrocution test
+  for key, entity in pairs( Level:getEntitiesNearPos( { x, y }, { 50, 50 } ) ) do
+    if entity.electrocute ~= nil then
+      entity:electrocute()
     end
+  end
+  
+  local obj = Game.partitions.active.propForPoint( Game.partitions.active, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
+  print (Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
+end

@@ -4,6 +4,7 @@ Sorcerer = class('sorcerer')
 
 function Sorcerer:initialize( parent, position, layer, partition )
   local x, y = unpack( position )
+  self.type = "sorcerer"
   self.spriteSheet = MOAITileDeck2D.new()
   self.spriteSheet:setTexture('res/img/Wizard.png')
   self.spriteSheet:setSize( 6, 1 )
@@ -35,7 +36,23 @@ function Sorcerer:initialize( parent, position, layer, partition )
   self.health = 15
   self.damage = 10
   
+  --layer:insertProp( self.prop )
+  self:initializePhysics()
   return self.prop
+end
+
+function Sorcerer:update()
+  
+end
+
+function Sorcerer:getPosition()
+  local thisX, thisY = self.transform:getLoc()
+  return { thisX, thisY }
+end
+
+function Sorcerer:getTransform()
+  --print( self.physics.body:getPosition() )
+  return self.transform
 end
 
 function Sorcerer:getLoc()
@@ -48,4 +65,9 @@ function Sorcerer:action()
   self.anim:start()
   print"sorcerer attacks"
   return true
+end
+
+function Sorcerer:initializePhysics()
+  self.physics = {}
+  self.physics.fixture = nil
 end

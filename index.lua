@@ -30,7 +30,7 @@ local resource_definitions = {
   footman = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/footman_sheet.png',
-    tileMapSize = {4, 2},
+    tileMapSize = {4, 3},
     width = 16, height = 16,
   },
 }

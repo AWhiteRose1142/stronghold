@@ -1,5 +1,26 @@
 module( "Gesture", package.seeall )
 
+--================================================
+-- Gesture idea:
+-- When left mouse down is called, start a timer.
+-- let timer compare mouse location.
+-- store type of movement somewhere.
+-- if movements match up to set pattern,
+-- execute the right function for that pattern.
+--================================================
+
+function Gesture:initialize()
+  --checks for mouseclick
+  if MOAIInputMgr.device.pointer then
+    MOAIInputMgr.device.mouseLeft:setCallback(
+    function(isMouseDown)
+      if MOAIInputMgr.device.mouseLeft:isDown() then
+        Gesture:trackSwipe()
+      end   
+    end)
+  end
+end
+
 function Gesture:click()
   -- calls if IsMouseDown
   clickEntity = Gesture:pickEntity(Gesture:getMouseLocation(Game.layers.active))
