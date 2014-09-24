@@ -21,6 +21,12 @@ local animationDefinitions = {
     time = 0.2,
     mode = MOAITimer.LOOP
   },
+  electrocute = {
+    startFrame = 8,
+    frameCount = 2,
+    time = 0.1,
+    mode = MOAITimer.LOOP
+  },
 }
 
 function Footman:initialize( position, layer )
@@ -69,6 +75,20 @@ function Footman:damage( damage )
   end
 end
 
+function Footman:electrocute()
+  self:stopMoving()
+  self:startAnimation("electrocute")
+  if self.timer ~= nil then self.timer:stop() end
+  self.timer = MOAITimer.new()
+  self.timer:setMode( MOAITimer.NORMAL )
+  self.timer:setSpan( 2 )
+  self.timer:setListener( 
+    MOAITimer.EVENT_TIMER_END_SPAN,
+    bind( self, "destroy" )
+  )
+  self.timer:start()
+end
+
 function Footman:getTransform()
   return self.physics.body.transform
 end
@@ -97,7 +117,6 @@ function Footman:attack( )
   if self.target.health >= 0 then
     if self.timer ~= nil then
       self.target:damage( 5 )
-      self.health = self.health - 1
     else
       self.timer = MOAITimer.new()
       self.timer:setMode( MOAITimer.LOOP )
@@ -117,10 +136,6 @@ function Footman:attack( )
     self.timer = nil
     self.target = nil
   end
-end
-
-function Footman:die()
-  -- Speel de electrocute anim, later komen hier passender anims bij?
 end
 
 --===========================================
@@ -153,7 +168,7 @@ function Footman:onCollide( phase, fixtureA, fixtureB, arbiter )
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
     if entityB.type == "wall" then
-      print( "boop! into a wall" )
+      print( "into a wall" )
       self.target = entityB
       self:attack( )
     end
@@ -170,6 +185,7 @@ function Footman:destroy()
   self.layer:removeProp( self.prop )
   --PhysicsHandler:sceduleForRemoval( self.physics.body )
   --self.physics.body:destroy()
+  
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
   Level.entities[self] = nil
@@ -183,6 +199,7 @@ function Footman:initializePhysics( position )
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
+  --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 
 function Footman:addAnimation( name, startFrame, frameCount, time, mode )
