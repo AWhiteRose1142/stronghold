@@ -88,7 +88,7 @@ function footmanMove()
 end
 
 --================================================
--- Gesture stuff
+-- Gesture stuff, mostly unused now
 --================================================
 
 function terms()

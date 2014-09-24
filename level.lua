@@ -111,7 +111,8 @@ function Level:getEntitiesNearPos( position, tolerance )
   local closeEntities = {}
   for key, entity in pairs( self.entities ) do
     local entityX, entityY = unpack( entity:getPosition() )
-    if entityX - posX <= tolX and entityY - posY <= tolY then
+    if math.abs( entityX - posX ) <= tolX and math.abs( entityY - posY ) <= tolY then
+      --print( tostring( entityX - posX ) .. "tolerance: " .. tostring( tolX ) )
       table.insert( closeEntities, entity )
     end
   end

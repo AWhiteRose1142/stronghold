@@ -16,7 +16,16 @@ function Gesture:initialize()
     function(isMouseDown)
       if MOAIInputMgr.device.mouseLeft:isDown() then
         Gesture:trackSwipe()
-      end   
+      end
+      -- Just for clicks
+      if MOAIInputMgr.device.mouseLeft:isUp() then
+        local mouseX, mouseY = Gesture:getMouseLocation( Game.layers.active )
+        for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, mouseY }, { 20, 20 } ) ) do
+          if entity.electrocute ~= nil then
+            entity:electrocute()
+          end
+        end
+      end
     end)
   end
 end
