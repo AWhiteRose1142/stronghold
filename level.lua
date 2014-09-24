@@ -81,6 +81,11 @@ function Level:loadBackground()
   self.backgroundProp:setDeck( self.backgroundDeck )
   self.backgroundProp:setScl( 2.5, 2.5 )
   Game.layers.background:insertProp( self.backgroundProp )
+
+  self.groundProp = MOAIProp2D.new()
+  self.groundProp:setDeck( ResourceManager:get( 'ground' ) )
+  self.groundProp:setLoc( 0, GROUND_LEVEL - 36 )
+  Game.layers.background:insertProp( self.groundProp )
 end
 
 function Level:loadScene()

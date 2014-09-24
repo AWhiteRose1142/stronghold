@@ -26,6 +26,11 @@ local resource_definitions = {
     fileName = 'img/ground_tile.png',
     width = 16, height = 16,
   },
+  ground = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/ground.png',
+    width = 512, height = 64,
+  },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_sheet.png',
