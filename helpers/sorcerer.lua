@@ -42,7 +42,9 @@ function Sorcerer:initialize( parent, position, layer, partition )
 end
 
 function Sorcerer:update()
-  
+  if Gesture.gestureTable ~= nil then
+    self:action()
+  end
 end
 
 function Sorcerer:getPosition()

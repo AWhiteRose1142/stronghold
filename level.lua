@@ -17,6 +17,7 @@ local base_objects = {
 }
 
 function Level:initialize( difficulty )
+  self.score = 1
   self:loadBackground()
   self:loadScene()
   self:loadEntities()
@@ -33,6 +34,7 @@ function Level:update()
     entity:update()
   end
   Gesture:update()
+  HUD:update()
 end
 
 --==================================================
@@ -43,6 +45,7 @@ function Level:loadEntities()
   self.entities = {}
   self.walls = {}
   startX = -170  
+  
   
   for i = 0, 3 do
     local wall = Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Game.layers.active )

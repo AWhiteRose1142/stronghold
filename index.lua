@@ -49,6 +49,13 @@ local resource_definitions = {
     tileMapSize = {2, 1},
     width = 16, height = 16,
   },
+  hudFont = {
+    type = RESOURCE_TYPE_FONT,
+    fileName = "fonts/tuffy.ttf",
+    glyphs = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789,.?!",
+    fontSize = 26,
+    dpi = 160
+  },
 }
 
 function Index:loadDefinitions()

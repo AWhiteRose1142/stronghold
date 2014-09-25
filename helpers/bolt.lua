@@ -40,7 +40,7 @@ function Bolt:initialize( position, layer )
   
   timer = MOAITimer.new()
   timer:setMode( MOAITimer.NORMAL )
-  timer:setSpan( 2 )
+  timer:setSpan( 1 )
   timer:setListener( 
     MOAITimer.EVENT_TIMER_END_SPAN, 
     bind( self, "destroy" )
