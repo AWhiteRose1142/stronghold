@@ -9,24 +9,145 @@ module( "Gesture", package.seeall )
 -- execute the right function for that pattern.
 --================================================
 
+-- Gesture types
+UP         = 1
+DOWN       = 2
+LEFT       = 3
+RIGHT      = 4
+UP_LEFT    = 5
+UP_RIGHT   = 6
+DOWN_LEFT  = 7
+DOWN_RIGHT = 8
+
 function Gesture:initialize()
+  
   --checks for mouseclick
   if MOAIInputMgr.device.pointer then
     MOAIInputMgr.device.mouseLeft:setCallback(
     function(isMouseDown)
       if MOAIInputMgr.device.mouseLeft:isDown() then
-        Gesture:trackSwipe()
+        --Gesture:trackSwipe()
+        local newX, newY = Gesture:getMouseLocation( Game.layers.active )
+        print("mousedown")
+        if Gesture.line == nil then
+          print( "making a new line" )
+          Gesture.line = Line:new( { newX, newY }, Game.layers.user )
+        else
+          print( "tracking a gesture" )
+          Gesture:trackGesture( newX, newY )
+        end
       end
       -- Just for clicks
       if MOAIInputMgr.device.mouseLeft:isUp() then
+        print( "mouse is up, stopping gesture tracking" )
         local mouseX, mouseY = Gesture:getMouseLocation( Game.layers.active )
+        
+        Gesture:determineCombo()
+        Gesture.line:destroy()
+        Gesture.line = nil
+        Gesture.gestureTable = nil
+        
+        --[=[
         for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, mouseY }, { 20, 20 } ) ) do
           if entity.electrocute ~= nil then
             entity:electrocute()
           end
         end
+        ]=]
       end
     end)
+  end
+end
+
+function Gesture:update()
+  if MOAIInputMgr.device.mouseLeft:isDown() then
+    if Gesture.line ~= nil then
+      local newX, newY = Gesture:getMouseLocation( Game.layers.active )
+      print( "tracking a gesture" )
+      Gesture:trackGesture( newX, newY )
+    end
+  end
+end
+
+function Gesture:trackGesture( newX, newY )
+  --check of er een table met gesture types is
+  if self.gestureTable == nil then
+    self.gestureTable = {}
+    oldX, oldY = unpack( self.line:getPoints()[1] )
+    local direction = Gesture:getDirection( newX, newY, oldX, oldY )
+    table.insert( self.gestureTable, direction )
+    self.line:addPoint( { newX, newY } )
+  else
+    local direction = Gesture:getDirection( newX, newY, oldX, oldY )
+    if direction == self.gestureTable[ table.getn( self.gestureTable ) ] then
+      self.line:setLastPoint( { newX, newY } )
+    else
+      Gesture:printGestureTable()
+      table.insert( self.gestureTable, direction )
+      self.line:addPoint( { newX, newY } )
+    end
+  end
+  
+end
+
+function Gesture:getDirection( newX, newY, oldX, oldY )
+  local x = newX - oldX
+  local y = newY - oldY
+  -- Normalize x & y
+  if x < y then
+    y = y / y
+    x = x / y
+  else
+    y = y / x
+    x = x / x
+  end
+  
+  local vertDir = nil
+  local horDir = nil
+  
+  if x > .5 then
+    print( "RIGHT" )
+    horDir = RIGHT
+  elseif x < -.5 then
+    print( "LEFT" )
+    horDir = LEFT
+  end
+  
+  if y > .5 then
+    print( "UP" )
+    vertDir = UP
+  elseif y < -.5 then
+    print( "DOWN" )
+    vertDir = DOWN
+  end
+  
+  if vertDir ~= nil and horDir ~= nil then
+    if vertDir == UP and horDir == LEFT then return UP_LEFT end
+    if vertDir == UP and horDir == RIGHT then return UP_RIGHT end
+    if vertDir == DOWN and horDir == LEFT then return DOWN_LEFT end
+    if vertDir == DOWN and horDir == RIGHT then return DOWN_RIGHT end
+  elseif vertDir ~= nil then
+    return vertDir
+  else
+    return horDir
+  end
+  
+end
+
+function Gesture:determineCombo()
+  
+end
+
+function Gesture:printGestureTable()
+  for key, dir in pairs( self.gestureTable ) do
+    if dir == UP then print( "UP" ) end
+    if dir == DOWN then print( "DOWN" ) end
+    if dir == LEFT then print( "LEFT" ) end
+    if dir == RIGHT then print( "RIGHT" ) end
+    if dir == UP_RIGHT then print( "UP_RIGHT" ) end
+    if dir == UP_LEFT then print( "UP_LEFT" ) end
+    if dir == DOWN_RIGHT then print( "DOWN_RIGHT" ) end
+    if dir == DOWN_LEFT then print( "DOWN_LEFT" ) end
   end
 end
 

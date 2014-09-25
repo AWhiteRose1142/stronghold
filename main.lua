@@ -7,6 +7,8 @@ require "level"
 require "helpers/wall"
 require "helpers/footman"
 require "helpers/sorcerer"
+require "helpers/bolt"
+require "helpers/line"
 require "gesture"
 
 --=============================================

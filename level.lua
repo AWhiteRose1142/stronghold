@@ -32,6 +32,7 @@ function Level:update()
   for key, entity in pairs( self.entities ) do
     entity:update()
   end
+  Gesture:update()
 end
 
 --==================================================
@@ -55,8 +56,9 @@ function Level:loadEntities()
       Game.layers.active, 
       Game.partitions.active )
   )
-  table.insert( self.entities, Footman:new( { -150, GROUND_LEVEL }, Game.layers.active ) )
+  table.insert( self.entities, Footman:new( { -100, GROUND_LEVEL }, Game.layers.active ) )
   
+  --[=[
   timer = MOAITimer.new()
   timer:setMode( MOAITimer.LOOP )
   timer:setSpan( 4 )
@@ -65,6 +67,7 @@ function Level:loadEntities()
     function() Level:footmanSpawner( 1 ) end
   )
   timer:start()
+  ]=]
   
   --Bolt:new( { 10, 10 }, Game.layers.active )
 end
