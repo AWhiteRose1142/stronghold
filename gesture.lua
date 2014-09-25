@@ -41,17 +41,18 @@ function Gesture:initialize()
       if MOAIInputMgr.device.mouseLeft:isUp() then
         print( "mouse is up, stopping gesture tracking" )
         local mouseX, mouseY = Gesture:getMouseLocation( Game.layers.active )
-        
+        local n = table.getn( Gesture.gestureTable )
         Gesture:determineCombo()
         Gesture.line:destroy()
         Gesture.line = nil
         Gesture.gestureTable = nil
         
-        Level:spawnBolts( { mouseX, mouseY } )
-        
-        for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, mouseY }, { 40, 40 } ) ) do
-          if entity.electrocute ~= nil then
-            entity:electrocute()
+        if n > 1 then
+          Level:spawnBolts( { mouseX, mouseY } )
+          for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, -120 }, { 40, 40 } ) ) do
+            if entity.electrocute ~= nil then
+              entity:electrocute()
+            end
           end
         end
         
