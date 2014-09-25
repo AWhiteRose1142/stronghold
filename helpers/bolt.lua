@@ -13,7 +13,7 @@ local animationDefinitions = {
 
 function Bolt:initialize( position, layer )
   local x, y = unpack( position )
-  
+  self.layer = layer
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'bolt' )
   
@@ -37,6 +37,15 @@ function Bolt:initialize( position, layer )
   end
   
   self:startAnimation( 'fizzle' )
+  
+  timer = MOAITimer.new()
+  timer:setMode( MOAITimer.NORMAL )
+  timer:setSpan( 2 )
+  timer:setListener( 
+    MOAITimer.EVENT_TIMER_END_SPAN, 
+    bind( self, "destroy" )
+  )
+  timer:start()
 end
 
 function Bolt:getPosition()
@@ -76,9 +85,7 @@ end
 function Bolt:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   print( "destroying a bolt" )
-  if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
-  Level:removeEntity( self )
 end
 
 function Bolt:addAnimation( name, startFrame, frameCount, time, mode )

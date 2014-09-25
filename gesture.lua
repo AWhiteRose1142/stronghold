@@ -47,13 +47,14 @@ function Gesture:initialize()
         Gesture.line = nil
         Gesture.gestureTable = nil
         
-        --[=[
-        for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, mouseY }, { 20, 20 } ) ) do
+        Level:spawnBolts( { mouseX, mouseY } )
+        
+        for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, mouseY }, { 40, 40 } ) ) do
           if entity.electrocute ~= nil then
             entity:electrocute()
           end
         end
-        ]=]
+        
       end
     end)
   end

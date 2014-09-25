@@ -57,17 +57,18 @@ function Level:loadEntities()
       Game.partitions.active )
   )
   table.insert( self.entities, Footman:new( { -100, GROUND_LEVEL }, Game.layers.active ) )
+  --Bolt:new( { 0, 0 }, Game.layers.active )
   
-  --[=[
+  
   timer = MOAITimer.new()
   timer:setMode( MOAITimer.LOOP )
-  timer:setSpan( 4 )
+  timer:setSpan( 5 )
   timer:setListener( 
     MOAITimer.EVENT_TIMER_END_SPAN, 
     function() Level:footmanSpawner( 1 ) end
   )
   timer:start()
-  ]=]
+  
   
   --Bolt:new( { 10, 10 }, Game.layers.active )
 end
@@ -139,5 +140,11 @@ function Level:removeEntity( killMe )
     if self.entities[i] == killMe then
       self.entities[i] = nil
     end
+  end
+end
+
+function Level:spawnBolts( position )
+  for i = 1, 6 do
+    Bolt:new( { position[1] + math.random( -30, 30 ), GROUND_LEVEL + math.random( 30 ) }, Game.layers.active )
   end
 end
