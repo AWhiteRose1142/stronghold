@@ -43,6 +43,12 @@ local resource_definitions = {
     tileMapSize = {4, 3},
     width = 16, height = 16,
   },
+  bolt = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/bolt_sheet.png',
+    tileMapSize = {2, 1},
+    width = 16, height = 16,
+  },
 }
 
 function Index:loadDefinitions()

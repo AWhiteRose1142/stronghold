@@ -2,37 +2,99 @@ local class = require 'libs/middleclass'
 
 Bolt = class('bolt')
 
+local animationDefinitions = {
+  fizzle = {
+    startFrame = 1,
+    frameCount = 2,
+    time = 0.1,
+    mode = MOAITimer.LOOP
+  },
+}
+
 function Bolt:initialize( position, layer )
   local x, y = unpack( position )
-  self.spriteSheet = MOAITileDeck2D.new()
-  self.spriteSheet:setTexture('res/img/WizardLightningAnimation.png')
-  self.spriteSheet:setSize( 2, 1 )
-  self.spriteSheet:setRect( -8, -8, 8, 8 )
   
+  -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
+  self.deck = ResourceManager:get( 'bolt' )
+  
+  -- Make the prop
   self.prop = MOAIProp2D.new()
-  self.prop:setDeck( self.spriteSheet )
-  self.prop:setLoc( x, y )
-  
-  self.remapper = MOAIDeckRemapper.new()
-  self.remapper:reserve(1)
-  self.prop:setRemapper(self.remapper)
-
-  self.curve = MOAIAnimCurve.new()
-  self.curve:reserveKeys(2)
-
-  curve:setKey( 1, 0, 1, MOAIEaseType.LINEAR)
-  curve:setKey( 2, 0.1, 2, MOAIEaseType.LINEAR)
-
-  self.anim = MOAIAnim.new()
-  self.anim:reserveLinks(1)
-  self.anim:setLink(1, self.curve, self.remapper, 1)
-  self.anim:setMode(MOAITimer.LOOP)
-  self.anim:start()
-  
+  self.prop:setDeck( self.deck )
   layer:insertProp( self.prop )
-  return self.prop
+  
+  self.transform = MOAITransform2D.new()
+  self.prop:setParent( self.transform )
+  self.transform:setLoc( x, y )
+  
+  -- Initialize animations
+  self.remapper = MOAIDeckRemapper.new()
+  self.remapper:reserve( 1 )
+  self.prop:setRemapper( self.remapper )
+  
+  self.animations = {}
+  for name, def in pairs( animationDefinitions ) do
+    self:addAnimation( name, def.startFrame, def.frameCount, def.time, def.mode )
+  end
+  
+  self:startAnimation( 'fizzle' )
 end
 
-function Bolt:collide( x, y )
-  -- checks to see if the bolt collides with an object
+function Bolt:getPosition()
+  local thisX, thisY = self.physics.body:getPosition()
+  return { thisX, thisY }
+end
+
+function Bolt:getTransform()
+  return self.physics.body.transform
+end
+
+--===========================================
+-- Animation control
+--===========================================
+
+function Bolt:getAnimation( name )
+  return self.animations[name]
+end
+
+function Bolt:stopCurrentAnimation()
+  if self.currentAnimation then
+    self.currentAnimation:stop()
+  end
+end
+
+function Bolt:startAnimation( name )
+  self:stopCurrentAnimation()
+  self.currentAnimation = self:getAnimation( name )
+  self.currentAnimation:start()
+  return self.currentAnimation
+end
+
+--===========================================
+-- Utility functions, consider these private
+--===========================================
+
+function Bolt:destroy()
+  -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  print( "destroying a bolt" )
+  if self.timer then self.timer:stop() end
+  self.layer:removeProp( self.prop )
+  Level:removeEntity( self )
+end
+
+function Bolt:addAnimation( name, startFrame, frameCount, time, mode )
+  -- This curve is going to do shit, yo
+  local curve = MOAIAnimCurve.new()
+  -- Reserve start and end keys
+  curve:reserveKeys( 2 )
+  -- Params: starting key, time, value ( index of in tilesheet ), animcurve type
+  curve:setKey( 1, 0, startFrame, MOAIEaseType.LINEAR )
+  curve:setKey( 2, time * frameCount, startFrame + frameCount, MOAIEaseType.LINEAR )
+  
+  -- Making the animation
+  local anim = MOAIAnim:new()
+  -- Reserve a link to connect the curve with the remapper
+  anim:reserveLinks( 1 )
+  anim:setLink( 1, curve, self.remapper, 1 )
+  anim:setMode( mode )
+  self.animations[name] = anim
 end

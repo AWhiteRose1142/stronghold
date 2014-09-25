@@ -199,10 +199,6 @@ function Footman:destroy()
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
   Level:removeEntity( self )
-  
-  for key, entity in pairs( Level.entities ) do
-    print( entity.type )
-  end
 end
 
 function Footman:initializePhysics( position )

@@ -65,6 +65,8 @@ function Level:loadEntities()
     function() Level:footmanSpawner( 1 ) end
   )
   timer:start()
+  
+  --Bolt:new( { 10, 10 }, Game.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
