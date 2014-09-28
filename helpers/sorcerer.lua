@@ -2,35 +2,39 @@ local class = require 'libs/middleclass'
 
 Sorcerer = class('sorcerer')
 
+local animationDefinitions = {
+  cast = {
+    startFrame = 1,
+    frameCount = 6,
+    time = 0.1,
+    mode = MOAITimer.NORMAL
+  },
+}
+
 function Sorcerer:initialize( parent, position, layer, partition )
   local x, y = unpack( position )
   self.type = "sorcerer"
-  self.spriteSheet = MOAITileDeck2D.new()
-  self.spriteSheet:setTexture('res/img/Wizard.png')
-  self.spriteSheet:setSize( 6, 1 )
-  self.spriteSheet:setRect( -8, -8, 8, 8 )
+  self.layer = layer
+  self.partition = partition
+  
+  self.deck = ResourceManager:get( 'sorcerer' )
   self.transform = parent
   
   self.prop = MOAIProp2D.new()
-  self.prop:setDeck( self.spriteSheet )
+  self.prop:setDeck( self.deck )
   self.prop:setLoc( ( x + 2 ), ( y + 12 ) )
   self.prop:setParent( parent )
-  partition:insertProp(self.prop)
+  self.partition:insertProp( self.prop )
   
-  -- load animation for attacking
-  self.curve = MOAIAnimCurve.new()
-  self.curve:reserveKeys(6)
+  -- Initialize animations
+  self.remapper = MOAIDeckRemapper.new()
+  self.remapper:reserve( 1 )
+  self.prop:setRemapper( self.remapper )
   
-  for i=1,6,1 do
-    -- keynumber, tijd waarop het moet plaatsvinden, value van de key (om welk plaatje gaat het dus)
-    self.curve:setKey(i, 0.12 * i, i)
+  self.animations = {}
+  for name, def in pairs( animationDefinitions ) do
+    self:addAnimation( name, def.startFrame, def.frameCount, def.time, def.mode )
   end
-  
-  self.anim = MOAIAnim:new()
-  self.anim:reserveLinks(1)
-  self.anim:setLink(1, self.curve, self.prop, MOAIProp2D.ATTR_INDEX)
-  self.anim:setMode(MOAITimer.NORMAL)
-  self.anim:setSpan(6 * 0.12)
   
   -- ability scores (for now)
   self.health = 15
@@ -38,12 +42,12 @@ function Sorcerer:initialize( parent, position, layer, partition )
   
   --layer:insertProp( self.prop )
   self:initializePhysics()
-  return self.prop
 end
 
 function Sorcerer:update()
+  -- Kan netter
   if Gesture.gestureTable ~= nil then
-    self:action()
+    self:cast()
   end
 end
 
@@ -53,7 +57,6 @@ function Sorcerer:getPosition()
 end
 
 function Sorcerer:getTransform()
-  --print( self.physics.body:getPosition() )
   return self.transform
 end
 
@@ -63,13 +66,60 @@ function Sorcerer:getLoc()
   return (x1 + x2), (y1 + y2)
 end
 
-function Sorcerer:action()
-  self.anim:start()
-  print"sorcerer attacks"
+function Sorcerer:cast()
+  self:startAnimation( "cast" )
   return true
 end
 
 function Sorcerer:initializePhysics()
   self.physics = {}
   self.physics.fixture = nil
+end
+
+--================================================
+-- Utility functions
+--================================================
+
+function Sorcerer:destroy()
+  self.partition.removeProp( self.prop )
+  Level:removeEntity( self )
+end
+
+--===========================================
+-- Animation control
+--===========================================
+
+function Sorcerer:getAnimation( name )
+  return self.animations[name]
+end
+
+function Sorcerer:stopCurrentAnimation()
+  if self.currentAnimation then
+    self.currentAnimation:stop()
+  end
+end
+
+function Sorcerer:startAnimation( name )
+  self:stopCurrentAnimation()
+  self.currentAnimation = self:getAnimation( name )
+  self.currentAnimation:start()
+  return self.currentAnimation
+end
+
+function Sorcerer:addAnimation( name, startFrame, frameCount, time, mode )
+  -- This curve is going to do shit, yo
+  local curve = MOAIAnimCurve.new()
+  -- Reserve start and end keys
+  curve:reserveKeys( 2 )
+  -- Params: starting key, time, value ( index of in tilesheet ), animcurve type
+  curve:setKey( 1, 0, startFrame, MOAIEaseType.LINEAR )
+  curve:setKey( 2, time * frameCount, startFrame + frameCount, MOAIEaseType.LINEAR )
+  
+  -- Making the animation
+  local anim = MOAIAnim:new()
+  -- Reserve a link to connect the curve with the remapper
+  anim:reserveLinks( 1 )
+  anim:setLink( 1, curve, self.remapper, 1 )
+  anim:setMode( mode )
+  self.animations[name] = anim
 end
