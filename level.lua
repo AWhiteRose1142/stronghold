@@ -7,12 +7,16 @@ initialized = false
 -- Basic objects that are the same for every level
 --==================================================
 
+-- These are definitions for the physics. The category and mask Bits are to prevent units from bumping into eachother.
+-- Please use cat & mask 4 & 2 for walls and groundstuff, and use 2 & 4 for units like footmen
 local base_objects = {
   floor = {
     type = MOAIBox2DBody.STATIC,
     position = { 0, GROUND_LEVEL - 10 },
     friction = 0,
-    size = { 2 * WORLDRES_X, 10 }
+    size = { 2 * WORLDRES_X, 10 },
+    categoryBits = 0x04,
+    maskBits = 0x02,
   },
 }
 
@@ -100,6 +104,8 @@ function Level:loadScene()
     width, height = unpack( attr.size )
     local fixture = body:addRect( - width / 2, - height / 2, width / 2, height / 2 )
     fixture:setFriction( attr.friction )
+    -- Filter zetten. Zorgt ervoor dat bijv footmen niet met elkaar maar wel met de grond en muur colliden.
+    fixture:setFilter( attr.categoryBits, attr.maskBits )
     self.objects[key] = { body = body, fixture = fixture }
   end
 end

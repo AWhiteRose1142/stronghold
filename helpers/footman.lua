@@ -207,6 +207,8 @@ function Footman:initializePhysics( position )
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
   self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  -- Cat, mask, group
+  self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
