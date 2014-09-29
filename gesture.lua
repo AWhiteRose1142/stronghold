@@ -25,7 +25,6 @@ function Gesture:initialize()
   if MOAIInputMgr.device.pointer then
     MOAIInputMgr.device.mouseLeft:setCallback(
       function( isMouseDown )
-        print( isMouseDown )
         -- Mouse down
         if MOAIInputMgr.device.mouseLeft:isDown() then Gesture:onMouseDown() end
         -- Mouse up
@@ -199,4 +198,10 @@ function Gesture:getMouseLocation( layer )
   else
     return layer:wndToWorld(MOAIInputMgr.device.pointer:getLoc ())
   end
+end
+
+function Gesture:destroy()
+  if Gesture.line ~= nil then Gesture.line:destroy() end
+  Gesture.line = nil
+  Gesture.gestureTable = nil
 end

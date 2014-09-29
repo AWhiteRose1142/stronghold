@@ -26,12 +26,12 @@ function PhysicsManager:initialize ( layer )
   -- We start the simulation so objects
   -- begin to interact.
   self.world:start ()
-  
   -- If a debug layer is passed use
   -- it to display the objects that
   -- our world is using in the 
   -- simulation.
   if layer then
+    self.layer = layer
     layer:setBox2DWorld ( self.world )
   end
   
@@ -40,6 +40,12 @@ function PhysicsManager:initialize ( layer )
   --self.killList = nil
   --Game.corout.attach( self.world )
   
+end
+
+function PhysicsManager:destroy()
+  self.world:stop()
+  if self.layer ~= nil then self.layer = nil end
+  self.world = nil
 end
 
 -- NOT USED, SHIT DOESNT WORK

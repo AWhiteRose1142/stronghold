@@ -9,6 +9,7 @@ function Wall:initialize( height, position, layer )
   self.health = 32 + ( height * 50 )
   self.baseX, self.baseY = x, y
   self.type = "wall"
+  self.layer = layer
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.baseDeck = ResourceManager:get( 'wallBase' )
@@ -84,4 +85,19 @@ end
 
 function onCollide( phase, fixtureA, fixtureB, arbiter )
   print( "boop! says a wall" )
+end
+
+function Wall:destroy()
+  -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  print( "destroying a wall" )
+  if self.timer then self.timer:stop() end
+  
+  self.layer:removeProp( self.baseProp )
+  self.layer:removeProp( self.topProp )
+  for key, prop in pairs(self.midProps) do
+    self.layer:removeProp( prop )
+  end
+  
+  self.physics.body:setTransform( 0, -1000 )
+  Level:removeEntity( self )
 end

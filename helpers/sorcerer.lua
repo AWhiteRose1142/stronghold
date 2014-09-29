@@ -81,7 +81,7 @@ end
 --================================================
 
 function Sorcerer:destroy()
-  self.partition.removeProp( self.prop )
+  self.partition:removeProp( self.prop )
   Level:removeEntity( self )
 end
 

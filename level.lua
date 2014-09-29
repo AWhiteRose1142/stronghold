@@ -22,6 +22,10 @@ local base_objects = {
 
 function Level:initialize( difficulty )
   self.score = 1
+  
+  PhysicsManager:initialize( Game.layers.active )
+  Gesture:initialize()
+  
   self:loadBackground()
   self:loadScene()
   self:loadEntities()
@@ -114,6 +118,41 @@ function Level:footmanSpawner( amount )
   for i = 1, amount do
     table.insert( self.entities, Footman:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active ) )
   end
+end
+
+--====================================================
+-- Loading, saving & destroying
+--====================================================
+
+function Level:destroy()
+  
+  -- destroy background
+  Game.layers.background:removeProp( self.backgroundProp )
+  self.backgroundProp = nil
+  Game.layers.background:removeProp( self.groundProp )
+  self.groundProp = nil
+  
+  -- destroy all entities
+  for key, entity in pairs( self.entities ) do
+    entity:destroy()
+  end
+  
+  -- Destroy the gestures
+  Gesture:destroy()
+  -- Destroy the physics world ( MUAHAHAHAHA )
+  PhysicsManager:destroy()
+  
+  -- Set own variables to nil
+  self.score = 0
+  self.initialized = false
+end
+
+function Level:loadLevel()
+  
+end
+
+function Level:saveLevel()
+  
 end
 
 --====================================================

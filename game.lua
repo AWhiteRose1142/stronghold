@@ -29,8 +29,6 @@ function Game:initialize()
   
   --self.corout = MOAICoroutine.new()
   
-  PhysicsManager:initialize( --[=[ self.layers.active ]=] )
-  Gesture:initialize()
   Level:initialize( 1 )
   HUD:initialize()
   

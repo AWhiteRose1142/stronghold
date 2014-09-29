@@ -83,8 +83,6 @@ end
 --===========================================
 
 function Bolt:destroy()
-  -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  print( "destroying a bolt" )
   self.layer:removeProp( self.prop )
 end
 
