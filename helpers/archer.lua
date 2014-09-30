@@ -17,7 +17,8 @@ local animationDefinitions = {
   },
 }
 
-function Archer:initialize( parent, position, layer )
+function Archer:initialize( parent, position, layer, partition )
+  self.isBusy = false
   self.health = 10
   self.strength = 10
   self.type = "archer"
@@ -33,7 +34,7 @@ function Archer:initialize( parent, position, layer )
   
   -- Make the prop
   self.prop = MOAIProp2D.new()
-  self.prop:setLoc(self.x, self.y)
+  self.prop:setLoc( self.x, self.y )
   self.prop:setDeck( self.deck )
   layer:insertProp( self.prop )
   
@@ -48,7 +49,7 @@ function Archer:initialize( parent, position, layer )
   end
   
   -- Setup physics
-  self:initializePhysics( parent, position )
+  self:initializePhysics( position )
 end
 
 function Archer:update()
@@ -73,7 +74,7 @@ end
 
 function Archer:attack( )
   if self.timer ~= nil then
-    --self.target:damage( 5 )
+    --DO NOTHING
   else
     self.timer = MOAITimer.new()
     self.timer:setMode( MOAITimer.LOOP )
@@ -82,10 +83,15 @@ function Archer:attack( )
       MOAITimer.EVENT_TIMER_END_SPAN,
       bind( self, "attack" )
     )
+    self.timer:setListener( 
+    MOAITimer.EVENT_TIMER_BEGIN_SPAN, 
+    function() 
+      table.insert(Level.entities, Arrow:new({self.x, self.y}, self.layer, self.aim, self.strength)) 
+    end
+    )
     self.timer:start()
-    --self.target:damage( 5 )
     self:startAnimation( "attack" )
-    Arrow:new({self.x, self.y}, self.layer, self.aim, self.strength)
+    --table.insert(Level.entities, Arrow:new({self.x, self.y}, self.layer, self.aim, self.strength))
   end
 end
 
@@ -98,18 +104,7 @@ end
 
 --Rotates the archer as much as the device location differs in Y value (height)
 function Archer:aim()
-  if self.timer ~= nil then
-    self.timer:pause()
-  end
-  local x1, y1 = Gesture:getMouseLocation(self.layer)
-  while Gesture:isClickDown() do
-    local x2, y2 = Gesture:getMouseLocation(self.layer)
-    local angle = y2 - y1
-    print(angle)
-    --self.physics.body:setAngle(angle)
-    --self.aim = math.abs(angle)
-  end
-  self.timer:resume()
+  --something
 end
 
 --===========================================
@@ -168,10 +163,10 @@ function Archer:destroy()
   Level:removeEntity( self )
 end
 
-function Archer:initializePhysics( parent, position )
+function Archer:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
-  self.physics.body:setTransform( parent )
+  self.physics.body:setTransform( unpack( position ) )
   self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
   self.prop:setParent( self.physics.body )
   

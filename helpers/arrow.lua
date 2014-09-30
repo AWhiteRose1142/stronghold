@@ -10,7 +10,6 @@ function Arrow:initialize( position, layer, aim, strength )
   self.aim = aim
   self.force = (strength * 10)
   local X, Y = unpack(position)
-  
 
   self.deck = ResourceManager:get( 'arrow' )
   
