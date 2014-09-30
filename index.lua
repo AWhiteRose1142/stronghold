@@ -31,10 +31,20 @@ local resource_definitions = {
     fileName = 'img/ground.png',
     width = 512, height = 64,
   },
+  button = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/button-ph.png',
+    width = 60, height = 20,
+  },
+  arrow = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/Arrow.png',
+    width = 16, height = 16,
+  },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_sheet.png',
-    tileMapSize = {4, 1},
+    tileMapSize = {5, 1},
     width = 16, height = 16,
   },
   footman = {

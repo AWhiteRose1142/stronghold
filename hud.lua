@@ -20,7 +20,12 @@ end
 function HUD:initializeDebugHud()
   self.font = MOAIFont.new()
   self.font = ResourceManager:get( "hudFont" )
-  self.score = self:newDebugTextBox( 30, { 10, 10, 100, 50 } )
+  --self.score = self:newDebugTextBox( 30, { 10, 10, 100, 50 } )
+  
+  self.buttonDeck = ResourceManager:get( "button" )
+  self.menuButton = MOAIProp2D.new()
+  self.menuButton:setDeck(self.buttonDeck)
+  --self.layer:insertProp(self.menuButton)
 end
 
 function HUD:newDebugTextBox( size, rectangle )
@@ -34,6 +39,12 @@ end
 
 function HUD:update()
   local string = ( "SCORE" .. " " .. Level.score )
-  self.score:setString( string )
+  --self.score:setString( string )
+end
+
+function HUD:menuButtonClicked()
+  if Gesture:isClickDown() then
+    local x, y = Gesture:getMouseLocation()
+  end
 end
   

@@ -36,6 +36,7 @@ function Level:update()
   Gesture:update()
   HUD:update()
 end
+    
 
 --==================================================
 -- Setting up
@@ -59,6 +60,14 @@ function Level:loadEntities()
       Game.layers.active, 
       Game.partitions.active )
   )
+  
+table.insert( self.entities, Archer:new( 
+      Level.walls[2]:getTransform(), 
+      { Level.walls[2]:getTopLoc() }, 
+      Game.layers.active, 
+      Game.partitions.active )
+  )
+  
   table.insert( self.entities, Footman:new( { -100, GROUND_LEVEL }, Game.layers.active ) )
   --Bolt:new( { 0, 0 }, Game.layers.active )
   

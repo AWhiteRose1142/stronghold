@@ -156,9 +156,8 @@ end
 function Gesture:click()
   -- calls if IsMouseDown
   clickEntity = Gesture:pickEntity(Gesture:getMouseLocation(Game.layers.active))
-  if(clickEntity ~= nil) then
-    --clickEntity:action()
-    print "entity attacks"
+  if clickEntity == "archer"  then
+    clickEntity:aim()
   end
 end
 
