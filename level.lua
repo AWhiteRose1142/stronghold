@@ -84,7 +84,7 @@ function Level:loadEntities()
   )
   
   Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
-  Orc:new( { -120, GROUND_LEVEL }, Game.layers.active )
+  Orc:new( { -80, GROUND_LEVEL }, Game.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.

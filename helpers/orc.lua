@@ -5,22 +5,22 @@ Orc = class('orc')
 local animationDefinitions = {
   walk = {
     startFrame = 1,
-    frameCount = 2,
+    frameCount = 4,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
   attack = {
-    startFrame = 3,
+    startFrame = 5,
     frameCount = 3,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
-  --electrocute = {
-  --  startFrame = 6,
-  --  frameCount = 2,
-  --  time = 0.1,
-  --  mode = MOAITimer.LOOP
-  --},
+  electrocute = {
+    startFrame = 8,
+    frameCount = 2,
+    time = 0.1,
+    mode = MOAITimer.LOOP
+  },
 }
 
 function Orc:initialize( position, layer, health )
