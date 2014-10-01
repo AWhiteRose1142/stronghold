@@ -17,6 +17,9 @@ function InputManager:initialize ()
     if key == 50 and down == false then 
       Level:loadLevel()
     end
+    if key == 51 and down == false then
+      Level.Sorcerer:fireball(Gesture:getMouseLocation(Game.layers.active))
+    end
     if key == 100 then 
       
     end

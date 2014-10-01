@@ -75,6 +75,11 @@ function Sorcerer:cast()
   return true
 end
 
+function Sorcerer:fireball( target )
+  local position = self:getPosition()
+  local fireball = Fireball:new( position, Game.layers.active, self.damage, target)
+end
+
 function Sorcerer:initializePhysics()
   self.physics = {}
   self.physics.fixture = nil

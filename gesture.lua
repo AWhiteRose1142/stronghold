@@ -83,6 +83,8 @@ function Gesture:onMouseUp()
         entity:electrocute()
       end
     end
+  elseif n == 0 then
+    --
   end
 end
 
