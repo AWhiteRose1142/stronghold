@@ -42,6 +42,9 @@ function Sorcerer:initialize( parent, position, layer, partition )
   
   --layer:insertProp( self.prop )
   self:initializePhysics()
+  
+  table.insert( Level.entities, self )
+  table.insert( Level.playerEntities.sorcerer, self )
 end
 
 function Sorcerer:update()
@@ -52,8 +55,9 @@ function Sorcerer:update()
 end
 
 function Sorcerer:getPosition()
-  local thisX, thisY = self.transform:getLoc()
-  return { thisX, thisY }
+  local x1, y1 = self.transform:getLoc()
+  local x2, y2 = self.prop:getLoc()
+  return { (x1 + x2), (y1 + y2) }
 end
 
 function Sorcerer:getTransform()

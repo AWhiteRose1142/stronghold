@@ -29,7 +29,7 @@ local animationDefinitions = {
   },
 }
 
-function Footman:initialize( position, layer )
+function Footman:initialize( position, layer, health )
   self.health = 6
   self.type = "footman"
   self.timer = nil
@@ -56,10 +56,17 @@ function Footman:initialize( position, layer )
   
   -- Setup physics
   self:initializePhysics( position )
+  
+  -- For loading a footman with certain amount of health.
+  if health ~= nil then
+    self:damage( self.health - health )
+  end
     
   -- Code for testing
   --self:startAnimation( "electrocute" )
   self:move( -1 )
+  table.insert( Level.entities, self )
+  table.insert( Level.enemyEntities.footmen, self )
 end
 
 function Footman:update()

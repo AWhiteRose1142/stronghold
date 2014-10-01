@@ -1,5 +1,6 @@
 -- Name of the game
 GAMENAME = "stronghold"
+SAVE_FILE_NAME = "save"
 
 -- World resolution
 WORLDRES_X = 480

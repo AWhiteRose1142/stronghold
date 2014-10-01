@@ -3,7 +3,7 @@ local class = require 'libs/middleclass'
 Wall = class('wall')
 local WORLDHEIGHT_HEALTH_RATIO = 3.125
 
-function Wall:initialize( height, position, layer )
+function Wall:initialize( height, position, layer, health )
   local x, y = unpack( position )
   self.height = height
   self.health = 32 + ( height * 50 )
@@ -42,6 +42,13 @@ function Wall:initialize( height, position, layer )
   self.topProp:setParent( self.transform )
   
   self:initializePhysics( position, height )
+  if health ~= nil then
+    self:damage( self.health - health )
+  end
+  
+  -- Put the wall in the Level's stores
+  table.insert( Level.entities, self )
+  table.insert( Level.playerEntities.walls, self )
 end
 
 function Wall:update()

@@ -22,9 +22,27 @@ local base_objects = {
 
 function Level:initialize( difficulty )
   self.score = 1
+  -- For all entites so we can look them up or update them
+  self.entities = {}
+  -- For all enemy entities
+  self.enemyEntities = {
+    footmen = {},
+    skeletons = {},
+    orks = {},
+  }
+  -- For all entities that belong to the player
+  self.playerEntities = {
+    walls = {},
+    sorcerer = {},
+    tower = {},
+    archers = {},
+  }
+  self.objects = {}
   
   PhysicsManager:initialize( Game.layers.active )
   Gesture:initialize()
+  -- This is mostly for debugging purposes.
+  InputManager:initialize()
   
   self:loadBackground()
   self:loadScene()
@@ -39,6 +57,7 @@ end
 function Level:update()
   -- Doet nu nog niets.
   for key, entity in pairs( self.entities ) do
+    --print( "updating: " .. entity.type )
     entity:update()
   end
   Gesture:update()
@@ -50,38 +69,21 @@ end
 --==================================================
 
 function Level:loadEntities()
-  self.entities = {}
-  self.walls = {}
-  startX = -170  
-  
+  startX = -170
   
   for i = 0, 3 do
-    local wall = Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Game.layers.active )
-    table.insert( self.entities, wall )
-    table.insert( self.walls, wall )
+    Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Game.layers.active )
   end
   
-  table.insert( self.entities, Sorcerer:new( 
-      Level.walls[3]:getTransform(), 
-      { Level.walls[3]:getTopLoc() }, 
-      Game.layers.active, 
-      Game.partitions.active )
+  -- Should be initialized on it's own tower
+  Sorcerer:new( 
+    self.playerEntities.walls[3]:getTransform(), 
+    { self.playerEntities.walls[3]:getTopLoc() }, 
+    Game.layers.active, 
+    Game.partitions.active 
   )
-  table.insert( self.entities, Footman:new( { -100, GROUND_LEVEL }, Game.layers.active ) )
-  --Bolt:new( { 0, 0 }, Game.layers.active )
   
-  
-  timer = MOAITimer.new()
-  timer:setMode( MOAITimer.LOOP )
-  timer:setSpan( 5 )
-  timer:setListener( 
-    MOAITimer.EVENT_TIMER_END_SPAN, 
-    function() Level:footmanSpawner( 1 ) end
-  )
-  timer:start()
-  
-  
-  --Bolt:new( { 10, 10 }, Game.layers.active )
+  Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
@@ -101,7 +103,6 @@ function Level:loadBackground()
 end
 
 function Level:loadScene()
-  self.objects = {}
   for key, attr in pairs( base_objects ) do
     local body = PhysicsManager.world:addBody( attr.type )
     body:setTransform( unpack( attr.position ) )
@@ -116,7 +117,59 @@ end
 
 function Level:footmanSpawner( amount )
   for i = 1, amount do
-    table.insert( self.entities, Footman:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active ) )
+    Footman:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active )
+  end
+end
+
+--==========================================
+-- Loads enemies and player stuff
+--==========================================
+
+function Level:loadEnemies( enemyDefs )
+  for key, def in pairs( enemyDefs.footmen ) do
+    local footman = Footman:new( def.position, Game.layers.active, def.health )
+  end
+  
+  for key, def in pairs( enemyDefs.orks ) do
+    -- make ork
+  end
+  
+  for key, def in pairs( enemyDefs.skeletons ) do
+    -- make skeleton
+  end
+end
+
+function Level:loadPlayer( playerDefs )
+  self.score = playerDefs.stats.score
+  
+  for key, def in pairs( playerDefs.entities.walls ) do
+    Wall:new( def.height, def.position, Game.layers.active, def.health )
+  end
+  
+  for key, def in pairs( playerDefs.entities.archers ) do
+    local archer = Archer:new( def.position, Game.layers.active, def.health )
+  end
+  
+  for key, def in pairs( playerDefs.entities.tower ) do
+    local tower = Tower:new( def.position, Game.layers.active, def.health )
+  end
+  
+  for key, def in pairs( playerDefs.entities.sorcerer ) do
+    local sorcerer = Sorcerer:new( 
+      self.playerEntities.walls[3]:getTransform(), 
+      { self.playerEntities.walls[3]:getTopLoc() },
+      Game.layers.active, 
+      Game.partitions.active    
+    )
+  end
+  
+  if sorcerer ~= nil then
+    Sorcerer:new( 
+      self.playerEntities.walls[3]:getTransform(), 
+      { self.playerEntities.walls[3]:getTopLoc() },
+      Game.layers.active, 
+      Game.partitions.active    
+    )
   end
 end
 
@@ -143,16 +196,126 @@ function Level:destroy()
   PhysicsManager:destroy()
   
   -- Set own variables to nil
-  self.score = 0
+  self.score = nil
   self.initialized = false
 end
 
-function Level:loadLevel()
+function Level:loadLevel( levelDefinition )
+  -- Load the savefile
+  local fullFileName = SAVE_FILE_NAME .. ".lua"
+	local workingDir
+  local saveData = nil
+	
+  -- Code for when we're running this on a device
+	if DEVICE then
+		workingDir = MOAIFileSystem.getWorkingDirectory ()
+		MOAIFileSystem.setWorkingDirectory ( MOAIEnvironment.documentDirectory )
+	end
+	
+	if MOAIFileSystem.checkFileExists ( fullFileName ) then
+    print ("Loading file: " .. fullFileName)
+		local file = io.open ( fullFileName, 'rb' )
+		saveData = dofile ( fullFileName )
+		self.fileexist = true
+	else
+    print ("Savefile does not exist")
+    return
+	end
+
+	if DEVICE then
+		MOAIFileSystem.setWorkingDirectory ( workingDir )
+	end
   
+  -- initialize level
+  self.score = saveData.player.score
+  
+  PhysicsManager:initialize( Game.layers.active )
+  Gesture:initialize()
+  
+  self:loadBackground()
+  self:loadScene()
+  
+  -- instantiate all player entities
+  self:loadPlayer( saveData.player )
+  
+  -- instantiate all new entities
+  self:loadEnemies( saveData.enemyEntities )
+  
+  self.initialized = true
 end
 
 function Level:saveLevel()
+  for key, entity in pairs( self.entities ) do
+    print( "saving: " .. entity.type )
+  end
   
+  local saveDefinition = {}
+  saveDefinition.enemyEntities = {
+    footmen = {},
+    orks = {},
+    skeletons = {},
+  }
+  
+  for key, enemyType in pairs( self.enemyEntities ) do
+    for key, enemy in pairs( enemyType ) do
+      print( "saving enemy: " .. enemy.type )
+      local eDef = {
+        type = enemy.type,
+        health = enemy.health,
+        position = enemy:getPosition(),
+      }
+      local tableType = "notable"
+      if enemy.type == "footman"  then tableType = "footmen"   end
+      if enemy.type == "ork"      then tableType = "orks"      end
+      if enemy.type == "skeleton" then tableType = "skeletons" end
+      table.insert( saveDefinition.enemyEntities[tableType], eDef )
+    end
+  end
+  
+  saveDefinition.player = {    
+    stats = {
+      score = self.score,
+    },
+    entities = {
+      tower = {},
+      sorcerer = {},
+      walls = {},
+      archers = {},
+    },
+  }
+  
+  for key, entityType in pairs( self.playerEntities ) do
+    for key, entity in pairs( entityType ) do
+      local eDef = {
+        type = entity.type,
+        health = entity.health,
+        position = entity:getPosition(),
+      }
+      local tableType = "notable"
+      if entity.type == "wall"   then 
+        eDef.height = entity.height
+        tableType = "walls"   
+      end
+      if entity.type == "archer" then tableType = "archers" end
+      if entity.type == "sorcerer" then tableType = "sorcerer" end
+      if entity.type == "tower" then tableType = "tower" end
+      table.insert( saveDefinition.player.entities[tableType], eDef )
+    end
+  end
+  
+  -- COPIED FILESAVING STUFF
+  -- Filename for the save
+  local fullFileName = SAVE_FILE_NAME .. ".lua"
+	local serializer = MOAISerializer.new ()
+
+	serializer:serialize ( saveDefinition )
+	local gamestateStr = serializer:exportToString ()
+	
+	print ("Saving file: " .. fullFileName)
+	local file = io.open ( fullFileName, 'wb' )
+	file:write ( gamestateStr )
+	file:close ()
+		
 end
 
 --====================================================
