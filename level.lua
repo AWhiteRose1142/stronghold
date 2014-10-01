@@ -83,6 +83,14 @@ function Level:loadEntities()
     Game.partitions.active 
   )
   
+  local archer = Archer:new(
+    { 50, 50 }, 
+    Game.layers.active, 
+    Game.partitions.active 
+  )
+  table.insert( self.playerEntities.archers, archer )
+  self.playerEntities.walls[2]:mountEntity( archer )
+  
   Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
 end
 
