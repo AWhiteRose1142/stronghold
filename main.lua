@@ -12,6 +12,7 @@ require "helpers/sorcerer"
 require "helpers/bolt"
 require "helpers/line"
 require "gesture"
+require "helpers/orc"
 
 --=============================================
 -- Resource types

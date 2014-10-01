@@ -55,6 +55,12 @@ local resource_definitions = {
     tileMapSize = {6, 1},
     width = 16, height = 16,
   },
+  orc = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/Orc.png',
+    tileMapSize = {5, 1},
+    width = 16, height = 16,
+  },
   hudFont = {
     type = RESOURCE_TYPE_FONT,
     fileName = "fonts/tuffy.ttf",

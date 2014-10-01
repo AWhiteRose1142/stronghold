@@ -84,6 +84,7 @@ function Level:loadEntities()
   )
   
   Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
+  Orc:new( { -120, GROUND_LEVEL }, Game.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
@@ -121,6 +122,12 @@ function Level:footmanSpawner( amount )
   end
 end
 
+function Level:orcSpawner( amount )
+  for i = 1, amount do
+    Orc:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active )
+  end
+end
+
 --==========================================
 -- Loads enemies and player stuff
 --==========================================
@@ -131,7 +138,7 @@ function Level:loadEnemies( enemyDefs )
   end
   
   for key, def in pairs( enemyDefs.orks ) do
-    -- make ork
+    local orc = Orc:new( def.position, Game.layers.active, def.health )
   end
   
   for key, def in pairs( enemyDefs.skeletons ) do
@@ -266,7 +273,7 @@ function Level:saveLevel()
       }
       local tableType = "notable"
       if enemy.type == "footman"  then tableType = "footmen"   end
-      if enemy.type == "ork"      then tableType = "orks"      end
+      if enemy.type == "orc"      then tableType = "orks"      end
       if enemy.type == "skeleton" then tableType = "skeletons" end
       table.insert( saveDefinition.enemyEntities[tableType], eDef )
     end
