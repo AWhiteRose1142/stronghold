@@ -29,9 +29,9 @@ function Game:initialize()
   
   --self.corout = MOAICoroutine.new()
   
-  Level:initialize( 1 )
-  HUD:initialize()
-  
+  --Level:initialize( 1 )
+  --HUD:initialize()
+  Upgrade:initialize()
 end
 
 -- setup of layers and partitions
