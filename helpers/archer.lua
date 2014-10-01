@@ -26,6 +26,7 @@ function Archer:initialize( position, layer, partition )
   self.target = nil
   self.layer = layer
   self.aim = 45
+  self.wallOffset = { 0, 11 }
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'archer' )
@@ -47,6 +48,9 @@ function Archer:initialize( position, layer, partition )
   
   -- Setup physics
   self:initializePhysics( position )
+  
+  table.insert( Level.entities, self )
+  table.insert( Level.playerEntities.archers, self )
 end
 
 function Archer:update()

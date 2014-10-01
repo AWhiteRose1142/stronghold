@@ -96,7 +96,7 @@ end
 -- Pass this the entity you want to mount on top of it.
 function Wall:mountEntity( mount )
   local x, y = self:getTopLoc()
-  mount.physics.body:setTransform( x, y + 11 )
+  mount.physics.body:setTransform( x + mount.wallOffset[1], y + mount.wallOffset[2] )
   self.mountedEntity = {
     entity = mount,
     basePos = mount:getPosition(),
