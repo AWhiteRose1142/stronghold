@@ -31,6 +31,11 @@ local resource_definitions = {
     fileName = 'img/ground.png',
     width = 512, height = 64,
   },
+  button = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/button-ph.png',
+    width = 90, height = 30,
+  },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_sheet.png',

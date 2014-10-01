@@ -13,7 +13,8 @@ require "helpers/bolt"
 require "helpers/line"
 require "gesture"
 require "helpers/fireball"
-require "helpers/menu_upgrade"
+require "menu_upgrade"
+require "helpers/button"
 
 --=============================================
 -- Resource types
