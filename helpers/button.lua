@@ -7,8 +7,6 @@ function Button:initialize( placement, layer, count )
   self.textsize = 20
   self.id = count
   
-  --Ik zou een triple art maken per button, locked, unlocked, purchased
-  
   self.deck = ResourceManager:get( 'button' )
   self.prop = MOAIProp2D.new()
   self.prop:setDeck( self.deck )
@@ -20,4 +18,13 @@ end
 --Used to change text on button
 function Button:changeText()
   --
+end
+
+function Button:wasClicked()
+  local location = MOAIInputMgr.device.pointer:getLoc()
+  if self.prop:inside( self, location) then
+    print (self.id)
+    return true
+  end
+  return false
 end

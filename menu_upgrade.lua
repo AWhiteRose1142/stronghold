@@ -3,7 +3,7 @@ module ( "Upgrade", package.seeall )
 MOAIInputMgr.device.mouseLeft:setCallback( 
   function( isMouseDown )
     if MOAIInputMgr.device.mouseLeft:isDown() then
-      Upgrade:tapped()
+      Upgrade:clicked()
     end
   end)
 
@@ -15,16 +15,19 @@ function Upgrade:initialize()
     for b = 1, 4 do
       local button = Button:new( { (b * 180), (a * 90) }, Game.layers.user, self.buttonCount )
       table.insert( self.entities, button )
-      buttonCount = self.buttonCount + 1
+      self.buttonCount = self.buttonCount + 1
     end
   end
   self:loadProgress()
 end
 
-function Upgrade:tapped()
-  local button = self.entities:propForPoint( MOAIInputMgr.device.pointer:getLoc() )
-  local upgrade = button.id
-  print ( upgrade )
+function Upgrade:clicked()
+  print "er is geklikt op: "
+  --check all wasClicked functions
+  for key, entity in pairs( self.entities ) do
+    --print( "updating: " .. entity.type )
+    entity:wasClicked()
+  end
 end
 
 function Upgrade:loadProgress()
