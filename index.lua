@@ -45,7 +45,7 @@ local resource_definitions = {
   goblin = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/Goblin.png',
-    tileMapSize = {7, 1},
+    tileMapSize = {9, 1},
     width = 16, height = 16,
   },
   footman = {

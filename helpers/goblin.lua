@@ -9,15 +9,9 @@ local animationDefinitions = {
     time = 0.2,
     mode = MOAITimer.LOOP
   },
-  piss = {
+  attack = {
     startFrame = 5,
     frameCount = 3,
-    time = 0.2,
-    mode = MOAITimer.LOOP
-  },
-  attack = {
-    startFrame = 6,
-    frameCount = 2,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
