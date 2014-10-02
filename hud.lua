@@ -20,7 +20,7 @@ end
 function HUD:initializeDebugHud()
   self.font = MOAIFont.new()
   self.font = ResourceManager:get( "hudFont" )
-  self.score = self:newDebugTextBox( 30, { 10, 10, 100, 50 } )
+  self.score = self:newDebugTextBox( 30, { 10, 10, 200, 50 } )
 end
 
 function HUD:newDebugTextBox( size, rectangle )
