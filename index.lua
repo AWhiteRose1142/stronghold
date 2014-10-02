@@ -34,7 +34,7 @@ local resource_definitions = {
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_sheet.png',
-    tileMapSize = {4, 1},
+    tileMapSize = {5, 1},
     width = 16, height = 16,
   },
   footman = {
@@ -58,6 +58,12 @@ local resource_definitions = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/sorcerer_sheet.png',
     tileMapSize = {6, 1},
+    width = 16, height = 16,
+  },
+  orc = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/orc_sheet.png',
+    tileMapSize = {9, 1},
     width = 16, height = 16,
   },
   hudFont = {

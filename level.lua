@@ -28,7 +28,7 @@ function Level:initialize( difficulty )
   self.enemyEntities = {
     footmen = {},
     skeletons = {},
-    orks = {},
+    orcs = {},
   }
   -- For all entities that belong to the player
   self.playerEntities = {
@@ -76,14 +76,19 @@ function Level:loadEntities()
   end
   
   -- Should be initialized on it's own tower
-  Sorcerer:new( 
-    self.playerEntities.walls[3]:getTransform(), 
-    { self.playerEntities.walls[3]:getTopLoc() }, 
+  Sorcerer:new( { 0, 0 }, Game.layers.active )
+  
+  local archer = Archer:new(
+    { 50, 50 }, 
     Game.layers.active, 
     Game.partitions.active 
   )
+  table.insert( self.playerEntities.archers, archer )
+  self.playerEntities.walls[2]:mountEntity( archer )
+  self.playerEntities.walls[4]:mountEntity( self.playerEntities.sorcerer[1] )
   
   Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
+  Orc:new( { -80, GROUND_LEVEL }, Game.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
@@ -121,6 +126,12 @@ function Level:footmanSpawner( amount )
   end
 end
 
+function Level:orcSpawner( amount )
+  for i = 1, amount do
+    Orc:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active )
+  end
+end
+
 --==========================================
 -- Loads enemies and player stuff
 --==========================================
@@ -130,8 +141,8 @@ function Level:loadEnemies( enemyDefs )
     local footman = Footman:new( def.position, Game.layers.active, def.health )
   end
   
-  for key, def in pairs( enemyDefs.orks ) do
-    -- make ork
+  for key, def in pairs( enemyDefs.orcs ) do
+    local orc = Orc:new( def.position, Game.layers.active, def.health )
   end
   
   for key, def in pairs( enemyDefs.skeletons ) do
@@ -252,7 +263,7 @@ function Level:saveLevel()
   local saveDefinition = {}
   saveDefinition.enemyEntities = {
     footmen = {},
-    orks = {},
+    orcs = {},
     skeletons = {},
   }
   
@@ -266,7 +277,7 @@ function Level:saveLevel()
       }
       local tableType = "notable"
       if enemy.type == "footman"  then tableType = "footmen"   end
-      if enemy.type == "ork"      then tableType = "orks"      end
+      if enemy.type == "orc"      then tableType = "orcs"      end
       if enemy.type == "skeleton" then tableType = "skeletons" end
       table.insert( saveDefinition.enemyEntities[tableType], eDef )
     end

@@ -7,6 +7,7 @@ function Wall:initialize( height, position, layer, health )
   local x, y = unpack( position )
   self.height = height
   self.health = 32 + ( height * 50 )
+  self.baseHealth = self.health
   self.baseX, self.baseY = x, y
   self.type = "wall"
   self.layer = layer
@@ -52,15 +53,26 @@ function Wall:initialize( height, position, layer, health )
 end
 
 function Wall:update()
+  local x, y = self.physics.body:getPosition()
+  local heightDecrease = ( self.baseHealth - self.health ) / WORLDHEIGHT_HEALTH_RATIO
+  self.physics.body:setTransform( x, self.baseY - heightDecrease  )
+  
+  if self.mountedEntity then
+    self.mountedEntity.entity.physics.body:setTransform( self.mountedEntity.basePos[1], self.mountedEntity.basePos[2] - heightDecrease )
+  end
+  
   if self.health <= 0 then
+    -- Maybe allow the archer to defend itself after it has been killed?
+    if self.mountedEntity then self.mountedEntity.entity:destroy() end
     x, y = self.physics.body:getPosition()
-    self.physics.body:setTransform( x, y - ( 17 + ( self.height * 16 ) ) )
+    self.physics.body:setTransform( x, y - ( 10 + ( self.height * 16 ) ) )
+    self:destroy()
   end
 end
 
 function Wall:damage( damage )
   self.health = ( self.health - damage )
-  self.transform:addLoc( 0, - ( damage / WORLDHEIGHT_HEALTH_RATIO ) )
+  
   if self.health <= 0 then
     print( "this wall is destroyed" )
   end
@@ -76,14 +88,26 @@ function Wall:getTransform()
 end
 
 function Wall:getTopLoc()
-  return self.topProp:getLoc()
+  local bX, bY = self.physics.body:getPosition()
+  local tX, tY = self.topProp:getLoc()
+  return ( tX + bX ), ( bY + tY )
+end
+
+-- Pass this the entity you want to mount on top of it.
+function Wall:mountEntity( mount )
+  local x, y = self:getTopLoc()
+  mount.physics.body:setTransform( x + mount.wallOffset[1], y + mount.wallOffset[2] )
+  self.mountedEntity = {
+    entity = mount,
+    basePos = mount:getPosition(),
+  }
 end
 
 function Wall:initializePhysics( position, height )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -8, -8, 8, 16 * height )
+  self.physics.fixture = self.physics.body:addRect( -8, -8, 8, 7 + ( 16 * height ) )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
   self.transform:setParent( self.physics.body )

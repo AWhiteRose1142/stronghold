@@ -11,8 +11,9 @@ require "helpers/footman"
 require "helpers/sorcerer"
 require "helpers/bolt"
 require "helpers/line"
+require "helpers/archer"
 require "gesture"
-require "helpers/fireball"
+require "helpers/orc"
 
 --=============================================
 -- Resource types
