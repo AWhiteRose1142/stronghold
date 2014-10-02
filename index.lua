@@ -21,6 +21,11 @@ local resource_definitions = {
     fileName = 'img/background.png', 
     width = 256, height = 128,
   },
+  mainMenuBackground = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/main_bg.png', 
+    width = 256, height = 128,
+  },
   groundTile = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/ground_tile.png',
@@ -30,6 +35,11 @@ local resource_definitions = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/ground.png',
     width = 512, height = 64,
+  },
+  buttonPH = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/button_ph.png',
+    width = 32, height = 16,
   },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,

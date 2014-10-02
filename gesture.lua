@@ -19,19 +19,12 @@ UP_RIGHT   = 6
 DOWN_LEFT  = 7
 DOWN_RIGHT = 8
 
-function Gesture:initialize()
+function Gesture:initialize( layers, partitions )
   
-  -- Register callbacks
-  if MOAIInputMgr.device.pointer then
-    MOAIInputMgr.device.mouseLeft:setCallback(
-      function( isMouseDown )
-        -- Mouse down
-        if MOAIInputMgr.device.mouseLeft:isDown() then Gesture:onMouseDown() end
-        -- Mouse up
-        if MOAIInputMgr.device.mouseLeft:isUp() then Gesture:onMouseUp() end
-      end
-    )
-  end
+  self.layers = layers
+  self.partitions = partitions
+  self.initialized = true
+  
 end
 
 --======================================================
@@ -41,7 +34,7 @@ end
 function Gesture:update()
   if MOAIInputMgr.device.mouseLeft:isDown() then
     if Gesture.line ~= nil then
-      local newX, newY = Gesture:getMouseLocation( Game.layers.active )
+      local newX, newY = Gesture:getMouseLocation( self.layers.active )
       --print( "tracking a gesture" )
       Gesture:trackGesture( newX, newY )
     end
@@ -54,11 +47,11 @@ end
 
 function Gesture:onMouseDown()
   --Gesture:trackSwipe()
-  local newX, newY = Gesture:getMouseLocation( Game.layers.active )
+  local newX, newY = Gesture:getMouseLocation( self.layers.active )
   
   if Gesture.line == nil then
     print( "making a new line" )
-    Gesture.line = Line:new( { newX, newY }, Game.layers.user )
+    Gesture.line = Line:new( { newX, newY }, self.layers.user )
   else
     print( "tracking a gesture" )
     Gesture:trackGesture( newX, newY )
@@ -68,7 +61,7 @@ end
 
 function Gesture:onMouseUp()
   print( "mouse is up, stopping gesture tracking" )
-  local mouseX, mouseY = Gesture:getMouseLocation( Game.layers.active )
+  local mouseX, mouseY = Gesture:getMouseLocation( self.layers.active )
   local n = table.getn( Gesture.gestureTable )
   
   Gesture:determineCombo()
@@ -172,7 +165,7 @@ end
 
 function Gesture:click()
   -- calls if IsMouseDown
-  clickEntity = Gesture:pickEntity(Gesture:getMouseLocation(Game.layers.active))
+  clickEntity = Gesture:pickEntity(Gesture:getMouseLocation(self.layers.active))
   if(clickEntity ~= nil) then
     --clickEntity:action()
     print "entity attacks"
@@ -181,7 +174,7 @@ end
 
 -- Picks the entity at coordinates x & y
 function Gesture:pickEntity( x, y )
-  local obj = Game.partitions.active.propForPoint( Game.partitions.active, Gesture:getMouseLocation(Game.layers.active))
+  local obj = self.partitions.active.propForPoint( self.partitions.active, Gesture:getMouseLocation(self.layers.active))
   for key, entity in pairs(Level.entities) do
     if entity.prop == obj then
       return entity
@@ -204,4 +197,5 @@ function Gesture:destroy()
   if Gesture.line ~= nil then Gesture.line:destroy() end
   Gesture.line = nil
   Gesture.gestureTable = nil
+  Gesture.initialized = false
 end
