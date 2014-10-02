@@ -59,6 +59,11 @@ local resource_definitions = {
     tileMapSize = {2, 1},
     width = 16, height = 16,
   },
+  fireball = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = "FireBall.png",
+    width = 16, height = 16,
+  },
   sorcerer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/sorcerer_sheet.png',

@@ -15,16 +15,24 @@ function InputManager:initialize ()
         Level:saveLevel()
         Level:destroy()
       end
+      
       if key == 50 and down == false then 
         Level:loadLevel()
       end
+      
+      if key == 51 and down == false then
+        Level.Sorcerer:fireball(Gesture:getMouseLocation(Game.layers.active))
+      end
+      
       if key == 100 and down == false then 
         
       end
+      
       -- Numpad 7
       if key == 55 and down == false then 
         Game:startNewState( "level" )
       end
+      
       -- Numpad 8
       if key == 56 and down == false then 
         Game:startNewState( "mainmenu" )
