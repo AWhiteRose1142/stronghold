@@ -28,7 +28,7 @@ function Level:initialize( difficulty )
   self.enemyEntities = {
     footmen = {},
     skeletons = {},
-    orks = {},
+    orcs = {},
   }
   -- For all entities that belong to the player
   self.playerEntities = {
@@ -137,7 +137,7 @@ function Level:loadEnemies( enemyDefs )
     local footman = Footman:new( def.position, Game.layers.active, def.health )
   end
   
-  for key, def in pairs( enemyDefs.orks ) do
+  for key, def in pairs( enemyDefs.orcs ) do
     local orc = Orc:new( def.position, Game.layers.active, def.health )
   end
   
@@ -259,7 +259,7 @@ function Level:saveLevel()
   local saveDefinition = {}
   saveDefinition.enemyEntities = {
     footmen = {},
-    orks = {},
+    orcs = {},
     skeletons = {},
   }
   
@@ -273,7 +273,7 @@ function Level:saveLevel()
       }
       local tableType = "notable"
       if enemy.type == "footman"  then tableType = "footmen"   end
-      if enemy.type == "orc"      then tableType = "orks"      end
+      if enemy.type == "orc"      then tableType = "orcs"      end
       if enemy.type == "skeleton" then tableType = "skeletons" end
       table.insert( saveDefinition.enemyEntities[tableType], eDef )
     end

@@ -57,7 +57,7 @@ local resource_definitions = {
   },
   orc = {
     type = RESOURCE_TYPE_TILED_IMAGE,
-    fileName = 'img/Orc.png',
+    fileName = 'img/orc_sheet.png',
     tileMapSize = {9, 1},
     width = 16, height = 16,
   },

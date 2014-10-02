@@ -61,7 +61,7 @@ function Orc:initialize( position, layer, health )
   --self:startAnimation( "electrocute" )
   self:move( -1 )
   table.insert( Level.entities, self )
-  table.insert( Level.enemyEntities.orks, self )
+  table.insert( Level.enemyEntities.orcs, self )
 end
 
 function Orc:update()
