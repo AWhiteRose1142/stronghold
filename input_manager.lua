@@ -20,6 +20,26 @@ function InputManager:initialize ()
     if key == 51 and down == false then
       Level.Sorcerer:fireball(Gesture:getMouseLocation(Game.layers.active))
     end
+    if key == 52 and down == false then
+      for key, entity in pairs( Level.playerEntities.archers ) do
+        entity:setAim(5)
+      end
+    end
+    if key == 53 and down == false then
+      for key, entity in pairs( Level.playerEntities.archers ) do
+        entity:setAim(-5)
+      end
+    end
+    if key == 54 and down == false then
+      for key, entity in pairs( Level.playerEntities.archers ) do
+        entity:setStrength(5)
+      end
+    end
+    if key == 55 and down == false then
+      for key, entity in pairs( Level.playerEntities.archers ) do
+        entity:setStrength(-5)
+      end
+    end
     if key == 100 then 
       
     end

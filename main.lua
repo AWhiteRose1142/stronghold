@@ -14,6 +14,9 @@ require "helpers/line"
 require "helpers/archer"
 require "gesture"
 require "helpers/orc"
+require "helpers/arrow"
+require "helpers/goblin"
+require "helpers/crossbolt"
 
 --=============================================
 -- Resource types

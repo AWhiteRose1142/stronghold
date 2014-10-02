@@ -27,7 +27,7 @@ function Level:initialize( difficulty )
   -- For all enemy entities
   self.enemyEntities = {
     footmen = {},
-    skeletons = {},
+    goblin = {},
     orcs = {},
   }
   -- For all entities that belong to the player
@@ -87,8 +87,9 @@ function Level:loadEntities()
   self.playerEntities.walls[2]:mountEntity( archer )
   self.playerEntities.walls[4]:mountEntity( self.playerEntities.sorcerer[1] )
   
-  Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
-  Orc:new( { -80, GROUND_LEVEL }, Game.layers.active )
+  --Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
+  --Orc:new( { -80, GROUND_LEVEL }, Game.layers.active )
+  Goblin:new( { -60, GROUND_LEVEL }, Game.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
@@ -145,8 +146,8 @@ function Level:loadEnemies( enemyDefs )
     local orc = Orc:new( def.position, Game.layers.active, def.health )
   end
   
-  for key, def in pairs( enemyDefs.skeletons ) do
-    -- make skeleton
+  for key, def in pairs( enemyDefs.goblins ) do
+    -- make goblin
   end
 end
 
@@ -264,7 +265,7 @@ function Level:saveLevel()
   saveDefinition.enemyEntities = {
     footmen = {},
     orcs = {},
-    skeletons = {},
+    goblins = {},
   }
   
   for key, enemyType in pairs( self.enemyEntities ) do
@@ -278,7 +279,7 @@ function Level:saveLevel()
       local tableType = "notable"
       if enemy.type == "footman"  then tableType = "footmen"   end
       if enemy.type == "orc"      then tableType = "orcs"      end
-      if enemy.type == "skeleton" then tableType = "skeletons" end
+      if enemy.type == "goblin" then tableType = "goblins" end
       table.insert( saveDefinition.enemyEntities[tableType], eDef )
     end
   end

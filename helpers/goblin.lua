@@ -1,44 +1,48 @@
 local class = require 'libs/middleclass'
 
-Archer = class('archer')
-
---To fire arrow, use this code
---table.insert(Level.entities, Arrow:new( self:getPosition(), self.layer, self.aim, self.strength)) 
-
+Goblin = class('goblin')
 
 local animationDefinitions = {
-  stand = {
+  walk = {
     startFrame = 1,
-    frameCount = 1,
+    frameCount = 4,
+    time = 0.2,
+    mode = MOAITimer.LOOP
+  },
+  piss = {
+    startFrame = 5,
+    frameCount = 3,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
   attack = {
-    startFrame = 2,
-    frameCount = 4,
-    time = 0.25,
+    startFrame = 6,
+    frameCount = 2,
+    time = 0.2,
+    mode = MOAITimer.LOOP
+  },
+  electrocute = {
+    startFrame = 8,
+    frameCount = 2,
+    time = 0.1,
     mode = MOAITimer.LOOP
   },
 }
 
-function Archer:initialize( position, layer, partition )
-  self.isBusy = false
-  self.health = 10
-  self.strength = 10
-  self.type = "archer"
+function Goblin:initialize( position, layer, health )
+  self.health = 6
+  self.type = "goblin"
   self.timer = nil
   self.target = nil
   self.layer = layer
-  self.aim = 45
-  self.wallOffset = { 0, 11 }
+  self.range = 120
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
-  self.deck = ResourceManager:get( 'archer' )
+  self.deck = ResourceManager:get( 'goblin' )
   
   -- Make the prop
   self.prop = MOAIProp2D.new()
   self.prop:setDeck( self.deck )
-  self.prop:setRot( (self.aim / 2) )
   layer:insertProp( self.prop )
   
   -- Initialize animations
@@ -54,81 +58,142 @@ function Archer:initialize( position, layer, partition )
   -- Setup physics
   self:initializePhysics( position )
   
+  -- For loading a footman with certain amount of health.
+  if health ~= nil then
+    self:damage( self.health - health )
+  end
+    
+  -- Code for testing
+  --self:startAnimation( "electrocute" )
+  self:move( -1 )
   table.insert( Level.entities, self )
-  table.insert( Level.playerEntities.archers, self )
+  table.insert( Level.enemyEntities.footmen, self )
 end
 
-function Archer:update()
-  self:attack()
-  self.prop:setRot( (self. aim / 5) )
+function Goblin:update()
+  for key, entity in pairs( Level.playerEntities.archers ) do
+    if self:inRange( entity ) then
+      self.target = entity
+      self:attack()
+    end
+  end
+  
+  for key, entity in pairs( Level.playerEntities.walls ) do
+    if self:inRange( entity ) then
+      self.target = entity
+      self:attack()
+    end
+  end
+  
+  if self.target == nil then
+    self:move( -1 )
+  end
+  
   if self.health <= 0 then
     self:destroy()
   end
 end
 
-function Archer:getPosition()
+function Goblin:getPosition()
   local thisX, thisY = self.physics.body:getPosition()
   return { thisX, thisY }
 end
 
-function Archer:getTransform()
+function Goblin:getTransform()
   return self.physics.body.transform
+end
+
+function Goblin:inRange( entity )
+  local ex, ey = unpack( entity:getPosition() )
+  local gx, gy = unpack( self:getPosition() )
+  local dx = math.abs(gx - ex)
+  local dy = math.abs(gy - ey)
+  if (dx + dy) <= self.range then
+    return true
+  end
+  return false
 end
 
 --===========================================
 -- Actions
 --===========================================
 
-function Archer:attack( )
+function Goblin:move( direction )
+  self.prop:setScl( -direction, 1 )
+  velX, velY = self.physics.body:getLinearVelocity()
+  self.physics.body:setLinearVelocity( direction * 10, velY )
+  
+  if ( self.currentAnimation ~= self:getAnimation ( 'walk' ) ) and not self.attacking then
+    self:startAnimation ( 'walk' )
+  end
+end
+
+function Goblin:stopMoving()
+  self.physics.body:setLinearVelocity ( 0, 0 )
+  self:stopCurrentAnimation()
+end
+
+function Goblin:attack( )
   if self.timer ~= nil then
-    --DO NOTHING 
+    --DO NOTHING
   else
     self.timer = MOAITimer.new()
     self.timer:setMode( MOAITimer.LOOP )
-    self.timer:setSpan( 2 )
+    self.timer:setSpan( 0.6 )
     self.timer:setListener( 
-    MOAITimer.EVENT_TIMER_END_SPAN, 
-      bind( self, "attack" ) )
+      MOAITimer.EVENT_TIMER_END_SPAN,
+      bind( self, "attack" )
+    )
     self.timer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
-      function()
-        table.insert(Level.entities, Arrow:new( self:getPosition(), self.layer, self.aim, self.strength))
+    function()
+        table.insert(Level.entities, Crossbolt:new( self:getPosition(), self.layer, 45, 10 ))
       end)
+    self:stopMoving()
     self:startAnimation( "attack" )
     self.timer:start()
   end
 end
 
-function Archer:damage( damage )
+function Goblin:damage( damage )
   self.health = self.health - damage
   if self.health <= 0 then
-    print( "the archer is dead" )
+    print( "the goblin is dead" )
   end
 end
 
---Rotates the archer as much as the device location differs in Y value (height)
-function Archer:setAim( aim )
-  self.aim = self.aim + aim
-end
-
-function Archer:setStrength( strength )
-  self.strength = self.strength + strength
+function Goblin:electrocute()
+  print( "electrocuting" )
+  self:stopMoving()
+  self:startAnimation("electrocute")
+  if self.timer ~= nil then 
+    self.timer:stop()
+    self.timer = nil
+  end
+  self.timer = MOAITimer.new()
+  self.timer:setMode( MOAITimer.NORMAL )
+  self.timer:setSpan( 2 )
+  self.timer:setListener( 
+    MOAITimer.EVENT_TIMER_END_SPAN,
+    bind( self, "destroy" )
+  )
+  self.timer:start()
 end
 
 --===========================================
 -- Animation control
 --===========================================
 
-function Archer:getAnimation( name )
+function Goblin:getAnimation( name )
   return self.animations[name]
 end
 
-function Archer:stopCurrentAnimation()
+function Goblin:stopCurrentAnimation()
   if self.currentAnimation then
     self.currentAnimation:stop()
   end
 end
 
-function Archer:startAnimation( name )
+function Goblin:startAnimation( name )
   self:stopCurrentAnimation()
   self.currentAnimation = self:getAnimation( name )
   self.currentAnimation:start()
@@ -139,7 +204,7 @@ end
 -- Event handlers
 --===========================================
 
-function Archer:onCollide( phase, fixtureA, fixtureB, arbiter )
+function Goblin:onCollide( phase, fixtureA, fixtureB, arbiter )
   print( "boop!" )
   
   local entityB = Level:getEntityFromFixture( fixtureB )
@@ -156,10 +221,10 @@ end
 -- Utility functions, consider these private
 --===========================================
 
-function Archer:destroy()
+function Goblin:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Level.score = Level.score - 10
-  print( "destroying an archer" )
+  Level.score = Level.score + 10
+  print( "destroying a goblin" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
   --PhysicsHandler:sceduleForRemoval( self.physics.body )
@@ -170,18 +235,20 @@ function Archer:destroy()
   Level:removeEntity( self )
 end
 
-function Archer:initializePhysics( position )
+function Goblin:initializePhysics( position )
   self.physics = {}
-  self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
+  self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
   self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  -- Cat, mask, group
+  self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )
-  
-  --self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
+
+  self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
   --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 
-function Archer:addAnimation( name, startFrame, frameCount, time, mode )
+function Goblin:addAnimation( name, startFrame, frameCount, time, mode )
   -- This curve is going to do shit, yo
   local curve = MOAIAnimCurve.new()
   -- Reserve start and end keys
