@@ -11,20 +11,21 @@ local animationDefinitions = {
   },
 }
 
-function Sorcerer:initialize( parent, position, layer, partition )
+function Sorcerer:initialize( position, layer )
   local x, y = unpack( position )
   self.type = "sorcerer"
   self.layer = layer
-  self.partition = partition
+  -- ability scores (for now)
+  self.health = 15
+  self.damage = 10
+  -- Offset for when placing this on a wall
+  self.wallOffset = { 3, 12 }
   
   self.deck = ResourceManager:get( 'sorcerer' )
-  self.transform = parent
   
   self.prop = MOAIProp2D.new()
   self.prop:setDeck( self.deck )
-  self.prop:setLoc( ( x + 2 ), ( y + 12 ) )
-  self.prop:setParent( parent )
-  self.partition:insertProp( self.prop )
+  layer:insertProp( self.prop )
   
   -- Initialize animations
   self.remapper = MOAIDeckRemapper.new()
@@ -36,12 +37,7 @@ function Sorcerer:initialize( parent, position, layer, partition )
     self:addAnimation( name, def.startFrame, def.frameCount, def.time, def.mode )
   end
   
-  -- ability scores (for now)
-  self.health = 15
-  self.damage = 10
-  
-  --layer:insertProp( self.prop )
-  self:initializePhysics()
+  self:initializePhysics( position )
   
   table.insert( Level.entities, self )
   table.insert( Level.playerEntities.sorcerer, self )
@@ -52,12 +48,16 @@ function Sorcerer:update()
   if Gesture.gestureTable ~= nil then
     self:cast()
   end
+  
+  if self.health <= 0 then
+    self:destroy()
+    -- Should probably call a game over too
+  end
 end
 
 function Sorcerer:getPosition()
-  local x1, y1 = self.transform:getLoc()
-  local x2, y2 = self.prop:getLoc()
-  return { (x1 + x2), (y1 + y2) }
+  local thisX, thisY = self.physics.body:getPosition()
+  return { thisX, thisY }
 end
 
 function Sorcerer:getTransform()
@@ -75,9 +75,15 @@ function Sorcerer:cast()
   return true
 end
 
-function Sorcerer:initializePhysics()
+function Sorcerer:initializePhysics( position )
   self.physics = {}
-  self.physics.fixture = nil
+  self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
+  self.physics.body:setTransform( unpack( position ) )
+  self.physics.fixture = self.physics.body:addRect( -8, -8, 3, 8 )
+  self.prop:setParent( self.physics.body )
+  
+  --self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
+  --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 
 --================================================
@@ -85,7 +91,8 @@ end
 --================================================
 
 function Sorcerer:destroy()
-  self.partition:removeProp( self.prop )
+  self.layer:removeProp( self.prop )
+  self.physics.body:setTransform( 0, -1000 )
   Level:removeEntity( self )
 end
 

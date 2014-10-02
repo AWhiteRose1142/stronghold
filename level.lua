@@ -76,12 +76,16 @@ function Level:loadEntities()
   end
   
   -- Should be initialized on it's own tower
-  Sorcerer:new( 
-    self.playerEntities.walls[3]:getTransform(), 
-    { self.playerEntities.walls[3]:getTopLoc() }, 
+  Sorcerer:new( { 0, 0 }, Game.layers.active )
+  
+  local archer = Archer:new(
+    { 50, 50 }, 
     Game.layers.active, 
     Game.partitions.active 
   )
+  table.insert( self.playerEntities.archers, archer )
+  self.playerEntities.walls[2]:mountEntity( archer )
+  self.playerEntities.walls[4]:mountEntity( self.playerEntities.sorcerer[1] )
   
   Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
   Orc:new( { -80, GROUND_LEVEL }, Game.layers.active )
