@@ -16,9 +16,9 @@ function Fireball:initialize( position, layer, strength, direction )
   self.strength = strength
   self.type = "fireball"
   self.timer = nil
-  self.target = nil
   self.layer = layer
   self.target = target
+  self.remove = false
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( "fireball" )
@@ -47,13 +47,15 @@ function Fireball:initialize( position, layer, strength, direction )
   dY = dY * 50
   self.physics.body:setLinearVelocity( dX, dY )
   table.insert( Level.entities, self )
-  table.insert( Level.objects, self )
+  -- Waarom toevoegen aan de objects?
+  --table.insert( Level.objects, self )
+  
+  self:startAnimation ( 'burn' )
 end
 
 function Fireball:update()
-  -- Makes sure animation is always 'burn'
-  if ( self.currentAnimation ~= self:getAnimation ( 'burn' ) ) and not self.attacking then
-    self:startAnimation ( 'burn' )
+  if self.remove == true then 
+    self:destroy() 
   end
 end
 
@@ -64,50 +66,6 @@ end
 
 function Fireball:getTransform()
   return self.physics.body.transform
-end
-
---===========================================
--- Actions
---===========================================
-
-function Fireball:move( direction )
-  self.prop:setScl( -direction, 1 )
-  velX, velY = self.physics.body:getLinearVelocity()
-  self.physics.body:setLinearVelocity( direction * 10, velY )
-end
-
-function Fireball:stopMoving()
-  self.physics.body:setLinearVelocity ( 0, 0 )
-  self:stopCurrentAnimation()
-end
-
-function Fireball:attack( )
-  if self.target.health >= 0 then
-    if self.timer ~= nil then
-      self.target:damage( self.strength )
-    else
-      self.timer = MOAITimer.new()
-      self.timer:setMode( MOAITimer.LOOP )
-      self.timer:setSpan( 0.6 )
-      self.timer:setListener( 
-        MOAITimer.EVENT_TIMER_END_SPAN,
-        bind( self, "attack" )
-      )
-      self.timer:start()
-      self:stopMoving()
-      self.target:damage( self.strength )
-      self:startAnimation( "burn" )
-    end
-  else
-    self:move( -1 )
-    self.timer:stop()
-    self.timer = nil
-    self.target = nil
-  end
-end
-
-function Fireball:damage( damage )
-  --does nothing
 end
 
 --===========================================
@@ -142,8 +100,8 @@ function Fireball:onCollide( phase, fixtureA, fixtureB, arbiter )
   if entityB ~= nil then
     if entityB.type == "orc" or entityB.type == "footman" then
       print( "burn baby!" )
-      self.target = entityB
-      self:attack( )
+      entityB:damage( 5 )
+      self.remove = true
     end
   end
 end
@@ -154,12 +112,8 @@ end
 
 function Fireball:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Level.score = Level.score + 10
-  print( "destroying a Fireball" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
-  --PhysicsHandler:sceduleForRemoval( self.physics.body )
-  --self.physics.body:destroy()
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
@@ -170,13 +124,13 @@ function Fireball:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -1, -5, 5, 5 )
+  self.physics.fixture = self.physics.body:addRect( -5, -4, 5, 5 )
+  self.physics.fixture:setSensor( true )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
-  --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 
 function Fireball:addAnimation( name, startFrame, frameCount, time, mode )

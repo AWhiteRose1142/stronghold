@@ -401,8 +401,14 @@ end
 function Level:removeEntity( killMe )
   for i = 1, table.getn( self.entities ) do
     if self.entities[i] == killMe then
-      self.entities[i] = nil
+      table.remove( self.entities, i )
     end
+  end
+end
+
+function Level:printEntities()
+  for key, entity in pairs( self.entities ) do
+    print( entity.type )
   end
 end
 
