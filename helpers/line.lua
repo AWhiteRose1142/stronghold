@@ -52,6 +52,10 @@ function Line:getPoints()
   return self.points
 end
 
+function Line:getLastPoint()
+  return self.points[ table.getn( self.points ) ]
+end
+
 function Line:destroy()
   self.layer:removeProp( self.prop )
 end

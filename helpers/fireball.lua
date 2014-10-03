@@ -6,12 +6,12 @@ local animationDefinitions = {
   burn = {
     startFrame = 1,
     frameCount = 2,
-    time = 0.2,
+    time = 0.1,
     mode = MOAITimer.LOOP
   },
 }
 
-function Fireball:initialize( position, layer, strength, target )
+function Fireball:initialize( position, layer, strength, direction )
   self.health = 6
   self.strength = strength
   self.type = "fireball"
@@ -21,7 +21,7 @@ function Fireball:initialize( position, layer, strength, target )
   self.target = target
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
-  self.deck = ResourceManager:get( 'fireball' )
+  self.deck = ResourceManager:get( "fireball" )
   
   -- Make the prop
   self.prop = MOAIProp2D.new()
@@ -42,8 +42,10 @@ function Fireball:initialize( position, layer, strength, target )
   self:initializePhysics( position )
     
   -- Code for testing
-  local t1, t2 = unpack( target )
-  self.physics.body:applyLinearImpulse( -1 )
+  local dX, dY = unpack( direction )
+  dX = dX * 50
+  dY = dY * 50
+  self.physics.body:setLinearVelocity( dX, dY )
   table.insert( Level.entities, self )
   table.insert( Level.objects, self )
 end
@@ -168,9 +170,9 @@ function Fireball:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -1, -5, 5, 5 )
   -- Cat, mask, group
-  self.physics.fixture:setFilter( 0x02, 0x04 )
+  self.physics.fixture:setFilter( 0x04, 0x02 )
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )

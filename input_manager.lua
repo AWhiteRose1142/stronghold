@@ -24,8 +24,9 @@ function InputManager:initialize ()
         Level.Sorcerer:fireball(Gesture:getMouseLocation(Game.layers.active))
       end
       
-      if key == 100 and down == false then 
-        
+      -- Numpad 6
+      if key == 54 and down == false then 
+        Fireball:new( { 0, 0 }, Level.layers.active, 10, { 5, -5 } )
       end
       
       -- Numpad 7

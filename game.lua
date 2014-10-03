@@ -31,7 +31,7 @@ function Game:initialize()
   -- Load the resource definitions
   Index:loadDefinitions()
   InputManager:initialize()
-  nextState = "mainmenu"
+  nextState = "level"
   
 end
 
