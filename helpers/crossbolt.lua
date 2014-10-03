@@ -11,13 +11,20 @@ local animationDefinitions = {
   },
 }
 
-function Crossbolt:initialize( position, layer, aim, strength )
+function Crossbolt:initialize( position, layer, target, strength )
   self.type = "arrow"
   self.timer = nil
-  self.target = nil
+  self.target = target
   self.layer = layer
   self.strength = strength
-  self.aim = aim
+  
+  local selfx, selfy = unpack( position )
+  local targetx, targety = unpack( self.target:getPosition() )
+  local x = ( targetx - selfx )
+  local y = ( targety - selfy )
+  local length = math.sqrt( ( x * x ) + ( y * y ) )
+  self.pytx = x / length
+  self.pyty = y / length
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'arrow' )
@@ -31,13 +38,13 @@ function Crossbolt:initialize( position, layer, aim, strength )
   self:initializePhysics( position )
     
   -- Code for testing
-  self.physics.body:setLinearVelocity( -(self.strength * 10), self.aim )
+  --self.physics.body:setLinearVelocity( (10 * self.strength * self.pytx), (10 * self.strength * self.pyty) )
   table.insert( Level.entities, self )
   table.insert( Level.objects, self )
 end
 
 function Crossbolt:update()
-  self:move( self.strength )
+  self:move( )
 end
 
 function Crossbolt:getPosition()
@@ -53,9 +60,8 @@ end
 -- Actions
 --===========================================
 
-function Crossbolt:move( direction )
-  velX, velY = self.physics.body:getLinearVelocity()
-  self.physics.body:setLinearVelocity( -(direction * 10), velY )
+function Crossbolt:move( )
+  self.physics.body:setLinearVelocity( (10 * self.strength * self.pytx), -(10 * self.strength * self.pyty) )
 end
 
 function Crossbolt:stopMoving()
@@ -106,9 +112,9 @@ end
 
 function Crossbolt:initializePhysics( position )
   self.physics = {}
-  self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
+  self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -6, -2, 5, 1 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )

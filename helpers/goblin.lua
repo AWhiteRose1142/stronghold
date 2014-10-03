@@ -65,27 +65,31 @@ function Goblin:initialize( position, layer, health )
 end
 
 function Goblin:update()
-  for key, entity in pairs( Level.playerEntities.archers ) do
-    if self:inRange( entity ) then
-      self.target = entity
-      self:attack()
-    end
-  end
-  
-  for key, entity in pairs( Level.playerEntities.walls ) do
-    if self:inRange( entity ) then
-      self.target = entity
-      self:attack()
-    end
-  end
-  
-  if self.target == nil then
+  if self.target  ~= nil then
+    self:attack()
+  elseif self.target == nil then
     self:move( -1 )
+    self.target = self:getTarget()
   end
   
   if self.health <= 0 then
     self:destroy()
   end
+end
+
+function Goblin:getTarget()
+  for key, entity in pairs( Level.playerEntities.archers ) do
+    if self:inRange( entity ) then
+      return entity
+    end
+  end
+  
+  for key, entity in pairs( Level.playerEntities.walls ) do
+    if self:inRange( entity ) then
+      return entity
+    end
+  end
+  return nil
 end
 
 function Goblin:getPosition()
@@ -140,7 +144,7 @@ function Goblin:attack( )
     )
     self.timer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
     function()
-        table.insert(Level.entities, Crossbolt:new( self:getPosition(), self.layer, 45, 10 ))
+        table.insert(Level.entities, Crossbolt:new( self:getPosition(), self.layer, self.target, 10 ))
       end)
     self:stopMoving()
     self:startAnimation( "attack" )
@@ -233,7 +237,7 @@ function Goblin:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 4 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )

@@ -31,7 +31,6 @@ function Arrow:initialize( position, layer, aim, strength )
   self:initializePhysics( position )
     
   -- Code for testing
-  --self.physics.body:setAngularVelocity( (-10 * self.strength) )
   self.physics.body:setLinearVelocity( (self.strength * 10), self.aim )
   table.insert( Level.entities, self )
   table.insert( Level.objects, self )
@@ -109,7 +108,7 @@ function Arrow:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -6, -2, 5, 1 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
   self.prop:setParent( self.physics.body )
