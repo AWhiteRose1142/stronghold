@@ -17,6 +17,7 @@ function Crossbolt:initialize( position, layer, target, strength )
   self.target = target
   self.layer = layer
   self.strength = strength
+  self.remove = false
   
   local selfx, selfy = unpack( position )
   local targetx, targety = unpack( self.target:getPosition() )
@@ -36,15 +37,12 @@ function Crossbolt:initialize( position, layer, target, strength )
   
   -- Setup physics
   self:initializePhysics( position )
-    
-  -- Code for testing
-  --self.physics.body:setLinearVelocity( (10 * self.strength * self.pytx), (10 * self.strength * self.pyty) )
+  
   table.insert( Level.entities, self )
-  table.insert( Level.objects, self )
 end
 
 function Crossbolt:update()
-  self:move( )
+  if self.remove == true then self:destroy() end
 end
 
 function Crossbolt:getPosition()
@@ -54,25 +52,6 @@ end
 
 function Crossbolt:getTransform()
   return self.physics.body.transform
-end
-
---===========================================
--- Actions
---===========================================
-
-function Crossbolt:move( )
-  self.physics.body:setLinearVelocity( (10 * self.strength * self.pytx), -(10 * self.strength * self.pyty) )
-end
-
-function Crossbolt:stopMoving()
-  self.physics.body:setLinearVelocity ( 0, 0 )
-end
-
-function Crossbolt:attack( )
-  if self.target.health >= 0 then
-    self.target:damage( self.strength )
-  end
-  self:destroy()
 end
 
 --===========================================
@@ -87,8 +66,8 @@ function Crossbolt:onCollide( phase, fixtureA, fixtureB, arbiter )
   if entityB ~= nil then
     if entityB.type == "wall" or entityB.type == "archer" then
       print( "gnarly!" )
-      self.target = entityB
-      self:attack( )
+      entityB.damage( strength )
+      self.remove = true
     end
   end
 end
@@ -117,26 +96,9 @@ function Crossbolt:initializePhysics( position )
   self.physics.fixture = self.physics.body:addRect( -6, -2, 5, 1 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
+  self.physics.fixture:setSensor( true )
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
   --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
-end
-
-function Crossbolt:addAnimation( name, startFrame, frameCount, time, mode )
-  -- This curve is going to do shit, yo
-  local curve = MOAIAnimCurve.new()
-  -- Reserve start and end keys
-  curve:reserveKeys( 2 )
-  -- Params: starting key, time, value ( index of in tilesheet ), animcurve type
-  curve:setKey( 1, 0, startFrame, MOAIEaseType.LINEAR )
-  curve:setKey( 2, time * frameCount, startFrame + frameCount, MOAIEaseType.LINEAR )
-  
-  -- Making the animation
-  local anim = MOAIAnim:new()
-  -- Reserve a link to connect the curve with the remapper
-  anim:reserveLinks( 1 )
-  anim:setLink( 1, curve, self.remapper, 1 )
-  anim:setMode( mode )
-  self.animations[name] = anim
 end

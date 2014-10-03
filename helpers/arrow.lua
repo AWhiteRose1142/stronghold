@@ -18,6 +18,7 @@ function Arrow:initialize( position, layer, aim, strength )
   self.layer = layer
   self.strength = strength
   self.aim = aim
+  self.remove = false
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'arrow' )
@@ -33,11 +34,10 @@ function Arrow:initialize( position, layer, aim, strength )
   -- Code for testing
   self.physics.body:setLinearVelocity( (self.strength * 10), self.aim )
   table.insert( Level.entities, self )
-  table.insert( Level.objects, self )
 end
 
 function Arrow:update()
-  self:move( self.strength )
+  if self.remove == true then self:destroy() end
 end
 
 function Arrow:getPosition()
@@ -50,26 +50,6 @@ function Arrow:getTransform()
 end
 
 --===========================================
--- Actions
---===========================================
-
-function Arrow:move( direction )
-  velX, velY = self.physics.body:getLinearVelocity()
-  self.physics.body:setLinearVelocity( direction * 10, velY )
-end
-
-function Arrow:stopMoving()
-  self.physics.body:setLinearVelocity ( 0, 0 )
-end
-
-function Arrow:attack( )
-  if self.target.health >= 0 then
-    self.target:damage( self.strength )
-  end
-  self:destroy()
-end
-
---===========================================
 -- Event handlers
 --===========================================
 
@@ -79,10 +59,10 @@ function Arrow:onCollide( phase, fixtureA, fixtureB, arbiter )
   self.physics.body:setLinearVelocity(0, 0)
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "orc" or entityB.type == "footman" then
+    if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" then
       print( "headshot!" )
-      self.target = entityB
-      self:attack( )
+      entityB:damage( self.strength )
+      self.remove = true
     end
   end
 end
@@ -96,8 +76,6 @@ function Arrow:destroy()
   print( "destroying arrow" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
-  --PhysicsHandler:sceduleForRemoval( self.physics.body )
-  --self.physics.body:destroy()
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
@@ -111,10 +89,10 @@ function Arrow:initializePhysics( position )
   self.physics.fixture = self.physics.body:addRect( -6, -2, 5, 1 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
+  self.physics.fixture:setSensor( true )
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
-  --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 
 function Arrow:addAnimation( name, startFrame, frameCount, time, mode )
