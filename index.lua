@@ -21,6 +21,11 @@ local resource_definitions = {
     fileName = 'img/background.png', 
     width = 256, height = 128,
   },
+  mainMenuBackground = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/main_bg.png', 
+    width = 256, height = 128,
+  },
   groundTile = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/ground_tile.png',
@@ -36,6 +41,11 @@ local resource_definitions = {
     fileName = 'img/Arrow.png',
     width = 16, height = 16,
     },
+  buttonPH = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/button_ph.png',
+    width = 32, height = 16,
+  },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_sheet.png',
@@ -62,7 +72,8 @@ local resource_definitions = {
   },
   fireball = {
     type = RESOURCE_TYPE_TILED_IMAGE,
-    fileName = "FireBall.png",
+    fileName = "img/fireball_sheet.png",
+    tileMapSize = {2, 1},
     width = 16, height = 16,
   },
   sorcerer = {

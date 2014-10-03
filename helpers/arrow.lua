@@ -33,10 +33,15 @@ function Arrow:initialize( position, layer, aim, strength )
     
   -- Code for testing
   self.physics.body:setLinearVelocity( (self.strength * 10), self.aim )
+  local x, y = self.physics.body:getPosition()
+  self.physics.body:setTransform( x, y, getRotationFrom( (self.strength * 10), self.aim ) )
   table.insert( Level.entities, self )
 end
 
 function Arrow:update()
+  local x, y = self.physics.body:getPosition()
+  local lX, lY = self.physics.body:getLinearVelocity()
+  self.physics.body:setTransform( x, y, getRotationFrom( lX, lY ) )
   if self.remove == true then self:destroy() end
 end
 

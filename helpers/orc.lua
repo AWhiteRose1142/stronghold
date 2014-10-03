@@ -174,8 +174,6 @@ end
 --===========================================
 
 function Orc:onCollide( phase, fixtureA, fixtureB, arbiter )
-  print( "boop!" )
-  
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
     if entityB.type == "wall" then
@@ -196,11 +194,9 @@ function Orc:destroy()
   print( "destroying an orc" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
-  --PhysicsHandler:sceduleForRemoval( self.physics.body )
-  --self.physics.body:destroy()
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
-  self.physics.body:setTransform( 0, -1000 )
+  self.physics.body:setTransform( -100, -1000 )
   Level:removeEntity( self )
 end
 

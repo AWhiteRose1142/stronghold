@@ -20,7 +20,7 @@ local base_objects = {
   },
 }
 
-function Level:initialize( difficulty )
+function Level:initialize( )
   self.score = 1
   -- For all entites so we can look them up or update them
   self.entities = {}
@@ -39,8 +39,14 @@ function Level:initialize( difficulty )
   }
   self.objects = {}
   
-  PhysicsManager:initialize( Game.layers.active )
-  Gesture:initialize()
+  -- Setup of the level's layers and camera
+  self.camera = MOAICamera2D.new()
+  self:setupLayers()
+  
+  HUD:initialize( )
+  PhysicsManager:initialize( Level.layers.active )
+  Gesture:initialize( self.layers, self.partitions )
+  
   -- This is mostly for debugging purposes.
   InputManager:initialize()
   
@@ -64,32 +70,67 @@ function Level:update()
   HUD:update()
 end
 
+function Level:onInput( down, x, y )
+  if Gesture.initialized == false then return end
+  -- Mouse down
+  if MOAIInputMgr.device.mouseLeft:isDown() then Gesture:onMouseDown() end
+  -- Mouse up
+  if MOAIInputMgr.device.mouseLeft:isUp() then Gesture:onMouseUp() end
+end
+
 --==================================================
 -- Setting up
 --==================================================
+
+function Level:setupLayers()
+  self.layers = {}
+  self.layers.background = MOAILayer2D.new()
+  self.layers.active = MOAILayer2D.new()
+  self.layers.user = MOAILayer2D.new()
+  
+  -- Set the viewport and camera for each layer
+  for key, layer in pairs ( self.layers ) do
+    layer:setViewport( gameViewport )
+    layer:setCamera( self.camera )
+  end
+  
+  -- Create a table with the layers in order
+  local renderTable = {
+    self.layers.background,
+    self.layers.active,
+    self.layers.user
+  }
+  
+  -- Set up partitions
+  self.partitions = {}
+  self.partitions.active = MOAIPartition.new()
+  self.layers.active:setPartition( self.partitions.active )
+  
+  -- And pass them to the render manager
+  MOAIRenderMgr.setRenderTable( renderTable )
+end
 
 function Level:loadEntities()
   startX = -170
   
   for i = 0, 3 do
-    Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Game.layers.active )
+    Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Level.layers.active )
   end
   
   -- Should be initialized on it's own tower
-  Sorcerer:new( { 0, 0 }, Game.layers.active )
+  Sorcerer:new( { 0, 0 }, Level.layers.active )
   
   local archer = Archer:new(
     { 50, 50 }, 
-    Game.layers.active, 
-    Game.partitions.active 
+    Level.layers.active, 
+    Level.partitions.active 
   )
-  table.insert( self.playerEntities.archers, archer )
   self.playerEntities.walls[2]:mountEntity( archer )
   self.playerEntities.walls[4]:mountEntity( self.playerEntities.sorcerer[1] )
   
-  --Footman:new( { -100, GROUND_LEVEL }, Game.layers.active )
-  --Orc:new( { -80, GROUND_LEVEL }, Game.layers.active )
-  Goblin:new( { -60, GROUND_LEVEL }, Game.layers.active )
+  --Footman:new( { -100, GROUND_LEVEL }, self.layers.active )
+  --Orc:new( { -80, GROUND_LEVEL }, self.layers.active )
+  Goblin:new( { -60, GROUND_LEVEL }, self.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
@@ -100,12 +141,12 @@ function Level:loadBackground()
   self.backgroundProp = MOAIProp2D.new()
   self.backgroundProp:setDeck( self.backgroundDeck )
   self.backgroundProp:setScl( 2.5, 2.5 )
-  Game.layers.background:insertProp( self.backgroundProp )
+  self.layers.background:insertProp( self.backgroundProp )
 
   self.groundProp = MOAIProp2D.new()
   self.groundProp:setDeck( ResourceManager:get( 'ground' ) )
   self.groundProp:setLoc( 0, GROUND_LEVEL - 36 )
-  Game.layers.background:insertProp( self.groundProp )
+  Level.layers.background:insertProp( self.groundProp )
 end
 
 function Level:loadScene()
@@ -123,13 +164,13 @@ end
 
 function Level:footmanSpawner( amount )
   for i = 1, amount do
-    Footman:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active )
+    Footman:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Level.layers.active )
   end
 end
 
 function Level:orcSpawner( amount )
   for i = 1, amount do
-    Orc:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Game.layers.active )
+    Orc:new( { 0 + ( 16 * amount ), GROUND_LEVEL }, Level.layers.active )
   end
 end
 
@@ -139,11 +180,11 @@ end
 
 function Level:loadEnemies( enemyDefs )
   for key, def in pairs( enemyDefs.footmen ) do
-    local footman = Footman:new( def.position, Game.layers.active, def.health )
+    local footman = Footman:new( def.position, Level.layers.active, def.health )
   end
   
   for key, def in pairs( enemyDefs.orcs ) do
-    local orc = Orc:new( def.position, Game.layers.active, def.health )
+    local orc = Orc:new( def.position, Level.layers.active, def.health )
   end
   
   for key, def in pairs( enemyDefs.goblins ) do
@@ -155,23 +196,23 @@ function Level:loadPlayer( playerDefs )
   self.score = playerDefs.stats.score
   
   for key, def in pairs( playerDefs.entities.walls ) do
-    Wall:new( def.height, def.position, Game.layers.active, def.health )
+    Wall:new( def.height, def.position, Level.layers.active, def.health )
   end
   
   for key, def in pairs( playerDefs.entities.archers ) do
-    local archer = Archer:new( def.position, Game.layers.active, def.health )
+    local archer = Archer:new( def.position, Level.layers.active, def.health )
   end
   
   for key, def in pairs( playerDefs.entities.tower ) do
-    local tower = Tower:new( def.position, Game.layers.active, def.health )
+    local tower = Tower:new( def.position, Level.layers.active, def.health )
   end
   
   for key, def in pairs( playerDefs.entities.sorcerer ) do
     local sorcerer = Sorcerer:new( 
       self.playerEntities.walls[3]:getTransform(), 
       { self.playerEntities.walls[3]:getTopLoc() },
-      Game.layers.active, 
-      Game.partitions.active    
+      Level.layers.active, 
+      Level.partitions.active    
     )
   end
   
@@ -179,8 +220,8 @@ function Level:loadPlayer( playerDefs )
     Sorcerer:new( 
       self.playerEntities.walls[3]:getTransform(), 
       { self.playerEntities.walls[3]:getTopLoc() },
-      Game.layers.active, 
-      Game.partitions.active    
+      Level.layers.active, 
+      Level.partitions.active    
     )
   end
 end
@@ -192,9 +233,9 @@ end
 function Level:destroy()
   
   -- destroy background
-  Game.layers.background:removeProp( self.backgroundProp )
+  Level.layers.background:removeProp( self.backgroundProp )
   self.backgroundProp = nil
-  Game.layers.background:removeProp( self.groundProp )
+  Level.layers.background:removeProp( self.groundProp )
   self.groundProp = nil
   
   -- destroy all entities
@@ -241,7 +282,7 @@ function Level:loadLevel( levelDefinition )
   -- initialize level
   self.score = saveData.player.score
   
-  PhysicsManager:initialize( Game.layers.active )
+  PhysicsManager:initialize( Level.layers.active )
   Gesture:initialize()
   
   self:loadBackground()
@@ -361,13 +402,19 @@ end
 function Level:removeEntity( killMe )
   for i = 1, table.getn( self.entities ) do
     if self.entities[i] == killMe then
-      self.entities[i] = nil
+      table.remove( self.entities, i )
     end
+  end
+end
+
+function Level:printEntities()
+  for key, entity in pairs( self.entities ) do
+    print( entity.type )
   end
 end
 
 function Level:spawnBolts( position )
   for i = 1, 6 do
-    Bolt:new( { position[1] + math.random( -30, 30 ), GROUND_LEVEL + math.random( 30 ) }, Game.layers.active )
+    Bolt:new( { position[1] + math.random( -30, 30 ), GROUND_LEVEL + math.random( 30 ) }, Level.layers.active )
   end
 end

@@ -2,19 +2,26 @@ module( "Game", package.seeall )
 
 require "index"
 
+local currentState = nil
+local nextState = nil
+
 -- Start function, is called from main, also contains the gameloop
 function Game:start()
   -- Do the initial setup
   
   self:initialize()
   
-  
   while ( true ) do
+    coroutine.yield() -- Andere threads laten draaien
+    
+    if nextState ~= nil then
+      Game:startNewState( nextState )
+    end
+    
     if Level.initialized then
       Level:update()
     end
-    --PhysicsManager.update()
-    coroutine.yield() -- Andere threads laten draaien
+    
   end
 end
 
@@ -23,46 +30,50 @@ function Game:initialize()
   
   -- Load the resource definitions
   Index:loadDefinitions()
-  
-  self.camera = MOAICamera2D.new() -- Make a new camera
-  self:setupLayers()
-  
-  --self.corout = MOAICoroutine.new()
-  
-  Level:initialize( 1 )
-  HUD:initialize()
+  InputManager:initialize()
+  nextState = "level"
   
 end
 
--- setup of layers and partitions
-
-function Game:setupLayers()  
+function Game:startNewState( state )
   
-  self.layers = {}
-  self.layers.background = MOAILayer2D.new()
-  self.layers.active = MOAILayer2D.new()
-  self.layers.user = MOAILayer2D.new()
-  
-  -- Set the viewport and camera for each layer
-  for key, layer in pairs ( self.layers ) do
-    layer:setViewport( gameViewport )
-    layer:setCamera( self.camera )
+  if currentState == "level" then
+    Level:destroy()
+  end
+  if currentState == "mainmenu" then
+    MainMenu:destroy()
+  end
+  if currentState == "upgrade" then
+    Upgrade:destroy()
   end
   
-  -- Create a table with the layers in order
-  local renderTable = {
-    self.layers.background,
-    self.layers.active,
-    self.layers.user
-  }
+  MOAIRenderMgr.clearRenderStack ()
+	MOAISim.forceGarbageCollection ()
   
-  -- Set up partitions
-  self.partitions = {}
-  self.partitions.active = MOAIPartition.new()
-  self.layers.active:setPartition( self.partitions.active )
+  if state == "level" then
+    Level:initialize()
+  end
+  if state == "mainmenu" then
+    MainMenu:initialize()
+  end
+  if state == "upgrade" then
+    Upgrade:initialize()
+  end
   
-  -- And pass them to the render manager
-  MOAIRenderMgr.setRenderTable( renderTable )
+  currentState = state
+  nextState = nil
+end
+
+function Game:onInput( down, x, y )
+  if currentState == "level" and Level.initialized then
+    Level:onInput( down, x, y )
+  end
+  if currentState == "mainmenu" and MainMenu.initialized then
+    MainMenu:onInput( down, x, y )
+  end
+  if currentState == "upgrade" and Upgrade.initialized then
+    Upgrade:onInput( down, x, y )
+  end
 end
 
 --===============================================
@@ -74,40 +85,4 @@ function sleepCoroutine ( time )
   timer:setSpan ( time )
   timer:start ()
   MOAICoroutine.blockOnAction ( timer )
-end
-
-function footmanSpawn()
-  table.insert(footmanArray, footman(360, -160, activeLayer))
-end
-
-function footmanMove()
-  for i = 1, table.getn(footmanArray), 1 do
-    footman:move()
-  end
-end
-
---================================================
--- Gesture stuff, mostly unused now
---================================================
-
-function terms()
-    --checks to see if sorcerer is 'dead'
-    local x, y = Level.entities.sorcerer:getLoc()
-    if(y < 0) then
-      print "Tower took wizard down."
-    end
-end
-
-
-
-function handleClickorTouch(x, y)
-  -- This is an electrocution test
-  for key, entity in pairs( Level:getEntitiesNearPos( { x, y }, { 50, 50 } ) ) do
-    if entity.electrocute ~= nil then
-      entity:electrocute()
-    end
-  end
-  
-  local obj = Game.partitions.active.propForPoint( Game.partitions.active, Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
-  print (Game.layers.active:wndToWorld(MOAIInputMgr.device.pointer:getLoc()))
 end
