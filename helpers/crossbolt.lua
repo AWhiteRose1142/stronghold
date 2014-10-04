@@ -17,15 +17,8 @@ function Crossbolt:initialize( position, layer, target, strength )
   self.target = target
   self.layer = layer
   self.strength = strength
+  self.speed = 300
   self.remove = false
-  
-  local selfx, selfy = unpack( position )
-  local targetx, targety = unpack( self.target:getPosition() )
-  local x = ( targetx - selfx )
-  local y = ( targety - selfy )
-  local length = math.sqrt( ( x * x ) + ( y * y ) )
-  self.pytx = x / length
-  self.pyty = y / length
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'arrow' )
@@ -37,11 +30,26 @@ function Crossbolt:initialize( position, layer, target, strength )
   
   -- Setup physics
   self:initializePhysics( position )
+  local selfx, selfy = unpack( position )
+  local targetx, targety = unpack( self.target )
+  local x = ( targetx - selfx )
+  local y = ( targety - selfy )
+  local length = math.sqrt( ( x * x ) + ( y * y ) )
+  local nX = x / length
+  local nY = y / length
+  self.physics.body:setLinearVelocity( nX * self.speed, nY * self.speed)
+  
+  local sX, sY = self.physics.body:getPosition()
+  local lX, lY = self.physics.body:getLinearVelocity()
+  self.physics.body:setTransform( sX, sY, getRotationFrom( lX, lY ) )
   
   table.insert( Level.entities, self )
 end
 
 function Crossbolt:update()
+  local x, y = self.physics.body:getPosition()
+  local lX, lY = self.physics.body:getLinearVelocity()
+  self.physics.body:setTransform( x, y, getRotationFrom( lX, lY ) )
   if self.remove == true then self:destroy() end
 end
 
@@ -66,7 +74,7 @@ function Crossbolt:onCollide( phase, fixtureA, fixtureB, arbiter )
   if entityB ~= nil then
     if entityB.type == "wall" or entityB.type == "archer" then
       print( "gnarly!" )
-      entityB.damage( strength )
+      entityB:damage( self.strength )
       self.remove = true
     end
   end
@@ -97,6 +105,8 @@ function Crossbolt:initializePhysics( position )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.physics.fixture:setSensor( true )
+  --self.physics.fixture:setDensity( .1 )
+  --self.physics.body:resetMassData()
   self.prop:setParent( self.physics.body )
 
   self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )

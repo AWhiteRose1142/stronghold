@@ -58,16 +58,16 @@ function Goblin:initialize( position, layer, health )
   end
     
   -- Code for testing
-  --self:startAnimation( "electrocute" )
   self:move( -1 )
   table.insert( Level.entities, self )
-  table.insert( Level.enemyEntities.footmen, self )
+  table.insert( Level.enemyEntities.goblins, self )
 end
 
 function Goblin:update()
-  if self.target  ~= nil then
+  if self.target  ~= nil and self.target.health > 0 then
+    self:stopMoving()
     self:attack()
-  elseif self.target == nil then
+  elseif self.target == nil or self.target.health <= 0 then
     self:move( -1 )
     self.target = self:getTarget()
   end
@@ -79,7 +79,7 @@ end
 
 function Goblin:getTarget()
   for key, entity in pairs( Level.playerEntities.archers ) do
-    if self:inRange( entity ) then
+    if self:inRange( entity, 100 ) then
       return entity
     end
   end
@@ -101,12 +101,15 @@ function Goblin:getTransform()
   return self.physics.body.transform
 end
 
-function Goblin:inRange( entity )
+function Goblin:inRange( entity, mod )
+  local range = self.range
+  if mod ~= nil then range = range + mod end
+  -- Waarom de manhattan distance?
   local ex, ey = unpack( entity:getPosition() )
   local gx, gy = unpack( self:getPosition() )
   local dx = math.abs(gx - ex)
   local dy = math.abs(gy - ey)
-  if (dx + dy) <= self.range then
+  if (dx + dy) <= range then
     return true
   end
   return false
@@ -126,6 +129,24 @@ function Goblin:move( direction )
   end
 end
 
+function Goblin:fire()
+  if self.target == nil then return end
+  print( "goblin fires at " .. self.target.type )
+  local tx, ty
+  if self.target.type == "archer" then 
+    tx, ty = unpack( self.target:getPosition() )
+    --print( "firing to coordinates: " .. tx .. ", " .. ty )
+    ty = ty + 14
+  end
+  if self.target.type == "wall" then 
+    tx, ty = self.target:getTopLoc()
+    --print( "firing to coordinates: " .. tx .. ", " .. ty )
+    ty = ty + 14
+  end
+  
+  Crossbolt:new( self:getPosition(), self.layer, { tx, ty }, 10 )
+end
+
 function Goblin:stopMoving()
   self.physics.body:setLinearVelocity ( 0, 0 )
   self:stopCurrentAnimation()
@@ -137,15 +158,12 @@ function Goblin:attack( )
   else
     self.timer = MOAITimer.new()
     self.timer:setMode( MOAITimer.LOOP )
-    self.timer:setSpan( 0.6 )
+    self.timer:setSpan( 1.5 )
     self.timer:setListener( 
       MOAITimer.EVENT_TIMER_END_SPAN,
       bind( self, "attack" )
     )
-    self.timer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
-    function()
-        table.insert(Level.entities, Crossbolt:new( self:getPosition(), self.layer, self.target, 10 ))
-      end)
+    self.timer:setListener( MOAITimer.EVENT_TIMER_BEGIN_SPAN, bind( self, "fire" ) )
     self:stopMoving()
     self:startAnimation( "attack" )
     self.timer:start()

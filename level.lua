@@ -27,7 +27,7 @@ function Level:initialize( )
   -- For all enemy entities
   self.enemyEntities = {
     footmen = {},
-    goblin = {},
+    goblins = {},
     orcs = {},
   }
   -- For all entities that belong to the player
@@ -130,7 +130,7 @@ function Level:loadEntities()
   
   --Footman:new( { -100, GROUND_LEVEL }, self.layers.active )
   --Orc:new( { -80, GROUND_LEVEL }, self.layers.active )
-  Goblin:new( { -60, GROUND_LEVEL }, self.layers.active )
+  Goblin:new( { 100, GROUND_LEVEL }, self.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
