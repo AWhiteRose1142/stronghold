@@ -49,10 +49,12 @@ function Level:initialize( )
   
   -- This is mostly for debugging purposes.
   InputManager:initialize()
+  WaveGenerator:initialize( 1, 1 )
   
   self:loadBackground()
   self:loadScene()
   self:loadEntities()
+  WaveGenerator:newWave()
   self.initialized = true
 end
 
@@ -130,7 +132,7 @@ function Level:loadEntities()
   
   --Footman:new( { -100, GROUND_LEVEL }, self.layers.active )
   --Orc:new( { -80, GROUND_LEVEL }, self.layers.active )
-  Goblin:new( { 100, GROUND_LEVEL }, self.layers.active )
+  --Goblin:new( { 100, GROUND_LEVEL }, self.layers.active )
 end
 
 -- Hier wordt nog ook de grond ingeladen.
