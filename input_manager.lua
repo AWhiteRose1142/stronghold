@@ -6,7 +6,7 @@ module ( "InputManager", package.seeall )
 -- position on both mouse and touches
 ------------------------------------------------
 function InputManager:initialize ()
-  
+
   if MOAIInputMgr.device.keyboard then
     function onKeyboardEvent ( key, down )
       print( "key: " .. tostring( key ) .. "down: " .. tostring( down ) )
@@ -24,19 +24,25 @@ function InputManager:initialize ()
         Level.Sorcerer:fireball(Gesture:getMouseLocation(Game.layers.active))
       end
       
-      -- Numpad 6
-      if key == 54 and down == false then 
-        Fireball:new( { 0, 0 }, Level.layers.active, 10, { 5, -5 } )
+      if key == 52 and down == false then
+        for key, entity in pairs( Level.playerEntities.archers ) do
+          entity:setAim(5)
+        end
       end
-      
-      -- Numpad 7
-      if key == 55 and down == false then 
-        Game:startNewState( "level" )
+      if key == 53 and down == false then
+        for key, entity in pairs( Level.playerEntities.archers ) do
+          entity:setAim(-5)
+        end
       end
-      
-      -- Numpad 8
-      if key == 56 and down == false then 
-        Game:startNewState( "mainmenu" )
+      if key == 54 and down == false then
+        for key, entity in pairs( Level.playerEntities.archers ) do
+          entity:setStrength(5)
+        end
+      end
+      if key == 55 and down == false then
+        for key, entity in pairs( Level.playerEntities.archers ) do
+          entity:setStrength(-5)
+        end
       end
     end
   

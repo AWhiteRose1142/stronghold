@@ -36,6 +36,11 @@ local resource_definitions = {
     fileName = 'img/ground.png',
     width = 512, height = 64,
   },
+  arrow= {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/Arrow.png',
+    width = 16, height = 16,
+    },
   buttonPH = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/button_ph.png',
@@ -45,6 +50,12 @@ local resource_definitions = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_sheet.png',
     tileMapSize = {5, 1},
+    width = 16, height = 16,
+  },
+  goblin = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/Goblin.png',
+    tileMapSize = {9, 1},
     width = 16, height = 16,
   },
   footman = {

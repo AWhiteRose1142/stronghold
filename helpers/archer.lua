@@ -2,6 +2,10 @@ local class = require 'libs/middleclass'
 
 Archer = class('archer')
 
+--To fire arrow, use this code
+--table.insert(Level.entities, Arrow:new( self:getPosition(), self.layer, self.aim, self.strength)) 
+
+
 local animationDefinitions = {
   stand = {
     startFrame = 1,
@@ -12,7 +16,7 @@ local animationDefinitions = {
   attack = {
     startFrame = 2,
     frameCount = 4,
-    time = 0.2,
+    time = 0.25,
     mode = MOAITimer.LOOP
   },
 }
@@ -27,6 +31,7 @@ function Archer:initialize( position, layer, partition )
   self.layer = layer
   self.aim = 45
   self.wallOffset = { 0, 11 }
+  self.mount = nil
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'archer' )
@@ -34,6 +39,7 @@ function Archer:initialize( position, layer, partition )
   -- Make the prop
   self.prop = MOAIProp2D.new()
   self.prop:setDeck( self.deck )
+  self.prop:setRot( (self.aim / 2) )
   layer:insertProp( self.prop )
   
   -- Initialize animations
@@ -54,7 +60,8 @@ function Archer:initialize( position, layer, partition )
 end
 
 function Archer:update()
-  --self:attack()
+  self:attack()
+  self.prop:setRot( (self. aim / 5) )
   if self.health <= 0 then
     self:destroy()
   end
@@ -75,37 +82,34 @@ end
 
 function Archer:attack( )
   if self.timer ~= nil then
-    --DO NOTHING
+    --DO NOTHING 
   else
     self.timer = MOAITimer.new()
     self.timer:setMode( MOAITimer.LOOP )
     self.timer:setSpan( 2 )
     self.timer:setListener( 
-      MOAITimer.EVENT_TIMER_END_SPAN,
-      bind( self, "attack" )
-    )
-    self.timer:setListener( 
-    MOAITimer.EVENT_TIMER_BEGIN_SPAN, 
-    function() 
-      table.insert(Level.entities, Arrow:new({self.x, self.y}, self.layer, self.aim, self.strength)) 
-    end
-    )
-    self.timer:start()
+    MOAITimer.EVENT_TIMER_END_SPAN, 
+      bind( self, "attack" ) )
+    self.timer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
+      function()
+        table.insert(Level.entities, Arrow:new( self:getPosition(), self.layer, self.aim, self.strength))
+      end)
     self:startAnimation( "attack" )
-    --table.insert(Level.entities, Arrow:new({self.x, self.y}, self.layer, self.aim, self.strength))
+    self.timer:start()
   end
 end
 
 function Archer:damage( damage )
   self.health = self.health - damage
-  if self.health <= 0 then
-    print( "the archer is dead" )
-  end
 end
 
 --Rotates the archer as much as the device location differs in Y value (height)
-function Archer:aim()
-  --something
+function Archer:setAim( aim )
+  self.aim = self.aim + aim
+end
+
+function Archer:setStrength( strength )
+  self.strength = self.strength + strength
 end
 
 --===========================================
@@ -130,34 +134,16 @@ function Archer:startAnimation( name )
 end
 
 --===========================================
--- Event handlers
---===========================================
-
-function Archer:onCollide( phase, fixtureA, fixtureB, arbiter )
-  print( "boop!" )
-  
-  local entityB = Level:getEntityFromFixture( fixtureB )
-  if entityB ~= nil then
-    if entityB.type == "wall" then
-      print( "into a wall" )
-      self.target = entityB
-      self:attack( )
-    end
-  end
-end
-
---===========================================
 -- Utility functions, consider these private
 --===========================================
 
 function Archer:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  self.mount.mountedEntity = nil
   Level.score = Level.score - 10
   print( "destroying an archer" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
-  --PhysicsHandler:sceduleForRemoval( self.physics.body )
-  --self.physics.body:destroy()
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
@@ -170,9 +156,7 @@ function Archer:initializePhysics( position )
   self.physics.body:setTransform( unpack( position ) )
   self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
   self.prop:setParent( self.physics.body )
-  
-  --self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
-  --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
+  self.physics.fixture:setFilter( 0x04, 0x02 )
 end
 
 function Archer:addAnimation( name, startFrame, frameCount, time, mode )
