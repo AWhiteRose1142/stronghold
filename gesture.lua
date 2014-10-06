@@ -82,7 +82,8 @@ function Gesture:determineCombo( )
   local mouseX, mouseY = Gesture:getMouseLocation( self.layers.active )
   local n = table.getn( Gesture.gestureTable )
   
-  if Gesture:checkLightning() then
+  if Player.progress.lightning and Player.progress.mana >= 60 and Gesture:checkLightning()then
+    Player.progress.mana = Player.progress.mana - 60
     Level:spawnBolts( { mouseX, mouseY } )
     for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, -120 }, { 40, 40 } ) ) do
       if entity.electrocute ~= nil then
@@ -91,7 +92,8 @@ function Gesture:determineCombo( )
     end
   end
   
-  if Gesture:checkFireball() then
+  if Player.progress.fireBall and Player.progress.mana >= 10 and Gesture:checkFireball() then
+    Player.progress.mana = Player.progress.mana - 10
     direction = normalize( mouseX - startX, mouseY - startY )
     Fireball:new( { startX, startY }, Level.layers.active, 10, direction )
   end

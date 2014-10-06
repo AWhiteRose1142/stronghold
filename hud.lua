@@ -20,7 +20,8 @@ end
 function HUD:initializeDebugHud()
   self.font = MOAIFont.new()
   self.font = ResourceManager:get( "hudFont" )
-  self.score = self:newDebugTextBox( 30, { 10, 10, 200, 50 } )
+  self.score = self:newDebugTextBox( 30, { 10, 10, 150, 50 } )
+  self.mana = self:newDebugTextBox( 30, { 10, 70, 200, 130 } )
 end
 
 function HUD:newDebugTextBox( size, rectangle )
@@ -33,7 +34,9 @@ function HUD:newDebugTextBox( size, rectangle )
 end
 
 function HUD:update()
-  local string = ( "SCORE" .. " " .. Level.score )
-  self.score:setString( string )
+  local scoreString = ( "SCORE: " .. Level.score )
+  self.score:setString( scoreString )
+  local manaString = ( "MANA: " .. Player.progress.mana )
+  self.mana:setString( manaString )
 end
   

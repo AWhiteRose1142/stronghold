@@ -68,6 +68,7 @@ function Level:update()
     --print( "updating: " .. entity.type )
     entity:update()
   end
+  Player:update()
   Gesture:update()
   HUD:update()
 end
