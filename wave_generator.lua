@@ -3,35 +3,37 @@ module( "WaveGenerator", package.seeall )
 waves = {
   wave1 = {
     stage1 = { 2, "orc" },
-    stage2 = { 3, "goblin", "orc" },
-    stage3 = { 2, "orc" },
-    stage4 = { 3, "goblin", "orc", "orc" },
-    stage5 = { 3, "goblin", "orc", "orc" },
-    stage6 = { 3, "goblin", "orc", "orc" },
+    stage2 = { 1, "goblin" },
+    stage3 = { 4, "orc" },
+    stage4 = { 6, "goblin" },
+    stage5 = { 1, "orc" },
+    stage6 = { 1, "goblin" },
   },
   wave2 = {
-    stage1 = { 2, "orc", "orc" },
-    stage2 = { 3, "goblin", "orc" },
-    stage3 = { 2, "orc" },
-    stage4 = { 3, "goblin", "orc", "orc" },
-    stage5 = { 3, "goblin", "orc", "orc" },
-    stage6 = { 3, "goblin", "orc", "orc" },
+    stage1 = { 2, "orc" },
+    stage2 = { 1, "goblin" },
+    stage3 = { 4, "orc" },
+    stage4 = { 6, "goblin" },
+    stage5 = { 1, "orc" },
+    stage6 = { 1, "orc" },
+    stage7 = { 1, "orc" },
+    stage8 = { 1, "goblin" },
   },
   wave3 = {
-    stage1 = { 2, "orc", "orc", "orc" },
-    stage2 = { 3, "goblin", "orc" },
-    stage3 = { 2, "orc" },
-    stage4 = { 3, "goblin", "orc", "orc" },
-    stage5 = { 3, "goblin", "orc", "orc" },
-    stage6 = { 3, "goblin", "orc", "orc" },
+    stage1 = { 2, "orc" },
+    stage2 = { 1, "goblin" },
+    stage3 = { 4, "orc" },
+    stage4 = { 6, "goblin" },
+    stage5 = { 1, "orc" },
+    stage6 = { 1, "goblin" },
   },
   wave4 = {
-    stage1 = { 2, "orc", "orc", "orc", "orc" },
-    stage2 = { 3, "goblin", "orc" },
-    stage3 = { 2, "orc" },
-    stage4 = { 3, "goblin", "orc", "orc" },
-    stage5 = { 3, "goblin", "orc", "orc" },
-    stage6 = { 3, "goblin", "orc", "orc" },
+    stage1 = { 2, "orc" },
+    stage2 = { 1, "goblin" },
+    stage3 = { 4, "orc" },
+    stage4 = { 6, "goblin" },
+    stage5 = { 1, "orc" },
+    stage6 = { 1, "goblin" },
   },
 }
 
@@ -45,6 +47,10 @@ end
 
 -- Kicks off a new wave
 function WaveGenerator:newWave()
+  if self.waves["wave" .. self.wave] == nil then
+    print( "there's no wave for that index D: Make one, you lazy bastard!" )
+    return
+  end
   self.timer = MOAITimer.new()
   self.timer:setMode( MOAITimer.NORMAL )
   self.timer:setSpan( self.waves["wave" .. self.wave]["stage" .. self.stage][1] )
@@ -65,7 +71,7 @@ function WaveGenerator:doStage( )
     self:spawn( stage[i] )
   end
   self.stage = self.stage + 1
-  if table.getn( self.waves["wave" .. self.wave] ) > self.stage then
+  if self.waves["wave" .. self.wave]["stage" .. self.stage] == nil then
     self:setupNextWave()
     -- Interrupt here, or in setupNextWave.
     self:newWave()
