@@ -6,7 +6,8 @@ require "physics_manager"
 require "input_manager"
 require "level"
 require "hud"
-require "main-menu"
+require "main_menu"
+require "upgrade_menu"
 require "gesture"
 require "wave_generator"
 require "player"
@@ -21,6 +22,7 @@ require "helpers/orc"
 require "helpers/arrow"
 require "helpers/goblin"
 require "helpers/crossbolt"
+require "helpers/button"
 
 --=============================================
 -- Resource types

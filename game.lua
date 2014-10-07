@@ -22,6 +22,10 @@ function Game:start()
       Level:update()
     end
     
+    if UpgradeMenu.initialized then
+      UpgradeMenu:update()
+    end
+    
   end
 end
 
@@ -32,7 +36,7 @@ function Game:initialize()
   Index:loadDefinitions()
   InputManager:initialize()
   Player:initialize()
-  nextState = "level"
+  nextState = "upgrademenu"
   
 end
 
@@ -44,8 +48,8 @@ function Game:startNewState( state )
   if currentState == "mainmenu" then
     MainMenu:destroy()
   end
-  if currentState == "upgrade" then
-    Upgrade:destroy()
+  if currentState == "upgrademenu" then
+    UpgradeMenu:destroy()
   end
   
   MOAIRenderMgr.clearRenderStack ()
@@ -57,8 +61,8 @@ function Game:startNewState( state )
   if state == "mainmenu" then
     MainMenu:initialize()
   end
-  if state == "upgrade" then
-    Upgrade:initialize()
+  if state == "upgrademenu" then
+    UpgradeMenu:initialize()
   end
   
   currentState = state
@@ -72,8 +76,8 @@ function Game:onInput( down, x, y )
   if currentState == "mainmenu" and MainMenu.initialized then
     MainMenu:onInput( down, x, y )
   end
-  if currentState == "upgrade" and Upgrade.initialized then
-    Upgrade:onInput( down, x, y )
+  if currentState == "upgrademenu" and UpgradeMenu.initialized then
+    UpgradeMenu:onInput( down, x, y )
   end
 end
 

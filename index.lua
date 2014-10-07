@@ -26,6 +26,41 @@ local resource_definitions = {
     fileName = 'img/main_bg.png', 
     width = 256, height = 128,
   },
+  upgradeBackground = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/upgrade_bg.png', 
+    width = 256, height = 128,
+  },
+  buttonActive = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/button_active.png', 
+    width = 100, height = 50,
+  },
+  buttonInactive = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/button_inactive.png', 
+    width = 100, height = 50,
+  },
+  iceIcon = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/ice_icon.png', 
+    width = 24, height = 24,
+  },
+  bowIcon = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/bow_icon.png', 
+    width = 24, height = 24,
+  },
+  wallIcon = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/wall_icon.png', 
+    width = 24, height = 24,
+  },
+  lightningIcon = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/lightning_icon.png', 
+    width = 24, height = 24,
+  },
   groundTile = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/ground_tile.png',
@@ -40,7 +75,7 @@ local resource_definitions = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/Arrow.png',
     width = 16, height = 16,
-    },
+  },
   buttonPH = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/button_ph.png',
@@ -91,7 +126,14 @@ local resource_definitions = {
   hudFont = {
     type = RESOURCE_TYPE_FONT,
     fileName = "fonts/tuffy.ttf",
-    glyphs = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789,.?!",
+    glyphs = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789:,.?!",
+    fontSize = 26,
+    dpi = 160
+  },
+  font = {
+    type = RESOURCE_TYPE_FONT,
+    fileName = "fonts/dpcomic.ttf",
+    glyphs = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789:,.?!",
     fontSize = 26,
     dpi = 160
   },
