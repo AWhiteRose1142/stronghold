@@ -119,7 +119,7 @@ function UpgradeMenu:setupItems()
   self.items.wall.button:setHandler( 
     function()
       print( "wall button!" )
-      if Player.progress.score >= UpgradeMenu.items.wall.cost then
+      if Player.progress.score >= UpgradeMenu.items.wall.cost and Player.progress.walls <= 3 then
         Player.progress.score = Player.progress.score - UpgradeMenu.items.wall.cost
         Player.progress.walls = Player.progress.walls + 1
       end
@@ -129,7 +129,7 @@ function UpgradeMenu:setupItems()
   self.items.archer.button:setHandler( 
     function()
       print( "archer button!" )
-      if Player.progress.score >= UpgradeMenu.items.wall.cost then
+      if Player.progress.score >= UpgradeMenu.items.archer.cost and Player.progress.walls <= Player.progress.archers then
         Player.progress.score = Player.progress.score - UpgradeMenu.items.archer.cost
         Player.progress.archers = Player.progress.archers + 1
       end

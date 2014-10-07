@@ -53,7 +53,7 @@ function Level:initialize( )
   
   self:loadBackground()
   self:loadScene()
-  self:loadEntities()
+  self:setupWaveStart()
   WaveGenerator:newWave()
   self.initialized = true
 end
@@ -113,27 +113,22 @@ function Level:setupLayers()
   MOAIRenderMgr.setRenderTable( renderTable )
 end
 
-function Level:loadEntities()
-  startX = -170
+function Level:setupWaveStart()
+  startX = -200
   
-  for i = 0, 3 do
-    Wall:new( i + 1 , { startX - (i * 16), GROUND_LEVEL }, Level.layers.active )
+  for i = 1, Player.progress.walls do
+    Wall:new( i + 1, { startX + (i * 16), GROUND_LEVEL }, Level.layers.active )
+  end
+  
+  for i = 1, Player.progress.archers do
+    local archer = Archer:new( { 0, 0 }, self.layers.active, self.partitions.active )
+    Self.playerEntities.walls[i + 1]:mountEntity( archer )
   end
   
   -- Should be initialized on it's own tower
   Sorcerer:new( { 0, 0 }, Level.layers.active )
-  
-  local archer = Archer:new(
-    { 50, 50 }, 
-    Level.layers.active, 
-    Level.partitions.active 
-  )
-  self.playerEntities.walls[2]:mountEntity( archer )
-  self.playerEntities.walls[4]:mountEntity( self.playerEntities.sorcerer[1] )
-  
-  --Footman:new( { -100, GROUND_LEVEL }, self.layers.active )
-  --Orc:new( { -80, GROUND_LEVEL }, self.layers.active )
-  --Goblin:new( { 100, GROUND_LEVEL }, self.layers.active )
+  self.playerEntities.tower[1] = Wall:new( 4, { startX - 25, GROUND_LEVEL }, self.layers.active )
+  self.playerEntities.tower[1]:mountEntity( self.playerEntities.sorcerer[1] )
 end
 
 -- Hier wordt nog ook de grond ingeladen.

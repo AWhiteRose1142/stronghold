@@ -43,6 +43,7 @@ function WaveGenerator:initialize( wave, stage )
   self.wave = wave
   self.stage = stage
   self.timer = nil
+  self.isThisWaveOver = false
 end
 
 -- Kicks off a new wave
@@ -62,6 +63,7 @@ end
 function WaveGenerator:setupNextWave()
   self.wave = self.wave + 1
   self.stage = 1
+  Player.progress.waveNum = self.wave
 end
 
 -- Executes a stage
@@ -73,8 +75,9 @@ function WaveGenerator:doStage( )
   self.stage = self.stage + 1
   if self.waves["wave" .. self.wave]["stage" .. self.stage] == nil then
     self:setupNextWave()
-    -- Interrupt here, or in setupNextWave.
-    self:newWave()
+    -- Tell the level the wave is over. Then let the level check if all enemies are dead
+    self.isThisWaveOver = true
+    --Game:startNewState( "upgrademenu" )
   else
     self:nextStage()
   end

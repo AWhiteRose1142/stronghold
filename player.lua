@@ -2,7 +2,7 @@ module( "Player", package.seeall )
 
 function Player:initialize( )
   self.progress = {
-    score = 9001,
+    score = 50,
     mana = 100,
     waveNum = 1,
     walls = 0,
