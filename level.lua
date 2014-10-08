@@ -1,6 +1,6 @@
 module( "Level", package.seeall )
 
-GROUND_LEVEL = -120
+GROUND_LEVEL = -130
 initialized = false
 
 --==================================================
@@ -119,20 +119,23 @@ function Level:setupLayers()
 end
 
 function Level:setupWaveStart()
-  startX = -200
+  startX = -210
   
+  local wallStartX = startX + 40 + ( 32 * Player.progress.walls )
   for i = 1, Player.progress.walls do
-    Wall:new( i + 1, { startX + (i * 16), GROUND_LEVEL }, Level.layers.active )
+    print( "wallheight " .. i+1 .. " startX " .. startX + ( i * 32) )
+    local xpos = wallStartX - ( i * 32 )
+    Wall:new( i, {  xpos , GROUND_LEVEL + 5 }, Level.layers.active )
   end
   
   for i = 1, Player.progress.archers do
     local archer = Archer:new( { 0, 0 }, self.layers.active, self.partitions.active )
-    Self.playerEntities.walls[i + 1]:mountEntity( archer )
+    self.playerEntities.walls[i]:mountEntity( archer )
   end
   
   -- Should be initialized on it's own tower
+  Tower:new( 3, { startX, GROUND_LEVEL + 12 }, self.layers.active )
   Sorcerer:new( { 0, 0 }, Level.layers.active )
-  self.playerEntities.tower[1] = Wall:new( 4, { startX - 25, GROUND_LEVEL }, self.layers.active )
   self.playerEntities.tower[1]:mountEntity( self.playerEntities.sorcerer[1] )
 end
 

@@ -204,7 +204,7 @@ function Orc:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -6, -16, 10, 16 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )

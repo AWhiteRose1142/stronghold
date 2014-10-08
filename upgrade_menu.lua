@@ -17,19 +17,19 @@ local buttonDefs = {
     pos = { BASEPX, BASEPY - PAD_B },
     name = "archer",
     img = "bowIcon",
-    cost = 100,
+    cost = 200,
   },
   lightning = {
     pos = { BASEPX, BASEPY - ( PAD_B * 2 ) },
     name = "lightning",
     img = "lightningIcon",
-    cost = 100,
+    cost = 500,
   },
   ice = {
     pos = { BASEPX, BASEPY - ( PAD_B * 3 ) },
     name = "ice",
     img = "iceIcon",
-    cost = 100,
+    cost = 500,
   },
 }
 
@@ -119,7 +119,7 @@ function UpgradeMenu:setupItems()
   self.items.wall.button:setHandler( 
     function()
       print( "wall button!" )
-      if Player.progress.score >= UpgradeMenu.items.wall.cost and Player.progress.walls <= 3 then
+      if Player.progress.score >= UpgradeMenu.items.wall.cost and Player.progress.walls < 3 then
         Player.progress.score = Player.progress.score - UpgradeMenu.items.wall.cost
         Player.progress.walls = Player.progress.walls + 1
       end
@@ -129,7 +129,7 @@ function UpgradeMenu:setupItems()
   self.items.archer.button:setHandler( 
     function()
       print( "archer button!" )
-      if Player.progress.score >= UpgradeMenu.items.archer.cost and Player.progress.walls <= Player.progress.archers then
+      if Player.progress.score >= UpgradeMenu.items.archer.cost and Player.progress.walls > Player.progress.archers then
         Player.progress.score = Player.progress.score - UpgradeMenu.items.archer.cost
         Player.progress.archers = Player.progress.archers + 1
       end

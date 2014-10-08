@@ -2,7 +2,7 @@ module( "Player", package.seeall )
 
 function Player:initialize( )
   self.progress = {
-    score = 50,
+    score = 9000,
     mana = 100,
     waveNum = 1,
     walls = 0,
@@ -25,7 +25,7 @@ function Player:manaUpdate()
     if self.manaTimer == nil then
       self.manaTimer = MOAITimer.new()
       self.manaTimer:setMode( MOAITimer.LOOP )
-      self.manaTimer:setSpan( .1 )
+      self.manaTimer:setSpan( .15 )
       self.manaTimer:setListener(
         MOAITimer.EVENT_TIMER_END_SPAN,
         bind( self, "manaUpdate" )
@@ -33,7 +33,7 @@ function Player:manaUpdate()
       self.manaTimer:start()
     else
       -- update mana score
-      if self.progress.mana < 100 then self.progress.mana = self.progress.mana + .5 end
+      if self.progress.mana < 100 then self.progress.mana = self.progress.mana + 1 end
     end
   else
     self.manaTimer:stop()

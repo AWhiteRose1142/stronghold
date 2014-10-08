@@ -92,8 +92,8 @@ function Gesture:determineCombo( )
     end
   end
   
-  if Player.progress.fireBall and Player.progress.mana >= 10 and Gesture:checkFireball() then
-    Player.progress.mana = Player.progress.mana - 10
+  if Player.progress.fireBall and Player.progress.mana >= 15 and Gesture:checkFireball() then
+    Player.progress.mana = Player.progress.mana - 15
     direction = normalize( mouseX - startX, mouseY - startY )
     Fireball:new( { startX, startY }, Level.layers.active, 10, direction )
   end

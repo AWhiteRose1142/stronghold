@@ -11,7 +11,7 @@ local animationDefinitions = {
     startFrame = 1,
     frameCount = 1,
     time = 0.2,
-    mode = MOAITimer.LOOP
+    mode = MOAITimer.NORMAL
   },
   attack = {
     startFrame = 2,
@@ -30,7 +30,7 @@ function Archer:initialize( position, layer, partition )
   self.target = nil
   self.layer = layer
   self.aim = 45
-  self.wallOffset = { 0, 11 }
+  self.wallOffset = { 0, 22 }
   self.mount = nil
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
@@ -82,7 +82,7 @@ end
 
 function Archer:attack( )
   if self.timer ~= nil then
-    --DO NOTHING 
+    --DO NOTHING
   else
     self.timer = MOAITimer.new()
     self.timer:setMode( MOAITimer.LOOP )
@@ -92,6 +92,7 @@ function Archer:attack( )
       bind( self, "attack" ) )
     self.timer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
       function()
+        if Level.initialized == false then return end
         table.insert(Level.entities, Arrow:new( self:getPosition(), self.layer, self.aim, self.strength))
       end)
     self:startAnimation( "attack" )
@@ -139,22 +140,23 @@ end
 
 function Archer:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  Level:removeEntity( self )
   self.mount.mountedEntity = nil
-  Level.score = Level.score - 10
+  Player.progress.score = Player.progress.score - 10
   print( "destroying an archer" )
-  if self.timer then self.timer:stop() end
+  if self.timer ~= nil then self.timer:stop() end
   self.layer:removeProp( self.prop )
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( 0, -1000 )
-  Level:removeEntity( self )
+  
 end
 
 function Archer:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -6, -16, 10, 16 )
   self.prop:setParent( self.physics.body )
   self.physics.fixture:setFilter( 0x04, 0x02 )
 end

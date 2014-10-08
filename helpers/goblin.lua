@@ -255,7 +255,7 @@ function Goblin:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 4 )
+  self.physics.fixture = self.physics.body:addRect( -6, -16, 10, 8 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )

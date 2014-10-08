@@ -4,17 +4,32 @@ local resource_definitions = {
   wallTop = {
     type = RESOURCE_TYPE_IMAGE, 
     fileName = 'img/wall_top.png', 
-    width = 16, height = 16,
+    width = 32, height = 32,
   },
   wallMiddle = {
     type = RESOURCE_TYPE_IMAGE, 
     fileName = 'img/wall_middle.png', 
-    width = 16, height = 16,
+    width = 32, height = 32,
   },
   wallBase = {
     type = RESOURCE_TYPE_IMAGE, 
     fileName = 'img/wall_base.png', 
-    width = 16, height = 16,
+    width = 32, height = 32,
+  },
+  towerTop = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/wizard_tower_top.png', 
+    width = 48, height = 48,
+  },
+  towerMiddle = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/wizard_tower_middle.png', 
+    width = 48, height = 48,
+  },
+  towerBase = {
+    type = RESOURCE_TYPE_IMAGE, 
+    fileName = 'img/wizard_tower_base.png', 
+    width = 48, height = 48,
   },
   background = {
     type = RESOURCE_TYPE_IMAGE, 
@@ -71,27 +86,22 @@ local resource_definitions = {
     fileName = 'img/ground.png',
     width = 512, height = 64,
   },
-  arrow= {
+  arrow = {
     type = RESOURCE_TYPE_IMAGE,
-    fileName = 'img/Arrow.png',
+    fileName = 'img/arrow.png',
     width = 16, height = 16,
-  },
-  buttonPH = {
-    type = RESOURCE_TYPE_IMAGE,
-    fileName = 'img/button_ph.png',
-    width = 32, height = 16,
   },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
-    fileName = 'img/archer_sheet.png',
-    tileMapSize = {5, 1},
-    width = 16, height = 16,
+    fileName = 'img/archer_32_sheet.png',
+    tileMapSize = {4, 1},
+    width = 32, height = 32,
   },
   goblin = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/Goblin.png',
     tileMapSize = {9, 1},
-    width = 16, height = 16,
+    width = 32, height = 32,
   },
   footman = {
     type = RESOURCE_TYPE_TILED_IMAGE,
@@ -113,15 +123,15 @@ local resource_definitions = {
   },
   sorcerer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
-    fileName = 'img/sorcerer_sheet.png',
+    fileName = 'img/wizard_32_sheet.png',
     tileMapSize = {6, 1},
-    width = 16, height = 16,
+    width = 32, height = 32,
   },
   orc = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/orc_sheet.png',
     tileMapSize = {9, 1},
-    width = 16, height = 16,
+    width = 32, height = 32,
   },
   hudFont = {
     type = RESOURCE_TYPE_FONT,

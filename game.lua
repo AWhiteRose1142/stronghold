@@ -36,7 +36,7 @@ function Game:initialize()
   Index:loadDefinitions()
   InputManager:initialize()
   Player:initialize()
-  nextState = "mainmenu"
+  nextState = "level"
   
 end
 
