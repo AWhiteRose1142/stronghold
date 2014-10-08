@@ -197,7 +197,7 @@ end
 
 function Footman:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Level.score = Level.score + 10
+  Player.progress.score = Player.progress.score + 10
   print( "destroying a footman" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )

@@ -47,7 +47,7 @@ function WaveGenerator:initialize( wave, stage )
 end
 
 -- Kicks off a new wave
-function WaveGenerator:newWave()
+function WaveGenerator:startWave()
   if self.waves["wave" .. self.wave] == nil then
     print( "there's no wave for that index D: Make one, you lazy bastard!" )
     return

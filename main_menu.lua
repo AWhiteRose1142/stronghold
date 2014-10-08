@@ -47,7 +47,7 @@ function MainMenu:loadButtons()
   self.buttons = {}
   
   self.buttons.newGame = {}
-  self.buttons.newGame.button = Button:new( { 0, 0 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME" )
+  self.buttons.newGame.button = Button:new( { 0, 0 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME", 20 )
   self.buttons.newGame.isClicked = false
   -- Button behavior for when it gets clicked
   self.buttons.newGame.button:setHandler( function( down )

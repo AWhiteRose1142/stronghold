@@ -49,12 +49,12 @@ function Level:initialize( )
   
   -- This is mostly for debugging purposes.
   InputManager:initialize()
-  WaveGenerator:initialize( 1, 1 )
+  WaveGenerator:initialize( Player.progress.waveNum, 1 )
   
   self:loadBackground()
   self:loadScene()
   self:setupWaveStart()
-  WaveGenerator:newWave()
+  WaveGenerator:startWave()
   self.initialized = true
 end
 
@@ -63,7 +63,12 @@ end
 --=============================================================
 
 function Level:update()
-  -- Doet nu nog niets.
+  
+  if WaveGenerator.isThisWaveOver == true and Level:getEnemyCount() <= 0 then
+    Game:startNewState( "upgrademenu" )
+    return
+  end
+  
   for key, entity in pairs( self.entities ) do
     --print( "updating: " .. entity.type )
     entity:update()
@@ -415,4 +420,13 @@ function Level:spawnBolts( position )
   for i = 1, 6 do
     Bolt:new( { position[1] + math.random( -30, 30 ), GROUND_LEVEL + math.random( 30 ) }, Level.layers.active )
   end
+end
+
+function Level:getEnemyCount()
+  local num = 0
+  for i = 1, table.getn( self.entities ) do
+    local t = self.entities[i].type
+    if t == "orc" or t == "footman" or t == "goblin" then num = num + 1 end
+  end
+  return num
 end

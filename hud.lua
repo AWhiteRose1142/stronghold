@@ -39,4 +39,9 @@ function HUD:update()
   local manaString = ( "MANA: " .. Player.progress.mana )
   self.mana:setString( manaString )
 end
+
+function HUD:destroy()
+  self.layer:removeProp( self.score )
+  self.layer:removeProp( self.mana )
+end
   

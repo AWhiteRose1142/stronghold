@@ -239,7 +239,7 @@ end
 
 function Goblin:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Level.score = Level.score + 10
+  Player.progress.score = Player.progress.score + 10
   print( "destroying a goblin" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )

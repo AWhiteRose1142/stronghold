@@ -2,7 +2,7 @@ local class = require "libs/middleclass"
 
 Button = class( "button")
 
-function Button:initialize( position, layer, partition, ignoreLayer, text )
+function Button:initialize( position, layer, partition, ignoreLayer, text, size )
   self.layer = layer
   self.ignoreLayer = ignoreLayer
   self.partition = partition
@@ -20,7 +20,7 @@ function Button:initialize( position, layer, partition, ignoreLayer, text )
   local x, y = unpack( position )
   local textBox = MOAITextBox.new()
   textBox:setFont( ResourceManager:get("font") )
-  textBox:setTextSize( 28 )
+  if size ~= nil then textBox:setTextSize( size ) else textBox:setTextSize( 28 ) end
   textBox:setRect( x - 50, y - 25, x + 50, y + 25 )
   textBox:setString( text )
   textBox:setYFlip( true )
