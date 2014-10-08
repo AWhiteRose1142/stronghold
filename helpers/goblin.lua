@@ -67,7 +67,7 @@ function Goblin:update()
   if self.target  ~= nil and self.target.health > 0 then
     self:stopMoving()
     self:attack()
-  elseif self.target == nil or self.target.health <= 0 then
+  elseif self.target == nil or self.target.health <= 0  then
     self:move( -1 )
     self.target = self:getTarget()
   end
@@ -124,7 +124,7 @@ function Goblin:move( direction )
   velX, velY = self.physics.body:getLinearVelocity()
   self.physics.body:setLinearVelocity( direction * 10, velY )
   
-  if ( self.currentAnimation ~= self:getAnimation ( 'walk' ) ) and not self.attacking then
+  if ( self.currentAnimation ~= self:getAnimation ( 'walk' ) ) and ( self.currentAnimation ~= self:getAnimation ( 'electrocute' ) ) and not self.attacking then
     self:startAnimation ( 'walk' )
   end
 end
@@ -178,7 +178,7 @@ function Goblin:damage( damage )
 end
 
 function Goblin:electrocute()
-  print( "electrocuting" )
+  print( "electrocuting the goblin" )
   self:stopMoving()
   self:startAnimation("electrocute")
   if self.timer ~= nil then 

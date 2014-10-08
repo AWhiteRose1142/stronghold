@@ -123,36 +123,6 @@ function Gesture:trackGesture( newX, newY )
     end
   end
   
-  
-  --[=[
-  -- Als het verschil tussen de afstand te klein is, geen nieuwe beweging maken
-  if math.abs( distance( Gesture.line.points[table.getn( Gesture.gestureTable )], { newX, newY } ) ) < 10 then 
-    --print( "distance too short" )
-    return 
-  end
-  
-  --check of er een table met gesture types is
-  if Gesture.gestureTable == nil then
-    -- Zonee, een nieuwe maken
-    Gesture.gestureTable = {}
-    local oldX, oldY = unpack( self.line:getPoints()[1] )
-    local direction = Gesture:getDirection( newX, newY, oldX, oldY )
-    table.insert( Gesture.gestureTable, direction )
-    self.line:addPoint( { newX, newY } )
-  else
-    -- zoja
-    oldX, oldY = unpack( self.line:getLastPoint() )
-    local direction = Gesture:getDirection( newX, newY, oldX, oldY )
-    
-    if direction == Gesture.gestureTable[ table.getn( Gesture.gestureTable ) ] then
-      self.line:setLastPoint( { newX, newY } )
-    else
-      table.insert( Gesture.gestureTable, direction )
-      self.line:addPoint( { newX, newY } )
-    end
-  end
-  ]=]
-  
 end
 
 function Gesture:getDirection( new, old )
