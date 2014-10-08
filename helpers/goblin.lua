@@ -30,6 +30,7 @@ function Goblin:initialize( position, layer, health )
   self.target = nil
   self.layer = layer
   self.range = 130
+  self.walkSpeed = 15
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'goblin' )
@@ -64,7 +65,7 @@ function Goblin:initialize( position, layer, health )
 end
 
 function Goblin:update()
-  if self.target  ~= nil and self.target.health > 0 then
+  if self.target ~= nil and self.target.health > 0 then
     self:stopMoving()
     self:attack()
   elseif self.target == nil or self.target.health <= 0  then
@@ -75,6 +76,24 @@ function Goblin:update()
   if self.health <= 0 then
     self:destroy()
   end
+end
+
+function Goblin:slow()
+  self.walkSpeed = 5
+  if self.taget == nil and self.health > 0 then self:move( -1 ) end
+  local timer = MOAITimer.new()
+  timer:setMode( MOAITimer.NORMAL )
+  timer:setSpan( 5 )
+  timer:setListener( 
+    MOAITimer.EVENT_TIMER_END_SPAN,
+    bind( self, "restoreSpeed" )
+  )
+  timer:start()
+end
+
+function Goblin:restoreSpeed()
+  self.walkSpeed = 15
+  if self.taget == nil and self.health > 0 then self:move( -1 ) end
 end
 
 function Goblin:getTarget()
@@ -122,7 +141,7 @@ end
 function Goblin:move( direction )
   self.prop:setScl( -direction, 1 )
   velX, velY = self.physics.body:getLinearVelocity()
-  self.physics.body:setLinearVelocity( direction * 10, velY )
+  self.physics.body:setLinearVelocity( direction * self.walkSpeed, velY )
   
   if ( self.currentAnimation ~= self:getAnimation ( 'walk' ) ) and ( self.currentAnimation ~= self:getAnimation ( 'electrocute' ) ) and not self.attacking then
     self:startAnimation ( 'walk' )

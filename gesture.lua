@@ -97,6 +97,14 @@ function Gesture:determineCombo( )
     direction = normalize( mouseX - startX, mouseY - startY )
     Fireball:new( { startX, startY }, Level.layers.active, 10, direction )
   end
+  
+  if Player.progress.iceBolt and Player.progress.mana >= 50 and Gesture:checkIceBolt() then
+    Player.progress.mana = Player.progress.mana - 50
+    for i = 1, 16 do
+      x = mouseX + math.random( -48, 48 )
+      IceBolt:new( { x, 260 }, Level.layers.active )
+    end
+  end
 end
 
 --======================================================
@@ -239,6 +247,15 @@ function Gesture:checkLightning()
     end
   end
   return false
+end
+
+function Gesture:checkIceBolt()
+  for key, direction in pairs( Gesture.gestureTable ) do
+    if direction ~= DOWN then
+      return false
+    end
+  end
+  return true
 end
 
 function Gesture:requireOneFrom( multiple, gesture )

@@ -30,6 +30,7 @@ function Orc:initialize( position, layer, health )
   self.timer = nil
   self.target = nil
   self.layer = layer
+  self.walkSpeed = 12
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'orc' )
@@ -70,6 +71,24 @@ function Orc:update()
   end
 end
 
+function Orc:slow()
+  self.walkSpeed = 5
+  if self.taget == nil and self.health > 0 then self:move( -1 ) end
+  local timer = MOAITimer.new()
+  timer:setMode( MOAITimer.NORMAL )
+  timer:setSpan( 5 )
+  timer:setListener( 
+    MOAITimer.EVENT_TIMER_END_SPAN,
+    bind( self, "restoreSpeed" )
+  )
+  timer:start()
+end
+
+function Orc:restoreSpeed()
+  self.walkSpeed = 15
+  if self.taget == nil and self.health > 0 then self:move( -1 ) end
+end
+
 function Orc:getPosition()
   local thisX, thisY = self.physics.body:getPosition()
   return { thisX, thisY }
@@ -86,7 +105,7 @@ end
 function Orc:move( direction )
   self.prop:setScl( -direction, 1 )
   velX, velY = self.physics.body:getLinearVelocity()
-  self.physics.body:setLinearVelocity( direction * 10, velY )
+  self.physics.body:setLinearVelocity( direction * self.walkSpeed, velY )
   
   if ( self.currentAnimation ~= self:getAnimation ( 'walk' ) ) and not self.attacking then
     self:startAnimation ( 'walk' )

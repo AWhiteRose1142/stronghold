@@ -9,7 +9,7 @@ function Player:initialize( )
     archers = 1,
     fireBall = true,
     lightning = true,
-    iceBolt = false,
+    iceBolt = true,
   }
   self.updateMana = true
   self.initialized = true

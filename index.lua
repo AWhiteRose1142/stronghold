@@ -121,6 +121,12 @@ local resource_definitions = {
     tileMapSize = {2, 1},
     width = 16, height = 16,
   },
+  iceBolt = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = "img/icebolt_sheet.png",
+    tileMapSize = {2, 1},
+    width = 16, height = 16,
+  },
   sorcerer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/wizard_32_sheet.png',
