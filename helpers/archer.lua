@@ -30,7 +30,7 @@ function Archer:initialize( position, layer, partition )
   self.target = nil
   self.layer = layer
   self.aim = 45
-  self.wallOffset = { 0, 22 }
+  self.wallOffset = { 0, -6 }
   self.mount = nil
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom

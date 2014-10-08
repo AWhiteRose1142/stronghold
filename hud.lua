@@ -34,7 +34,7 @@ function HUD:newDebugTextBox( size, rectangle )
 end
 
 function HUD:update()
-  local scoreString = ( "SCORE: " .. Level.score )
+  local scoreString = ( "SCORE: " .. Player.progress.score )
   self.score:setString( scoreString )
   local manaString = ( "MANA: " .. Player.progress.mana )
   self.mana:setString( manaString )

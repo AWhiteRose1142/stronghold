@@ -6,7 +6,7 @@ function Player:initialize( )
     mana = 100,
     waveNum = 1,
     walls = 2,
-    archers = 0,
+    archers = 1,
     fireBall = true,
     lightning = true,
     iceBolt = false,

@@ -72,7 +72,7 @@ function Crossbolt:onCollide( phase, fixtureA, fixtureB, arbiter )
   self.physics.body:setLinearVelocity(0, 0)
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "wall" or entityB.type == "archer" then
+    if entityB.type == "wall" or entityB.type == "archer" or entityB.type == "tower" then
       print( "gnarly!" )
       entityB:damage( self.strength )
       self.remove = true

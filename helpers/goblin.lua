@@ -29,7 +29,7 @@ function Goblin:initialize( position, layer, health )
   self.timer = nil
   self.target = nil
   self.layer = layer
-  self.range = 120
+  self.range = 130
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'goblin' )
@@ -136,12 +136,12 @@ function Goblin:fire()
   if self.target.type == "archer" then 
     tx, ty = unpack( self.target:getPosition() )
     --print( "firing to coordinates: " .. tx .. ", " .. ty )
-    ty = ty + 14
+    ty = ty + 4
   end
   if self.target.type == "wall" or self.target.type == "tower" then 
     tx, ty = self.target:getTopLoc()
     --print( "firing to coordinates: " .. tx .. ", " .. ty )
-    ty = ty + 14
+    ty = ty + 10
   end
   
   Crossbolt:new( self:getPosition(), self.layer, { tx, ty }, 10 )
@@ -260,7 +260,7 @@ function Goblin:initializePhysics( position )
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )
 
-  self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
+  --self.physics.fixture:setCollisionHandler( bind( self, 'onCollide'), MOAIBox2DArbiter.BEGIN )
   --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 

@@ -108,7 +108,7 @@ function Wall:initializePhysics( position, height )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -24, -24, 24, 21 + ( 48 * height ) )
+  self.physics.fixture = self.physics.body:addRect( -24, -24, 24, -8 + ( 48 * height ) )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
   self.transform:setParent( self.physics.body )
