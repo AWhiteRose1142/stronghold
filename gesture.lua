@@ -25,6 +25,7 @@ function Gesture:initialize( layers, partitions )
   self.partitions = partitions
   self.initialized = true
   
+  
 end
 
 --======================================================
@@ -32,7 +33,7 @@ end
 --======================================================
 
 function Gesture:update()
-  if MOAIInputMgr.device.mouseLeft:isDown() then
+  if Gesture:isDown() then
     if Gesture.line ~= nil then
       local newX, newY = Gesture:getMouseLocation( self.layers.active )
       --print( "tracking a gesture" )
@@ -214,9 +215,9 @@ end
 --in the layer's coordinate system
 function Gesture:getMouseLocation( layer )
   if layer == nil then
-    return MOAIInputMgr.device.pointer:getLoc ()
+    return self:getPointerLoc()
   else
-    return layer:wndToWorld(MOAIInputMgr.device.pointer:getLoc ())
+    return layer:wndToWorld( self:getPointerLoc() )
   end
 end
 
@@ -272,6 +273,22 @@ function Gesture:requireAllFrom( test, material )
     if test[i] ~= material[i] then return false end
   end
   return true
+end
+
+function Gesture:isDown()
+  if MOAIInputMgr.device.pointer then 
+    return MOAIInputMgr.device.mouseLeft:isDown()
+  elseif MOAIInputMgr.device.touch then 
+    return MOAITouchSensor:isDown()
+  end
+end
+
+function Gesture:getPointerLoc()
+  if MOAIInputMgr.device.pointer then
+    return MOAIInputMgr.device.pointer:getLoc()
+  elseif MOAIInputMgr.device.touch then
+    return MOAITouchSensor:getTouch()
+  end
 end
 
 function Gesture:destroy()

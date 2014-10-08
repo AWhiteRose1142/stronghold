@@ -56,4 +56,14 @@ function InputManager:initialize ()
     
     MOAIInputMgr.device.mouseLeft:setCallback( onMouseEvent )
   end
+  
+  if MOAIInputMgr.device.touch then
+    function onTouchEvent( eventType, idx, x, y, tapCount )
+      local down = false
+      if eventType == MOAITouchSensor.TOUCH_DOWN then down = true end
+      Game:onInput( down, x, y )
+    end
+    
+    MOAIInputMgr.device.mouseLeft:setCallback( onTouchEvent )
+  end
 end

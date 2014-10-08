@@ -81,9 +81,9 @@ end
 function Level:onInput( down, x, y )
   if Gesture.initialized == false then return end
   -- Mouse down
-  if MOAIInputMgr.device.mouseLeft:isDown() then Gesture:onMouseDown() end
+  if down == true then Gesture:onMouseDown() end
   -- Mouse up
-  if MOAIInputMgr.device.mouseLeft:isUp() then Gesture:onMouseUp() end
+  if down == false then Gesture:onMouseUp() end
 end
 
 --==================================================
