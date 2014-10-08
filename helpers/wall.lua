@@ -1,12 +1,12 @@
 local class = require 'libs/middleclass'
 
 Wall = class('wall')
-local WORLDHEIGHT_HEALTH_RATIO = 6.25
+local WORLDHEIGHT_HEALTH_RATIO = 1.5
 
 function Wall:initialize( height, position, layer, health )
   local x, y = unpack( position )
   self.height = height
-  self.health = 32 + ( height * 50 )
+  self.health = 48 + ( height * 50 )
   self.baseHealth = self.health
   self.baseX, self.baseY = x, y
   self.type = "wall"
@@ -30,7 +30,7 @@ function Wall:initialize( height, position, layer, health )
   for i = 1, ( height - 1 ) do
     local midProp = MOAIProp2D.new()
     midProp:setDeck( self.midDeck )
-    midProp:setLoc( 0, 32 * i )
+    midProp:setLoc( 0, 48 * i )
     layer:insertProp( midProp )
     midProp:setParent( self.transform )
     table.insert( self.midProps, midProp )
@@ -39,7 +39,7 @@ function Wall:initialize( height, position, layer, health )
   self.topProp = MOAIProp2D.new()
   self.topProp:setDeck( self.topDeck )
   layer:insertProp( self.topProp )
-  self.topProp:setLoc( 0, 32 * height )
+  self.topProp:setLoc( 0, 48 * height )
   self.topProp:setParent( self.transform )
   
   self:initializePhysics( position, height )
@@ -65,7 +65,7 @@ function Wall:update()
     -- Maybe allow the archer to defend itself after it has been killed?
     if self.mountedEntity then self.mountedEntity.entity:destroy() end
     x, y = self.physics.body:getPosition()
-    self.physics.body:setTransform( x, y - ( 20 + ( self.height * 32 ) ) )
+    self.physics.body:setTransform( x, y - ( 30 + ( self.height * 48 ) ) )
     self:destroy()
   end
 end
@@ -108,7 +108,7 @@ function Wall:initializePhysics( position, height )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.KINEMATIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -16, -16, 16, 14 + ( 32 * height ) )
+  self.physics.fixture = self.physics.body:addRect( -24, -24, 24, 21 + ( 48 * height ) )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
   self.transform:setParent( self.physics.body )

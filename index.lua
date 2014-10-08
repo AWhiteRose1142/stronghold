@@ -4,17 +4,17 @@ local resource_definitions = {
   wallTop = {
     type = RESOURCE_TYPE_IMAGE, 
     fileName = 'img/wall_top.png', 
-    width = 32, height = 32,
+    width = 48, height = 48,
   },
   wallMiddle = {
     type = RESOURCE_TYPE_IMAGE, 
     fileName = 'img/wall_middle.png', 
-    width = 32, height = 32,
+    width = 48, height = 48,
   },
   wallBase = {
     type = RESOURCE_TYPE_IMAGE, 
     fileName = 'img/wall_base.png', 
-    width = 32, height = 32,
+    width = 48, height = 48,
   },
   towerTop = {
     type = RESOURCE_TYPE_IMAGE, 

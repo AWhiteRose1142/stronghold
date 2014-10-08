@@ -5,10 +5,10 @@ function Player:initialize( )
     score = 9000,
     mana = 100,
     waveNum = 1,
-    walls = 0,
+    walls = 2,
     archers = 0,
     fireBall = true,
-    lightning = false,
+    lightning = true,
     iceBolt = false,
   }
   self.updateMana = true

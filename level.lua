@@ -52,8 +52,8 @@ function Level:initialize( )
   WaveGenerator:initialize( Player.progress.waveNum, 1 )
   
   self:loadBackground()
-  self:loadScene()
   self:setupWaveStart()
+  self:loadScene()
   WaveGenerator:startWave()
   self.initialized = true
 end
@@ -121,11 +121,11 @@ end
 function Level:setupWaveStart()
   startX = -210
   
-  local wallStartX = startX + 40 + ( 32 * Player.progress.walls )
+  local wallStartX = startX + 50 + ( 48 * Player.progress.walls )
   for i = 1, Player.progress.walls do
-    print( "wallheight " .. i+1 .. " startX " .. startX + ( i * 32) )
-    local xpos = wallStartX - ( i * 32 )
-    Wall:new( i, {  xpos , GROUND_LEVEL + 5 }, Level.layers.active )
+    print( "wallheight " .. i+1 .. " startX " .. startX + ( i * 48) )
+    local xpos = wallStartX - ( i * 48 )
+    Wall:new( i, {  xpos , GROUND_LEVEL + 12 }, Level.layers.active )
   end
   
   for i = 1, Player.progress.archers do

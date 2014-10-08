@@ -176,7 +176,7 @@ end
 function Orc:onCollide( phase, fixtureA, fixtureB, arbiter )
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "wall" then
+    if entityB.type == "wall" or entityB.type == "tower" then
       print( "into a wall" )
       self.target = entityB
       self:attack( )

@@ -138,7 +138,7 @@ function Goblin:fire()
     --print( "firing to coordinates: " .. tx .. ", " .. ty )
     ty = ty + 14
   end
-  if self.target.type == "wall" then 
+  if self.target.type == "wall" or self.target.type == "tower" then 
     tx, ty = self.target:getTopLoc()
     --print( "firing to coordinates: " .. tx .. ", " .. ty )
     ty = ty + 14
@@ -225,7 +225,7 @@ function Goblin:onCollide( phase, fixtureA, fixtureB, arbiter )
   
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "wall" then
+    if entityB.type == "wall" or entityB.type == "tower" then
       print( "into a wall" )
       self.target = entityB
       self:attack( )

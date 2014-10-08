@@ -1,7 +1,7 @@
 local class = require 'libs/middleclass'
 
 Tower = class('tower')
-local WORLDHEIGHT_HEALTH_RATIO = 6.25
+local WORLDHEIGHT_HEALTH_RATIO = 1.5
 
 function Tower:initialize( height, position, layer, health )
   local x, y = unpack( position )
