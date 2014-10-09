@@ -3,7 +3,7 @@ module( "WaveGenerator", package.seeall )
 waves = {
   wave1 = {
     stage1 = { 2, "orc" },
-    stage2 = { 1, "goblin" },
+    stage2 = { 1, "imp" },
     stage3 = { 4, "orc" },
     stage4 = { 6, "goblin" },
     stage5 = { 1, "orc" },
@@ -15,7 +15,7 @@ waves = {
     stage3 = { 4, "orc" },
     stage4 = { 6, "goblin" },
     stage5 = { 1, "orc" },
-    stage6 = { 1, "orc" },
+    stage6 = { 2, "orc" },
     stage7 = { 1, "orc" },
     stage8 = { 1, "goblin" },
   },
@@ -26,6 +26,10 @@ waves = {
     stage4 = { 6, "goblin" },
     stage5 = { 1, "orc" },
     stage6 = { 1, "goblin" },
+    stage7 = { 3, "goblin" },
+    stage8 = { 1, "orc" },
+    stage9 = { 2, "orc" },
+    stage10 = { 1, "orc" },
   },
   wave4 = {
     stage1 = { 2, "orc" },
@@ -34,6 +38,13 @@ waves = {
     stage4 = { 6, "goblin" },
     stage5 = { 1, "orc" },
     stage6 = { 1, "goblin" },
+    stage7 = { 1, "goblin" },
+    stage8 = { 2, "goblin" },
+    stage9 = { 1, "orc" },
+    stage10 = { 1, "orc" },
+    stage11 = { 1, "orc" },
+    stage12 = { 2, "goblin" },
+    stage13 = { 1, "goblin" },
   },
 }
 
@@ -102,5 +113,9 @@ function WaveGenerator:spawn( enemyType )
   
   if enemyType == "skeleton" then
     Skeleton:new( SPAWN_POSITION, Level.layers.active )
+  end
+  
+  if enemyType == "imp" then
+    Imp:new( SPAWN_POSITION, Level.layers.active )
   end
 end

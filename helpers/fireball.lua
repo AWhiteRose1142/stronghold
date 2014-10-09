@@ -96,7 +96,7 @@ end
 function Fireball:onCollide( phase, fixtureA, fixtureB, arbiter )
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" then
+    if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" or entityB.type == "imp" then
       print( "burn baby!" )
       entityB:damage( 5 )
       self.remove = true

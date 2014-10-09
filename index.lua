@@ -139,6 +139,12 @@ local resource_definitions = {
     tileMapSize = {9, 1},
     width = 32, height = 32,
   },
+  imp = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/imp_sheet.png',
+    tileMapSize = {7, 1},
+    width = 16, height = 16,
+  },
   hudFont = {
     type = RESOURCE_TYPE_FONT,
     fileName = "fonts/tuffy.ttf",
