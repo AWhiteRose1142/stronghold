@@ -19,9 +19,12 @@ end
 
 function HUD:initializeDebugHud()
   self.font = MOAIFont.new()
-  self.font = ResourceManager:get( "hudFont" )
-  self.score = self:newDebugTextBox( 30, { 10, 10, 200, 50 } )
-  self.mana = self:newDebugTextBox( 30, { 10, 70, 200, 130 } )
+  self.font = ResourceManager:get( "font" )
+  self.score = self:newDebugTextBox( 36, { 10, 10, 200, 50 } )
+  self.mana = self:newDebugTextBox( 36, { 10, 60, 100, 120 } )
+  self.mana:setString( "MANA: " )
+  self.manaBarUnder = Manabar:new( { 110, 75 }, 250, 30, self.layer, .7 )
+  self.manaBar = Manabar:new( { 110, 75 }, 250, 30, self.layer, 1 )
 end
 
 function HUD:newDebugTextBox( size, rectangle )
@@ -29,15 +32,15 @@ function HUD:newDebugTextBox( size, rectangle )
   textBox:setFont( self.font )
   textBox:setTextSize( size )
   textBox:setRect( unpack( rectangle ) )
+  textBox:setColor( .4, .4, .4, 1 )
   layer:insertProp( textBox )
   return textBox
 end
 
 function HUD:update()
+  self.manaBar:update()
   local scoreString = ( "SCORE: " .. Player.progress.score )
   self.score:setString( scoreString )
-  local manaString = ( "MANA: " .. Player.progress.mana )
-  self.mana:setString( manaString )
 end
 
 function HUD:destroy()

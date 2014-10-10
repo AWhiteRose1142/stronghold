@@ -26,6 +26,7 @@ require "helpers/arrow"
 require "helpers/goblin"
 require "helpers/crossbolt"
 require "helpers/button"
+require "helpers/manabar"
 
 --=============================================
 -- Resource types

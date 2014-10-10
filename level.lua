@@ -45,7 +45,7 @@ function Level:initialize( )
   self:setupLayers()
   
   HUD:initialize( )
-  PhysicsManager:initialize( --[=[Level.layers.active]=] )
+  PhysicsManager:initialize( Level.layers.active )
   Gesture:initialize( self.layers, self.partitions )
   
   -- This is mostly for debugging purposes.
@@ -135,7 +135,7 @@ function Level:setupWaveStart()
   end
   
   -- Should be initialized on it's own tower
-  Tower:new( 3, { startX, GROUND_LEVEL + 12 }, self.layers.active )
+  Tower:new( 4, { startX, GROUND_LEVEL + 12 }, self.layers.active )
   Sorcerer:new( { 0, 0 }, Level.layers.active )
   self.playerEntities.tower[1]:mountEntity( self.playerEntities.sorcerer[1] )
 end

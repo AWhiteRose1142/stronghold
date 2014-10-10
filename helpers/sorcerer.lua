@@ -19,7 +19,7 @@ function Sorcerer:initialize( position, layer )
   self.health = 15
   self.damage = 10
   -- Offset for when placing this on a wall
-  self.wallOffset = { 6, -6 }
+  self.wallOffset = { 6, -9 }
   
   self.deck = ResourceManager:get( 'sorcerer' )
   
