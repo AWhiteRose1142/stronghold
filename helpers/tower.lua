@@ -1,7 +1,7 @@
 local class = require 'libs/middleclass'
 
 Tower = class('tower')
-local WORLDHEIGHT_HEALTH_RATIO = 1.5
+local WORLDHEIGHT_HEALTH_RATIO = 1.25
 
 function Tower:initialize( height, position, layer, health )
   local x, y = unpack( position )
@@ -112,7 +112,7 @@ function Tower:initializePhysics( position, height )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x04, 0x02 )
   self.transform:setParent( self.physics.body )
-  self.physics.fixture:setCollisionHandler( onCollide, MOAIBox2DArbiter.BEGIN )
+  --self.physics.fixture:setCollisionHandler( onCollide, MOAIBox2DArbiter.BEGIN )
 end
 
 function onCollide( phase, fixtureA, fixtureB, arbiter )
@@ -130,6 +130,6 @@ function Tower:destroy()
     self.layer:removeProp( prop )
   end
   
-  self.physics.body:setTransform( 0, -1000 )
+  self.physics.body:setTransform( -1000, -1000 )
   Level:removeEntity( self )
 end

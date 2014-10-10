@@ -59,7 +59,6 @@ end
 --===========================================
 
 function Arrow:onCollide( phase, fixtureA, fixtureB, arbiter )
-  print( "boop!" )
   self.physics.body:setAngularVelocity(0)
   self.physics.body:setLinearVelocity(0, 0)
   local entityB = Level:getEntityFromFixture( fixtureB )

@@ -148,7 +148,7 @@ function Archer:destroy()
   self.layer:removeProp( self.prop )
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
-  self.physics.body:setTransform( 0, -1000 )
+  self.physics.body:setTransform( -1000, -1000 )
   
 end
 

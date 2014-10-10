@@ -90,6 +90,7 @@ end
 function Wall:getTopLoc()
   local bX, bY = self.physics.body:getPosition()
   local tX, tY = self.topProp:getLoc()
+  --print( "wall top loc is " .. ( tX + bX ) .. " " .. ( bY + tY ) )
   return ( tX + bX ), ( bY + tY )
 end
 
@@ -130,6 +131,6 @@ function Wall:destroy()
     self.layer:removeProp( prop )
   end
   
-  self.physics.body:setTransform( 0, -1000 )
+  self.physics.body:setTransform( -1000, -1000 )
   Level:removeEntity( self )
 end

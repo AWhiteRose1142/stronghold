@@ -100,13 +100,19 @@ end
 
 function Goblin:getTarget()
   for key, entity in pairs( Level.playerEntities.archers ) do
-    if self:inRange( entity, 100 ) then
+    if self:inRange( entity, 120 ) then
       return entity
     end
   end
   
   for key, entity in pairs( Level.playerEntities.walls ) do
-    if self:inRange( entity ) then
+    if self:inRange( entity, 80 ) then
+      return entity
+    end
+  end
+  
+  for key, entity in pairs( Level.playerEntities.tower ) do
+    if self:inRange( entity, 80 ) then
       return entity
     end
   end
@@ -128,9 +134,8 @@ function Goblin:inRange( entity, mod )
   -- Waarom de manhattan distance?
   local ex, ey = unpack( entity:getPosition() )
   local gx, gy = unpack( self:getPosition() )
-  local dx = math.abs(gx - ex)
-  local dy = math.abs(gy - ey)
-  if (dx + dy) <= range then
+  local dy = math.abs( gx - ex )
+  if dy <= range then
     return true
   end
   return false
@@ -152,17 +157,18 @@ end
 
 function Goblin:fire()
   if self.target == nil then return end
+  if self.target.health <= 0 then self.target = nil return end
   print( "goblin fires at " .. self.target.type )
   local tx, ty
   if self.target.type == "archer" then 
     tx, ty = unpack( self.target:getPosition() )
     --print( "firing to coordinates: " .. tx .. ", " .. ty )
-    ty = ty + 4
+    ty = ty + 40
   end
   if self.target.type == "wall" or self.target.type == "tower" then 
     tx, ty = self.target:getTopLoc()
     --print( "firing to coordinates: " .. tx .. ", " .. ty )
-    ty = ty + 10
+    ty = ty + 15
   end
   
   Crossbolt:new( self:getPosition(), self.layer, { tx, ty }, 10 )
@@ -242,8 +248,6 @@ end
 --===========================================
 
 function Goblin:onCollide( phase, fixtureA, fixtureB, arbiter )
-  print( "boop!" )
-  
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
     if entityB.type == "wall" or entityB.type == "tower" then
