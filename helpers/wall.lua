@@ -1,7 +1,7 @@
 local class = require 'libs/middleclass'
 
 Wall = class('wall')
-local WORLDHEIGHT_HEALTH_RATIO = 1.5
+local WORLDHEIGHT_HEALTH_RATIO = 1.6
 
 function Wall:initialize( height, position, layer, health )
   local x, y = unpack( position )

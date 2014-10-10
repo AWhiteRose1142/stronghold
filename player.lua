@@ -5,7 +5,7 @@ function Player:initialize( )
     score = 9000,
     mana = 100,
     waveNum = 1,
-    walls = 2,
+    walls = 1,
     archers = 1,
     fireBall = true,
     lightning = true,
@@ -53,4 +53,15 @@ end
 
 function Player:exportProgress( )
   
+end
+
+function Player:resetProgress()
+  self.progress.score = 0
+  self.progress.mana = 100
+  self.progress.waveNum = 1
+  self.progress.walls = 0
+  self.progress.archers = 0
+  self.progress.fireBall = true
+  self.progress.lightning = false
+  self.progress.iceBolt = false
 end

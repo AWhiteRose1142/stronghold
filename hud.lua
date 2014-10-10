@@ -20,14 +20,14 @@ end
 function HUD:initializeDebugHud()
   self.font = MOAIFont.new()
   self.font = ResourceManager:get( "font" )
-  self.score = self:newDebugTextBox( 36, { 10, 10, 200, 50 } )
-  self.mana = self:newDebugTextBox( 36, { 10, 60, 100, 120 } )
+  self.score = self:newTextBox( 36, { 10, 10, 200, 50 } )
+  self.mana = self:newTextBox( 36, { 10, 60, 100, 120 } )
   self.mana:setString( "MANA: " )
   self.manaBarUnder = Manabar:new( { 110, 75 }, 250, 30, self.layer, .7 )
   self.manaBar = Manabar:new( { 110, 75 }, 250, 30, self.layer, 1 )
 end
 
-function HUD:newDebugTextBox( size, rectangle )
+function HUD:newTextBox( size, rectangle )
   local textBox = MOAITextBox.new()
   textBox:setFont( self.font )
   textBox:setTextSize( size )

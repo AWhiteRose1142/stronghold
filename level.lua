@@ -70,6 +70,25 @@ function Level:update()
     return
   end
   
+  if self.playerEntities.tower[1].health <= 0 or self.playerEntities.sorcerer[1].health <= 0 then
+    if self.gameOverTimer ~= nil then return end
+    local gameOver = HUD:newTextBox( 70, { 0, 0, SCREENRES_X, SCREENRES_Y } )
+    gameOver:setAlignment( MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY )
+    gameOver:setColor( 1, 0, .2, 1 )
+    gameOver:setString( "GAME OVER" )
+    self.gameOverTimer = MOAITimer:new()
+    self.gameOverTimer:setMode( MOAITimer.NORMAL )
+    self.gameOverTimer:setSpan( 3 )
+    self.gameOverTimer:setListener(
+      MOAITimer.EVENT_TIMER_END_SPAN,
+      function()
+        Player:resetProgress()
+        Game:startNewState( "mainmenu" )
+      end
+    )
+    self.gameOverTimer:start()
+  end
+  
   for key, entity in pairs( self.entities ) do
     --print( "updating: " .. entity.type )
     entity:update()
@@ -244,6 +263,7 @@ function Level:destroy()
   self.backgroundProp = nil
   Level.layers.background:removeProp( self.groundProp )
   self.groundProp = nil
+  self.gameOverTimer = nil
   
   -- destroy all entities
   for key, entity in pairs( self.entities ) do
