@@ -65,6 +65,8 @@ function Goblin:initialize( position, layer, health )
 end
 
 function Goblin:update()
+  if self.currentAnimation == self:getAnimation( "electrocute" ) then return end
+  
   if self.target ~= nil and self.target.health > 0 then
     self:stopMoving()
     self:attack()
@@ -172,7 +174,7 @@ function Goblin:stopMoving()
 end
 
 function Goblin:attack( )
-  if self.timer ~= nil then
+  if self.timer ~= nil or self.currentAnimation == self:getAnimation( "electrocute" ) then
     --DO NOTHING
   else
     self.timer = MOAITimer.new()
