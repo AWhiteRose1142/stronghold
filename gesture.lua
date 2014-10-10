@@ -63,13 +63,20 @@ function Gesture:onMouseUp()
   print( "mouse is up, stopping gesture tracking" )
   -- Geen gesture porberen te tracken als deze niet ver genoeg is.
   newX, newY = Gesture:getMouseLocation( Gesture.layers.active )
+  lastX, lastY = unpack( self.line.points[ table.getn( self.line.points ) - 1 ] )
+  print( "lastPos: " .. lastX .. " " .. lastY .. " newPos: " .. newX .. " " .. newY .. " distance: " .. distance( { lastX, lastY }, { newX, newY } ) )
   if 
     table.getn( Gesture.gestureTable ) < 1 and 
-    distance( Gesture.line.points[1], { newX, newY } ) < 10 
-  then 
-    return 
+    distance( { lastX, lastY }, { newX, newY } ) < 20 
+  then
+    Gesture.line:destroy()
+    Gesture.line = nil
+    Gesture.gestureTable = nil
+    return
   end
   
+  local direction = Gesture:getDirection( { newX, newY }, { lastX, lastY } )
+  table.insert( Gesture.gestureTable, direction )
   Gesture:determineCombo(  )
   Gesture.line:destroy()
   Gesture.line = nil
@@ -94,12 +101,12 @@ function Gesture:determineCombo( )
   end
   
   if Player.progress.fireBall and Player.progress.mana >= 15 and Gesture:checkFireball() then
+    print( "casting fireball" )
     Player.progress.mana = Player.progress.mana - 15
     direction = normalize( mouseX - startX, mouseY - startY )
     Fireball:new( { startX, startY }, Level.layers.active, 10, direction )
-  end
-  
-  if Player.progress.iceBolt and Player.progress.mana >= 50 and Gesture:checkIceBolt() then
+  elseif Player.progress.iceBolt and Player.progress.mana >= 50 and Gesture:checkIceBolt() then
+    print( "raining ice" )
     Player.progress.mana = Player.progress.mana - 50
     for i = 1, 16 do
       x = mouseX + math.random( -48, 48 )
@@ -120,7 +127,7 @@ function Gesture:trackGesture( newX, newY )
   Gesture.line.points[pointN] = { newX, newY }
   
   absDist = math.abs( distance( Gesture.line.points[pointN - 1], Gesture.line.points[pointN] ) )
-  if absDist > 20 then
+  if absDist > 30 then
     -- Ok, enough distance! now we want a direction
     local direction = Gesture:getDirection( { newX, newY }, Gesture.prevLoc )
     local gestureN = table.getn( Gesture.gestureTable )
@@ -251,6 +258,7 @@ function Gesture:checkLightning()
 end
 
 function Gesture:checkIceBolt()
+  if table.getn( Gesture.gestureTable ) < 1 then return false end
   for key, direction in pairs( Gesture.gestureTable ) do
     if direction ~= DOWN then
       return false
