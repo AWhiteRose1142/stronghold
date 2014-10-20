@@ -50,8 +50,13 @@ function InputManager:initialize ()
   end
   
   if MOAIInputMgr.device.pointer then
-    function onMouseEvent( x, y )
-      Game:onInput( MOAIInputMgr.device.mouseLeft:isDown(), x, y )
+    function onMouseEvent( )
+      local mouseDown = MOAIInputMgr.device.mouseLeft:isDown()
+      local mx, my = MOAIInputMgr.device.pointer:getLoc()
+      print( "mousedown: " .. tostring( mouseDown ) )
+      print( "mouseX: " .. tostring( mx ) )
+      print( "mouseY: " .. tostring( my ) )
+      Game:onInput( mouseDown, mx, my )
     end
     
     MOAIInputMgr.device.mouseLeft:setCallback( onMouseEvent )
@@ -59,11 +64,28 @@ function InputManager:initialize ()
   
   if MOAIInputMgr.device.touch then
     function onTouchEvent( eventType, idx, x, y, tapCount )
-      local down = false
-      if eventType == MOAITouchSensor.TOUCH_DOWN then down = true end
-      Game:onInput( down, x, y )
+      local touchDown = false
+      if eventType == MOAITouchSensor.TOUCH_DOWN or eventType == MOAITouchSensor.TOUCH_MOVE then touchDown = true end
+      Game:onInput( touchDown, x, y )
     end
     
     MOAIInputMgr.device.touch:setCallback( onTouchEvent )
+  end
+end
+
+function InputManager:isDown()
+  if MOAIInputMgr.device.pointer then 
+    return MOAIInputMgr.device.mouseLeft:isDown()
+  elseif MOAIInputMgr.device.touch then 
+    return MOAIInputMgr.device.touch:isDown()
+  end
+end
+
+function InputManager:getPointerLoc()
+  if MOAIInputMgr.device.pointer then
+    return MOAIInputMgr.device.pointer:getLoc()
+  elseif MOAIInputMgr.device.touch then
+    local t1 = MOAIInputMgr.device.touch:getActiveTouches()
+    return MOAIInputMgr.device.touch:getTouch( t1 )
   end
 end

@@ -2,8 +2,8 @@ module( "HUD", package.seeall )
 
 function HUD:initialize()
   self.viewport = MOAIViewport.new()
-  viewport:setSize( SCREENRES_X, SCREENRES_Y )
-  viewport:setScale( SCREENRES_X, -SCREENRES_Y )
+  viewport:setSize( SCREEN_WIDTH, SCREEN_HEIGHT )
+  viewport:setScale( SCREEN_WIDTH, -SCREEN_HEIGHT )
   viewport:setOffset( -1, 1 )
   
   self.layer = MOAILayer2D.new()

@@ -33,7 +33,7 @@ end
 --======================================================
 
 function Gesture:update()
-  if Gesture:isDown() then
+  if InputManager:isDown() then
     if Gesture.line ~= nil then
       local newX, newY = Gesture:getMouseLocation( self.layers.active )
       --print( "tracking a gesture" )
@@ -48,7 +48,7 @@ end
 --======================================================
 
 function Gesture:onMouseDown()
-  --Gesture:trackSwipe()
+  print( "Gesture mouse down!" )
   local newX, newY = Gesture:getMouseLocation( self.layers.active )
   
   if Gesture.line == nil then
@@ -60,7 +60,11 @@ function Gesture:onMouseDown()
 end
 
 function Gesture:onMouseUp()
-  print( "mouse is up, stopping gesture tracking" )
+  print( "Gesture mouse up!" )
+  if self.line == nil then
+    print( "no line registered" )
+    return
+  end
   -- Geen gesture porberen te tracken als deze niet ver genoeg is.
   newX, newY = Gesture:getMouseLocation( Gesture.layers.active )
   lastX, lastY = unpack( self.line.points[ table.getn( self.line.points ) - 1 ] )
@@ -222,9 +226,9 @@ end
 --in the layer's coordinate system
 function Gesture:getMouseLocation( layer )
   if layer == nil then
-    return self:getPointerLoc()
+    return InputManager:getPointerLoc()
   else
-    return layer:wndToWorld( self:getPointerLoc() )
+    return layer:wndToWorld( InputManager:getPointerLoc() )
   end
 end
 
@@ -281,22 +285,6 @@ function Gesture:requireAllFrom( test, material )
     if test[i] ~= material[i] then return false end
   end
   return true
-end
-
-function Gesture:isDown()
-  if MOAIInputMgr.device.pointer then 
-    return MOAIInputMgr.device.mouseLeft:isDown()
-  elseif MOAIInputMgr.device.touch then 
-    return MOAITouchSensor:isDown()
-  end
-end
-
-function Gesture:getPointerLoc()
-  if MOAIInputMgr.device.pointer then
-    return MOAIInputMgr.device.pointer:getLoc()
-  elseif MOAIInputMgr.device.touch then
-    return MOAITouchSensor:getTouch()
-  end
 end
 
 function Gesture:destroy()

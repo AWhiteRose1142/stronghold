@@ -55,8 +55,8 @@ function UpgradeMenu:update()
 end
 
 function UpgradeMenu:onInput( )
-  local x, y = self.layers.user:wndToWorld(MOAIInputMgr.device.pointer:getLoc ())
-  local down = MOAIInputMgr.device.mouseLeft:isDown()
+  local x, y = self.layers.user:wndToWorld( InputManager:getPointerLoc() )
+  local down = InputManager:isDown()
   
   if down == true then self.activeButton = self:pickProp( down, x, y ) end
   if down == false and self.activeButton ~= nil then 

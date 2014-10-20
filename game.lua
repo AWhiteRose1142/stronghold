@@ -70,6 +70,7 @@ function Game:startNewState( state )
 end
 
 function Game:onInput( down, x, y )
+  --print( "Game onInput recieved: " .. tostring( down ) .. " " .. x .. " " .. y )
   if currentState == "level" and Level.initialized then
     Level:onInput( down, x, y )
   end

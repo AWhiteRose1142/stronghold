@@ -59,14 +59,14 @@ end
 
 function MainMenu:onInput( down, x, y )
   local wx, wy = self.layers.user:wndToWorld( x, y )
-  self:pickProp( wx, wy )
+  self:pickProp( down, wx, wy )
 end
 
-function MainMenu:pickProp( x, y )
+function MainMenu:pickProp( down, x, y )
   local obj = self.partitions.user.propForPoint( self.partitions.user, x, y )
   for key, item in pairs( self.buttons ) do
     if item.button.prop == obj then
-      item.button:onInput( MOAIInputMgr.device.mouseLeft:isDown(), true )
+      item.button:onInput( down, true )
     end
   end
   return nil

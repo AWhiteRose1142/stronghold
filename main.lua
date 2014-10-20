@@ -42,11 +42,31 @@ RESOURCE_TYPE_SOUND     = 4
 --=============================================
 
 -- Open a window
-MOAISim.openWindow( GAMENAME, SCREENRES_X, SCREENRES_Y)
+MOAISim.openWindow( GAMENAME, WORLDRES_X, WORLDRES_Y)
 
---Viewport for the game screensize is twee keer zo groot als de world, voor scaling.
+DEVICE_WIDTH, DEVICE_HEIGHT = MOAIGfxDevice.getViewSize()
+
+local gameAspect = WORLDRES_Y / WORLDRES_X
+local realAspect = DEVICE_HEIGHT / DEVICE_WIDTH
+
+if realAspect > gameAspect then
+  SCREEN_WIDTH = DEVICE_WIDTH
+  SCREEN_HEIGHT = DEVICE_WIDTH * gameAspect
+else
+  SCREEN_WIDTH = DEVICE_HEIGHT / gameAspect
+  SCREEN_HEIGHT = DEVICE_HEIGHT
+end
+
+if SCREEN_WIDTH < DEVICE_WIDTH then
+  SCREEN_X_OFFSET = ( DEVICE_WIDTH - SCREEN_WIDTH ) * 0.5
+end
+
+if SCREEN_HEIGHT < DEVICE_HEIGHT then
+  SCREEN_Y_OFFSET = ( DEVICE_HEIGHT - SCREEN_HEIGHT ) * 0.5
+end
+
 gameViewport = MOAIViewport.new()
-gameViewport:setSize( SCREENRES_X, SCREENRES_Y )
+gameViewport:setSize( SCREEN_X_OFFSET, SCREEN_Y_OFFSET, SCREEN_X_OFFSET + SCREEN_WIDTH, SCREEN_Y_OFFSET + SCREEN_HEIGHT )
 gameViewport:setScale( WORLDRES_X, WORLDRES_Y )
 
 --=============================================
