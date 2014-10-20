@@ -64,6 +64,6 @@ function InputManager:initialize ()
       Game:onInput( down, x, y )
     end
     
-    MOAIInputMgr.device.mouseLeft:setCallback( onTouchEvent )
+    MOAIInputMgr.device.touch:setCallback( onTouchEvent )
   end
 end

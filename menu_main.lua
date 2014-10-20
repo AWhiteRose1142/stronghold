@@ -58,8 +58,8 @@ function MainMenu:loadButtons()
 end
 
 function MainMenu:onInput( down, x, y )
-  local x, y = self.layers.user:wndToWorld(MOAIInputMgr.device.pointer:getLoc ())
-  self:pickProp( x, y )
+  local wx, wy = self.layers.user:wndToWorld( x, y )
+  self:pickProp( wx, wy )
 end
 
 function MainMenu:pickProp( x, y )
