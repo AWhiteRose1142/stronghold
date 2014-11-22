@@ -143,6 +143,7 @@ function Archer:destroy()
   Level:removeEntity( self )
   self.mount.mountedEntity = nil
   Player.progress.score = Player.progress.score - 10
+  Player.progress.archers = Player.progress.archers - 1
   print( "destroying an archer" )
   if self.timer ~= nil then self.timer:stop() end
   self.layer:removeProp( self.prop )

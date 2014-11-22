@@ -1,6 +1,6 @@
 module( "Level", package.seeall )
 
-GROUND_LEVEL = -130
+GROUND_LEVEL = -150
 initialized = false
 
 --==================================================
@@ -139,7 +139,7 @@ function Level:setupLayers()
 end
 
 function Level:setupWaveStart()
-  startX = -210
+  startX = -275
   
   local wallStartX = startX + 50 + ( 48 * Player.progress.walls )
   for i = 1, Player.progress.walls do
@@ -166,7 +166,7 @@ function Level:loadBackground()
   -- Make the prop
   self.backgroundProp = MOAIProp2D.new()
   self.backgroundProp:setDeck( self.backgroundDeck )
-  self.backgroundProp:setScl( 2.5, 2.5 )
+  self.backgroundProp:setScl( 2.85, 2.85 )
   self.layers.background:insertProp( self.backgroundProp )
 
   self.groundProp = MOAIProp2D.new()

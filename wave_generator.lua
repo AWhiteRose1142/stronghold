@@ -48,7 +48,7 @@ waves = {
   },
 }
 
-SPAWN_POSITION = { 250, -120 }
+SPAWN_POSITION = { 350, -135 }
 
 function WaveGenerator:initialize( wave, stage )
   self.wave = wave

@@ -38,7 +38,7 @@ function MainMenu:loadBackground()
   -- Make the prop
   local backgroundProp = MOAIProp2D.new()
   backgroundProp:setDeck( backgroundDeck )
-  backgroundProp:setScl( 2.5, 2.5 )
+  backgroundProp:setScl( 2.9, 2.9 )
   self.layers.background:insertProp( backgroundProp )
   table.insert( self.backgroundProps, backgroundProp )
 end

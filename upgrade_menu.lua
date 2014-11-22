@@ -40,7 +40,7 @@ function UpgradeMenu:initialize( )
   
   self.background = MOAIProp2D.new()
   self.background:setDeck( ResourceManager:get( "upgradeBackground" ) )
-  self.background:setScl( 2.5, 2.5 )
+  self.background:setScl( 2.9, 2.9 )
   self.layers.background:insertProp( self.background )
   
   self:setupItems()

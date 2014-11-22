@@ -84,7 +84,7 @@ local resource_definitions = {
   ground = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/ground.png',
-    width = 512, height = 64,
+    width = 700, height = 64,
   },
   arrow = {
     type = RESOURCE_TYPE_IMAGE,

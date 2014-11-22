@@ -3,8 +3,8 @@ GAMENAME = "stronghold"
 SAVE_FILE_NAME = "save"
 
 -- World resolution
-WORLDRES_X = 480
-WORLDRES_Y = 320
+WORLDRES_X = 640
+WORLDRES_Y = 360
 SCREEN_X_OFFSET = 0
 SCREEN_Y_OFFSET = 0
 
