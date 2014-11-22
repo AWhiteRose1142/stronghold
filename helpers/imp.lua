@@ -208,8 +208,9 @@ end
 --===========================================
 
 function Imp:destroy()
+  FloatyText:new( '+5', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Player.progress.score = Player.progress.score + 10
+  Player.progress.score = Player.progress.score + 5
   print( "destroying an Imp" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )

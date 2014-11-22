@@ -263,8 +263,9 @@ end
 --===========================================
 
 function Goblin:destroy()
+  FloatyText:new( '+15', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Player.progress.score = Player.progress.score + 10
+  Player.progress.score = Player.progress.score + 15
   print( "destroying a goblin" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )

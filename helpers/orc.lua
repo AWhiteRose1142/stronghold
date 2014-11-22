@@ -208,6 +208,7 @@ end
 --===========================================
 
 function Orc:destroy()
+  FloatyText:new( '+10', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 10
   print( "destroying an orc" )
@@ -217,6 +218,7 @@ function Orc:destroy()
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( -100, -1000 )
   Level:removeEntity( self )
+  
 end
 
 function Orc:initializePhysics( position )
