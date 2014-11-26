@@ -158,7 +158,7 @@ local resource_definitions = {
     glyphs = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789:,.?!",
     fontSize = 26,
     dpi = 160
-  },
+  }
 }
 
 function Index:loadDefinitions()
