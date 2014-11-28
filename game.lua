@@ -57,15 +57,18 @@ function Game:startNewState( state )
 	MOAISim.forceGarbageCollection ()
   
   if state == "level" then
-    SoundMachine:playMusic( "Level" )
+    SoundMachine:stop( "main" )
+    SoundMachine:play( "level" )
     Level:initialize()
   end
   if state == "mainmenu" then
-    SoundMachine:playMusic( "Menu" )
+    SoundMachine:stop( "level" )
+    SoundMachine:play( "main" )
     MainMenu:initialize()
   end
   if state == "upgrademenu" then
-    SoundMachine:playMusic( "Menu" )
+    SoundMachine:stop( "level" )
+    SoundMachine:play( "main" )
     UpgradeMenu:initialize()
   end
   

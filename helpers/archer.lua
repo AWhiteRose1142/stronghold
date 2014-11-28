@@ -139,6 +139,7 @@ end
 --===========================================
 
 function Archer:destroy()
+  SoundMachine:play( "dying" )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Level:removeEntity( self )
   self.mount.mountedEntity = nil

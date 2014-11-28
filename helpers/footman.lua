@@ -106,6 +106,7 @@ end
 function Footman:attack( )
   if self.target.health >= 0 then
     if self.timer ~= nil then
+      SoundMachine:play( "sword" )
       self.target:damage( 5 )
     else
       self.timer = MOAITimer.new()
@@ -136,6 +137,7 @@ function Footman:damage( damage )
 end
 
 function Footman:electrocute()
+  SoundMachine:play( "zap" )
   print( "electrocuting" )
   self:stopMoving()
   self:startAnimation("electrocute")
@@ -196,6 +198,7 @@ end
 --===========================================
 
 function Footman:destroy()
+  SoundMachine:play( "dying" )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 10
   print( "destroying a footman" )

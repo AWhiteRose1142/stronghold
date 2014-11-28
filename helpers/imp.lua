@@ -120,6 +120,7 @@ end
 function Imp:attack( )
   if self.target.health >= 0 then
     if self.timer ~= nil then
+      SoundMachine:play( "punch" )
       self.target:damage( self.strength )
     else
       self.timer = MOAITimer.new()
@@ -150,6 +151,7 @@ function Imp:damage( damage )
 end
 
 function Imp:electrocute()
+  SoundMachine:play( "zap" )
   print( "electrocuting" )
   self:stopMoving()
   self:startAnimation("electrocute")
@@ -208,6 +210,7 @@ end
 --===========================================
 
 function Imp:destroy()
+  SoundMachine:play( "dying" )
   FloatyText:new( '+5', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 5
