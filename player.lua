@@ -2,22 +2,39 @@ module( "Player", package.seeall )
 
 function Player:initialize( )
   self.progress = {
-    score = 9000,
+    score = 0,
     mana = 100,
     waveNum = 1,
-    walls = 1,
-    archers = 1,
+    walls = 0,
+    archers = 0,
     fireBall = true,
-    lightning = true,
-    iceBolt = true,
+    lightning = false,
+    iceBolt = false,
   }
   self.updateMana = true
   self.initialized = true
   self:manaUpdate()
+  self:manacostUpdate()
 end
 
 function Player:update( )
   
+end
+
+function Player:manacostUpdate()
+  if self.manacostTimer == nil then
+    self.manacostTimer = MOAITimer.new()
+    self.manacostTimer:setMode( MOAITimer.LOOP )
+    self.manacostTimer:setSpan( 1 )
+    self.manacostTimer:setListener(
+      MOAITimer.EVENT_TIMER_END_SPAN,
+      bind( self, "manacostUpdate" )
+    )
+    self.manacostTimer:start()
+  else
+    -- remove manacost text
+    HUD.manacost:setString( "" )
+  end
 end
 
 function Player:manaUpdate()
