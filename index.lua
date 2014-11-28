@@ -145,6 +145,12 @@ local resource_definitions = {
     tileMapSize = {7, 1},
     width = 16, height = 16,
   },
+  troll = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/troll_sheet.png',
+    tileMapSize = {1, 1},
+    width = 64, height = 64,
+  },
   hudFont = {
     type = RESOURCE_TYPE_FONT,
     fileName = "fonts/tuffy.ttf",
