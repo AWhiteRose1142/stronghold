@@ -205,13 +205,13 @@ local resource_definitions = {
     type = RESOURCE_TYPE_SOUND,
     fileName = "sfx/level.ogg",
     loop = true,
-    volume = 0.5
+    volume = 0.8
   },
   main = {
     type = RESOURCE_TYPE_SOUND,
     fileName = "sfx/main.ogg",
     loop = true,
-    volume = 0.5
+    volume = 0.8
   }
 }
 
