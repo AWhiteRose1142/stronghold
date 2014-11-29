@@ -167,37 +167,37 @@ local resource_definitions = {
   },
   dying = {
     type = RESOURCE_TYPE_SOUND,
-    fileName = "sfx/dying.wav",
+    fileName = "sfx/dying.ogg",
     loop = false,
     volume = 0.5
   },
   explosion = {
     type = RESOURCE_TYPE_SOUND,
-    fileName = "sfx/explosion.wav",
+    fileName = "sfx/explosion.ogg",
     loop = false,
     volume = 0.5
   },
   crumble = {
     type = RESOURCE_TYPE_SOUND,
-    fileName = "sfx/hit_and_crumble.wav",
+    fileName = "sfx/hit_and_crumble.ogg",
     loop = false,
     volume = 0.5
   },
   punch = {
     type = RESOURCE_TYPE_SOUND,
-    fileName = "sfx/punch.wav",
+    fileName = "sfx/punch.ogg",
     loop = false,
     volume = 0.5
   },
   sword = {
     type = RESOURCE_TYPE_SOUND,
-    fileName = "sfx/sword.wav",
+    fileName = "sfx/sword.ogg",
     loop = false,
     volume = 0.5
   },
   zap = {
     type = RESOURCE_TYPE_SOUND,
-    fileName = "sfx/zap.wav",
+    fileName = "sfx/zap.ogg",
     loop = false,
     volume = 0.5
   },
