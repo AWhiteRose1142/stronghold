@@ -1,39 +1,39 @@
 local class = require 'libs/middleclass'
 
-Imp = class('imp')
+Troll = class('troll')
 
 local animationDefinitions = {
   walk = {
     startFrame = 1,
-    frameCount = 2,
+    frameCount = 4,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
   attack = {
-    startFrame = 3,
+    startFrame = 5,
     frameCount = 3,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
   electrocute = {
-    startFrame = 6,
+    startFrame = 8,
     frameCount = 2,
     time = 0.1,
     mode = MOAITimer.LOOP
   },
 }
 
-function Imp:initialize( position, layer, health )
-  self.health = 3
-  self.strength = 5
-  self.type = "imp"
+function Troll:initialize( position, layer, health )
+  self.health = 64
+  self.strength = 15
+  self.type = "troll"
   self.timer = nil
   self.target = nil
   self.layer = layer
-  self.walkSpeed = 12
+  self.walkSpeed = 8
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
-  self.deck = ResourceManager:get( 'imp' )
+  self.deck = ResourceManager:get( 'troll' )
   
   -- Make the prop
   self.prop = MOAIProp2D.new()
@@ -53,7 +53,7 @@ function Imp:initialize( position, layer, health )
   -- Setup physics
   self:initializePhysics( position )
   
-  -- For loading a Imp with certain amount of health.
+  -- For loading a Orc with certain amount of health.
   if health ~= nil then
     self:damage( self.health - health )
   end
@@ -62,17 +62,17 @@ function Imp:initialize( position, layer, health )
   --self:startAnimation( "electrocute" )
   self:move( -1 )
   table.insert( Level.entities, self )
-  table.insert( Level.enemyEntities.imps, self )
+  table.insert( Level.enemyEntities.orcs, self )
 end
 
-function Imp:update()
+function Troll:update()
   if self.health <= 0 then
     self:destroy()
   end
 end
 
-function Imp:slow()
-  self.walkSpeed = 5
+function Troll:slow()
+  self.walkSpeed = 4
   if self.taget == nil and self.health > 0 then self:move( -1 ) end
   local timer = MOAITimer.new()
   timer:setMode( MOAITimer.NORMAL )
@@ -84,17 +84,17 @@ function Imp:slow()
   timer:start()
 end
 
-function Imp:restoreSpeed()
-  self.walkSpeed = 15
+function Troll:restoreSpeed()
+  self.walkSpeed = 8
   if self.taget == nil and self.health > 0 then self:move( -1 ) end
 end
 
-function Imp:getPosition()
+function Troll:getPosition()
   local thisX, thisY = self.physics.body:getPosition()
   return { thisX, thisY }
 end
 
-function Imp:getTransform()
+function Troll:getTransform()
   return self.physics.body.transform
 end
 
@@ -102,7 +102,7 @@ end
 -- Actions
 --===========================================
 
-function Imp:move( direction )
+function Troll:move( direction )
   self.prop:setScl( -direction, 1 )
   velX, velY = self.physics.body:getLinearVelocity()
   self.physics.body:setLinearVelocity( direction * self.walkSpeed, velY )
@@ -112,15 +112,15 @@ function Imp:move( direction )
   end
 end
 
-function Imp:stopMoving()
+function Troll:stopMoving()
   self.physics.body:setLinearVelocity ( 0, 0 )
   self:stopCurrentAnimation()
 end
 
-function Imp:attack( )
+function Troll:attack( )
   if self.target.health >= 0 then
     if self.timer ~= nil then
-      SoundMachine:play( "punch" )
+      SoundMachine:play( "crumble" )
       self.target:damage( self.strength )
     else
       self.timer = MOAITimer.new()
@@ -143,16 +143,16 @@ function Imp:attack( )
   end
 end
 
-function Imp:damage( damage )
+function Troll:damage( damage )
   self.health = self.health - damage
   if self.health <= 0 then
-    print( "the Imp is dead" )
+    print( "the troll is dead" )
   end
 end
 
-function Imp:electrocute()
-  SoundMachine:play( "zap" )
+function Troll:electrocute()
   print( "electrocuting" )
+  SoundMachine:play( "zap" )
   self:stopMoving()
   self:startAnimation("electrocute")
   if self.timer ~= nil then 
@@ -173,17 +173,17 @@ end
 -- Animation control
 --===========================================
 
-function Imp:getAnimation( name )
+function Troll:getAnimation( name )
   return self.animations[name]
 end
 
-function Imp:stopCurrentAnimation()
+function Troll:stopCurrentAnimation()
   if self.currentAnimation then
     self.currentAnimation:stop()
   end
 end
 
-function Imp:startAnimation( name )
+function Troll:startAnimation( name )
   self:stopCurrentAnimation()
   self.currentAnimation = self:getAnimation( name )
   self.currentAnimation:start()
@@ -194,7 +194,7 @@ end
 -- Event handlers
 --===========================================
 
-function Imp:onCollide( phase, fixtureA, fixtureB, arbiter )
+function Troll:onCollide( phase, fixtureA, fixtureB, arbiter )
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
     if entityB.type == "wall" or entityB.type == "tower" then
@@ -209,25 +209,26 @@ end
 -- Utility functions, consider these private
 --===========================================
 
-function Imp:destroy()
+function Troll:destroy()
   SoundMachine:play( "dying" )
-  FloatyText:new( '+5', self.layer, self:getPosition() )
+  FloatyText:new( '+10', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Player.progress.score = Player.progress.score + 5
-  print( "destroying an Imp" )
+  Player.progress.score = Player.progress.score + 10
+  print( "destroying the troll" )
   if self.timer then self.timer:stop() end
   self.layer:removeProp( self.prop )
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( -100, -1000 )
   Level:removeEntity( self )
+  
 end
 
-function Imp:initializePhysics( position )
+function Troll:initializePhysics( position )
   self.physics = {}
   self.physics.body = PhysicsManager.world:addBody( MOAIBox2DBody.DYNAMIC )
   self.physics.body:setTransform( unpack( position ) )
-  self.physics.fixture = self.physics.body:addRect( -3, -8, 5, 8 )
+  self.physics.fixture = self.physics.body:addRect( -6, -16, 10, 16 )
   -- Cat, mask, group
   self.physics.fixture:setFilter( 0x02, 0x04 )
   self.prop:setParent( self.physics.body )
@@ -236,7 +237,7 @@ function Imp:initializePhysics( position )
   --self.physics.fixture:setCollisionHandler( bind( self, 'deathCheck'), MOAIBox2DArbiter.POST_SOLVE )
 end
 
-function Imp:addAnimation( name, startFrame, frameCount, time, mode )
+function Troll:addAnimation( name, startFrame, frameCount, time, mode )
   -- This curve is going to do shit, yo
   local curve = MOAIAnimCurve.new()
   -- Reserve start and end keys

@@ -205,6 +205,7 @@ function Goblin:damage( damage )
 end
 
 function Goblin:electrocute()
+  SoundMachine:play( "zap" )
   print( "electrocuting the goblin" )
   self:stopMoving()
   self:startAnimation("electrocute")
@@ -263,6 +264,7 @@ end
 --===========================================
 
 function Goblin:destroy()
+  SoundMachine:play( "dying" )
   FloatyText:new( '+15', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 15

@@ -25,6 +25,10 @@ function HUD:initializeDebugHud()
   self.mana:setString( "MANA: " )
   self.manaBarUnder = Manabar:new( { 110, 75 }, 250, 30, self.layer, .7 )
   self.manaBar = Manabar:new( { 110, 75 }, 250, 30, self.layer, 1 )
+  self.manacost = self:newTextBox( 36, { 300, 60, 400, 120 } )
+  self.manacost:setString(" ")
+  self.manacurrent = self:newTextBox( 36, { 115, 60, 200, 120 } )
+  self.manacurrent:setString ( tostring(Player.progress.mana) )
 end
 
 function HUD:newTextBox( size, rectangle )
@@ -41,6 +45,7 @@ function HUD:update()
   self.manaBar:update()
   local scoreString = ( "SCORE: " .. Player.progress.score )
   self.score:setString( scoreString )
+  self.manacurrent:setString ( tostring(Player.progress.mana) )
 end
 
 function HUD:destroy()

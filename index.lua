@@ -145,6 +145,12 @@ local resource_definitions = {
     tileMapSize = {7, 1},
     width = 16, height = 16,
   },
+  troll = {
+    type = RESOURCE_TYPE_TILED_IMAGE,
+    fileName = 'img/troll_sheet.png',
+    tileMapSize = {1, 1},
+    width = 64, height = 64,
+  },
   hudFont = {
     type = RESOURCE_TYPE_FONT,
     fileName = "fonts/tuffy.ttf",
@@ -159,6 +165,54 @@ local resource_definitions = {
     fontSize = 26,
     dpi = 160
   },
+  dying = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/dying.wav",
+    loop = false,
+    volume = 0.5
+  },
+  explosion = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/explosion.wav",
+    loop = false,
+    volume = 0.5
+  },
+  crumble = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/hit_and_crumble.wav",
+    loop = false,
+    volume = 0.5
+  },
+  punch = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/punch.wav",
+    loop = false,
+    volume = 0.5
+  },
+  sword = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/sword.wav",
+    loop = false,
+    volume = 0.5
+  },
+  zap = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/zap.wav",
+    loop = false,
+    volume = 0.5
+  },
+  level = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/level.ogg",
+    loop = true,
+    volume = 0.5
+  },
+  main = {
+    type = RESOURCE_TYPE_SOUND,
+    fileName = "sfx/main.ogg",
+    loop = true,
+    volume = 0.5
+  }
 }
 
 function Index:loadDefinitions()

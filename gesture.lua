@@ -96,6 +96,7 @@ function Gesture:determineCombo( )
   
   if Player.progress.lightning and Player.progress.mana >= 60 and Gesture:checkLightning()then
     Player.progress.mana = Player.progress.mana - 60
+    HUD.manacost:setString("-60")
     Level:spawnBolts( { mouseX, mouseY } )
     for key, entity in pairs( Level:getEntitiesNearPos( { mouseX, -120 }, { 40, 40 } ) ) do
       if entity.electrocute ~= nil then
@@ -107,10 +108,12 @@ function Gesture:determineCombo( )
   if Player.progress.fireBall and Player.progress.mana >= 15 and Gesture:checkFireball() then
     print( "casting fireball" )
     Player.progress.mana = Player.progress.mana - 15
+    HUD.manacost:setString("-15")
     direction = normalize( mouseX - startX, mouseY - startY )
     Fireball:new( { startX, startY }, Level.layers.active, 10, direction )
   elseif Player.progress.iceBolt and Player.progress.mana >= 50 and Gesture:checkIceBolt() then
     print( "raining ice" )
+    HUD.manacost:setString("-50")
     Player.progress.mana = Player.progress.mana - 50
     for i = 1, 16 do
       x = mouseX + math.random( -48, 48 )

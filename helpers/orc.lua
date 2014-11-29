@@ -120,6 +120,7 @@ end
 function Orc:attack( )
   if self.target.health >= 0 then
     if self.timer ~= nil then
+      SoundMachine:play( "crumble" )
       self.target:damage( self.strength )
     else
       self.timer = MOAITimer.new()
@@ -151,6 +152,7 @@ end
 
 function Orc:electrocute()
   print( "electrocuting" )
+  SoundMachine:play( "zap" )
   self:stopMoving()
   self:startAnimation("electrocute")
   if self.timer ~= nil then 
@@ -208,6 +210,7 @@ end
 --===========================================
 
 function Orc:destroy()
+  SoundMachine:play( "dying" )
   FloatyText:new( '+10', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 10
