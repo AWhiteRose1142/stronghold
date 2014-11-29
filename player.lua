@@ -33,7 +33,9 @@ function Player:manacostUpdate()
     self.manacostTimer:start()
   else
     -- remove manacost text
-    HUD.manacost:setString("  ")
+    if HUD.manacost ~= nil then
+      HUD.manacost:setString("  ")
+    end
   end
 end
 
