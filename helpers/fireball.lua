@@ -54,7 +54,7 @@ function Fireball:initialize( position, layer, strength, direction )
 end
 
 function Fireball:update()
-  if self.remove == true then 
+  if self.remove == true or self:getPosition()[2] < Level.GROUND_LEVEL - 5 then 
     self:destroy()
   end
 end
@@ -102,6 +102,7 @@ function Fireball:onCollide( phase, fixtureA, fixtureB, arbiter )
       self.remove = true
     end
   end
+  print( "fireball collided with something else" )
 end
 
 --===========================================

@@ -16,7 +16,7 @@ local animationDefinitions = {
   attack = {
     startFrame = 2,
     frameCount = 4,
-    time = 0.25,
+    time = 0.6667,
     mode = MOAITimer.LOOP
   },
 }
@@ -57,12 +57,14 @@ function Archer:initialize( position, layer, partition )
   
   table.insert( Level.entities, self )
   table.insert( Level.playerEntities.archers, self )
+  self:startAttack()
+  print("archer created")
 end
 
 function Archer:update()
-  self:attack()
   self.prop:setRot( (self. aim / 5) )
   if self.health <= 0 then
+    print( "archer health low, destroying" )
     self:destroy()
   end
 end
@@ -80,28 +82,33 @@ end
 -- Actions
 --===========================================
 
-function Archer:attack( )
-  if self.timer ~= nil then
-    --DO NOTHING
-  else
-    self.timer = MOAITimer.new()
-    self.timer:setMode( MOAITimer.LOOP )
-    self.timer:setSpan( 2 )
-    self.timer:setListener( 
-    MOAITimer.EVENT_TIMER_END_SPAN, 
-      bind( self, "attack" ) )
-    self.timer:setListener(MOAITimer.EVENT_TIMER_BEGIN_SPAN,
-      function()
-        if Level.initialized == false then return end
-        table.insert(Level.entities, Arrow:new( self:getPosition(), self.layer, self.aim, self.strength))
-      end)
-    self:startAnimation( "attack" )
-    self.timer:start()
-  end
+function Archer:startAttack( )
+  self.timer = MOAITimer.new()
+  self.timer:setMode( MOAITimer.LOOP )
+  self.timer:setSpan( 2 )
+  self.timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, bind( self, "shootArrow" ) )
+  self:startAnimation( "attack" )
+  self.timer:start()
+end
+
+function Archer:shootArrow( )
+  if Level.initialized == false then return end
+  print("archer fires arrow")
+  table.insert( Level.entities, Arrow:new( 
+      self:getPosition(), 
+      self.layer, 
+      self.aim,
+      self.strength
+    )
+  )
 end
 
 function Archer:damage( damage )
   self.health = self.health - damage
+  if self.health <= 0 then
+    Player.progress.score = Player.progress.score - 10
+    Player.progress.archers = Player.progress.archers - 1
+  end
 end
 
 --Rotates the archer as much as the device location differs in Y value (height)
@@ -140,17 +147,15 @@ end
 
 function Archer:destroy()
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Level:removeEntity( self )
+  
   self.mount.mountedEntity = nil
-  Player.progress.score = Player.progress.score - 10
-  Player.progress.archers = Player.progress.archers - 1
   print( "destroying an archer" )
-  if self.timer ~= nil then self.timer:stop() end
+  self.timer:stop()
   self.layer:removeProp( self.prop )
   
   -- Voor nu flikkeren we de physicsbody maar in het diepe, zijn we er vanaf.
   self.physics.body:setTransform( -1000, -1000 )
-  
+  Level:removeEntity( self )
 end
 
 function Archer:initializePhysics( position )

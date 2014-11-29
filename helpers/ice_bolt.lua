@@ -49,7 +49,7 @@ function IceBolt:initialize( position, layer )
 end
 
 function IceBolt:update()
-  if self.remove == true then 
+  if self.remove == true or self:getPosition()[2] < Level.GROUND_LEVEL - 5 then 
     self:destroy()
   end
 end

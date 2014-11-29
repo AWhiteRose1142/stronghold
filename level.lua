@@ -257,7 +257,7 @@ end
 --====================================================
 
 function Level:destroy()
-  
+  print( "destroying the level" )
   -- destroy background
   Level.layers.background:removeProp( self.backgroundProp )
   self.backgroundProp = nil
@@ -265,9 +265,15 @@ function Level:destroy()
   self.groundProp = nil
   self.gameOverTimer = nil
   
+  -- copy the entities table
+  local eCopy = {}
+  for k, v in pairs( self.entities ) do
+   table.insert( eCopy, v )
+  end
+  
   -- destroy all entities
-  for key, entity in pairs( self.entities ) do
-    entity:destroy()
+  for k, v in pairs( eCopy ) do
+   v:destroy()
   end
   
   -- Destroy the gestures
