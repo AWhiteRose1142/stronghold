@@ -58,6 +58,43 @@ function WaveGenerator:initialize( wave, stage )
   HUD.wave:setString("WAVE: " .. self.wave )
 end
 
+-- returns an array suited for generating enemies
+function WaveGenerator:generateWave()
+  self.wave = {}
+  local rndm1 = math.random(1, 3)
+  local rndm2 = math.random(1, 4)
+  
+  for int w = 1, w = self:generateStage() do
+    rndm1 = math.random(1, 3)
+    rndm2 = math.random(1, 4)
+    
+    if rndm1 = 1 then
+      self.wave.stage[w] = {rndm2, "orc"}
+    end
+    if rndm1 = 2 then
+      self.wave.stage[w] = {rndm2, "imp"}
+    end
+    if rndm1 = 3 then
+      self.wave.stage[w] = {rndm2, "goblin"}
+    end
+    if rndm1 = 4 then
+      self.wave.stage[w] = {rndm2, "troll"}
+    end
+  end
+  
+  return self.wave
+end
+
+-- Returns amount of stages current wave will have
+function WaveGenerator:generateStage()
+  self.level = Player.waveNum
+  self.stage = 8
+  for int i = 1, i = self.level do
+    self.stage = self.stage + 2
+  end
+  return self.stage
+end
+
 -- Kicks off a new wave
 function WaveGenerator:startWave()
   if self.waves["wave" .. self.wave] == nil then
@@ -118,5 +155,9 @@ function WaveGenerator:spawn( enemyType )
   
   if enemyType == "imp" then
     Imp:new( SPAWN_POSITION, Level.layers.active )
+  end
+  
+  if enemyType == "troll" then
+    Troll:new( SPAWN_POSITION, Level.layers.active )
   end
 end

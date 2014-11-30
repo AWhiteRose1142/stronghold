@@ -213,6 +213,7 @@ function Orc:destroy()
   SoundMachine:play( "dying" )
   FloatyText:new( '+10', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
+  Player.progress.mana = Player.progress.score + 1
   Player.progress.score = Player.progress.score + 10
   print( "destroying an orc" )
   if self.timer then self.timer:stop() end
