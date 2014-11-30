@@ -83,10 +83,14 @@ function UpgradeMenu:setupText()
   wx, wy = unpack( buttonDefs.wall.pos )
   wx = wx + 25
   self.items.wall.textBox = self:makeTextBox( 16, { wx - 32, wy - 32, wx + 32, wy + 32 } )
-  
+  self.items.wall.costTextBox = self:makeTextBox( 16, { wx - 90, wy - 32, wx - 40, wy + 32 } )
+  self.items.wall.costTextBox:setString( buttonDefs.wall.cost .. "gp" )
+    
   ax, ay = unpack( buttonDefs.archer.pos )
   ax = ax + 25
   self.items.archer.textBox = self:makeTextBox( 16, { ax - 32, ay - 32, ax + 32, ay + 32 } )
+  self.items.archer.costTextBox = self:makeTextBox( 16, { ax - 90, ay - 32, ax - 40, ay + 32 } )
+  self.items.archer.costTextBox:setString( buttonDefs.archer.cost .. "gp" )
   
   sx, sy = 100, 0
   self.scoreBox = self:makeTextBox( 26, { sx - 48, sy - 16, sx + 48, sy + 16 } )
@@ -151,6 +155,10 @@ function UpgradeMenu:setupItems()
       end
     end
   )
+  local lx, ly = unpack( buttonDefs.lightning.pos )
+  self.items.lightning.costTextBox = self:makeTextBox( 16, { lx - 65, ly - 32, lx - 15, ly + 32 } )
+  self.items.lightning.costTextBox:setString( buttonDefs.lightning.cost .. "gp" )
+  
   
   if Player.progress.iceBolt == true then 
     self.items.ice.icon:setColor( 1, 1, 1, 1 ) 
@@ -167,6 +175,9 @@ function UpgradeMenu:setupItems()
       end
     end
   )
+  local ix, iy = unpack( buttonDefs.ice.pos )
+  self.items.ice.costTextBox = self:makeTextBox( 16, { ix - 65, iy - 32, ix - 15, iy + 32 } )
+  self.items.ice.costTextBox:setString( buttonDefs.ice.cost .. "gp" )
   
   self.items.nextWave = {}
   self.items.nextWave.button = Button:new( { 100, -100 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "next wave" )
