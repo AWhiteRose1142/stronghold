@@ -24,7 +24,7 @@ local animationDefinitions = {
 function Archer:initialize( position, layer, partition )
   self.isBusy = false
   self.health = 10
-  self.strength = 10
+  self.strength = 250
   self.type = "archer"
   self.timer = nil
   self.target = nil
@@ -62,7 +62,7 @@ function Archer:initialize( position, layer, partition )
 end
 
 function Archer:update()
-  self.prop:setRot( (self. aim / 5) )
+  self.prop:setRot( self.aim )
   if self.health <= 0 then
     print( "archer health low, destroying" )
     self:destroy()

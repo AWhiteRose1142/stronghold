@@ -24,7 +24,8 @@ function Gesture:initialize( layers, partitions )
   self.layers = layers
   self.partitions = partitions
   self.initialized = true
-  
+  self.archerControl = false
+  self.archer = nil
   
 end
 
@@ -36,9 +37,12 @@ function Gesture:update()
   if InputManager:isDown() then
     if Gesture.line ~= nil then
       local newX, newY = Gesture:getMouseLocation( self.layers.active )
-      --print( "tracking a gesture" )
-      Gesture:trackGesture( newX, newY )
-      Gesture.prevLoc = { newX, newY }
+      if Gesture.archerControl == true then
+        Gesture:aimArcher( newX, newY )
+      else
+        Gesture:trackGesture( newX, newY )
+        Gesture.prevLoc = { newX, newY }
+      end
     end
   end
 end
@@ -48,11 +52,11 @@ end
 --======================================================
 
 function Gesture:onMouseDown()
-  print( "Gesture mouse down!" )
   local newX, newY = Gesture:getMouseLocation( self.layers.active )
   
-  if Gesture.line == nil then
-    print( "making a new line" )
+  if Gesture:checkArcherControl( newX, newY ) == true then return end
+  
+  if Gesture.line == nil and self.archerControl == false then
     Gesture.line = Line:new( { newX, newY }, self.layers.user )
     Gesture.gestureTable = {}
   end
@@ -65,6 +69,13 @@ function Gesture:onMouseUp()
     print( "no line registered" )
     return
   end
+  
+  -- Checken of we de archer aan het richten zijn
+  if self.archerControl == true then
+    Gesture:endArcherAim()
+    return
+  end
+  
   -- Geen gesture porberen te tracken als deze niet ver genoeg is.
   newX, newY = Gesture:getMouseLocation( Gesture.layers.active )
   lastX, lastY = unpack( self.line.points[ table.getn( self.line.points ) - 1 ] )
@@ -120,6 +131,22 @@ function Gesture:determineCombo( )
       IceBolt:new( { x, 260 }, Level.layers.active )
     end
   end
+end
+
+function Gesture:aimArcher( x, y )
+  Gesture.line.points[2] = { x, y }
+  local sx, sy = unpack( self.line.points[1] )
+  sx = x - sx
+  sy = y - sy
+  --print("rotation = " .. getRotationFrom( sx, sy ) )
+  self.archer.aim = getRotationFrom( sx, sy )
+end
+
+function Gesture:endArcherAim()
+  self.archerControl = false
+  self.line:destroy()
+  self.line = nil
+  self.archer = nil
 end
 
 --======================================================
@@ -238,6 +265,34 @@ end
 --====================================================
 -- Functions that check for the right attack gesture
 --====================================================
+
+function Gesture:checkArcherControl( x, y )
+  -- do we have an archer near?
+  local entities = Level:getEntitiesNearPos( { x, y }, { 25, 30 } )
+  if table.getn( entities ) < 1 then return false end
+  
+  local archers = {}
+  for k, v in pairs( entities ) do
+    if v.type == "archer" then table.insert( archers, v ) end
+  end
+  if table.getn( archers ) < 1 then return false end
+  
+  local archer = nil
+  for k, v in pairs( archers ) do
+    if archer == nil then 
+      archer = v 
+    elseif math.abs( distance( {x,y}, v:getPosition() ) ) < math.abs( distance( {x,y}, archer:getPosition() ) ) then
+      archer = v
+    end
+  end
+  
+  -- NOW we're sure we have the right archer.
+  self.archerControl = true
+  self.archer = archer
+  Gesture.line = Line:new( { x, y }, self.layers.user )
+  print( "archer selected" )
+  return true
+end
 
 function Gesture:checkFireball()
   pass = true

@@ -35,3 +35,11 @@ function getRotationFrom( x, y )
   local nX, nY = unpack( normalize( x, y ) )
   return math.deg( math.atan2( nY, nX ) )
 end
+
+function rotateVec( vec, degrees )
+  local x, y = unpack( vec )
+  local radians = math.rad( degrees )
+  x = (x * math.cos(radians)) - (y * math.sin(radians));
+  y = (x * math.sin(radians)) + (y * math.cos(radians));
+  return { x, y }
+end

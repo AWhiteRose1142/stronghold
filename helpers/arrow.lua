@@ -19,6 +19,7 @@ function Arrow:initialize( position, layer, aim, strength )
   self.strength = strength
   self.aim = aim
   self.remove = false
+  self.damage = 5
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'arrow' )
@@ -31,8 +32,9 @@ function Arrow:initialize( position, layer, aim, strength )
   -- Setup physics
   self:initializePhysics( position )
     
-  -- Code for testing
-  self.physics.body:setLinearVelocity( (self.strength * 10), self.aim )
+  -- Vector van een gradenrotatie maken
+  local velX, velY = unpack( rotateVec( { 1, 0 }, self.aim ) )
+  self.physics.body:setLinearVelocity( velX * self.strength, velY * self.strength )
   local x, y = self.physics.body:getPosition()
   self.physics.body:setTransform( x, y, getRotationFrom( (self.strength * 10), self.aim ) )
   table.insert( Level.entities, self )
@@ -72,9 +74,9 @@ function Arrow:onCollide( phase, fixtureA, fixtureB, arbiter )
   self.physics.body:setLinearVelocity(0, 0)
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" then
+    if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" or entityB.type == "imp" then
       --print( "headshot!" )
-      entityB:damage( self.strength )
+      entityB:damage( self.damage )
       self.remove = true
     end
   end
