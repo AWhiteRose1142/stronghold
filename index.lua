@@ -91,6 +91,26 @@ local resource_definitions = {
     fileName = 'img/arrow.png',
     width = 16, height = 16,
   },
+  tutFireball = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/tutorial_lightning.png',
+    width = 400, height = 250,
+  },
+  tutLightning = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/tutorial_lightning.png',
+    width = 400, height = 250,
+  },
+  tutIce = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/tutorial_lightning.png',
+    width = 400, height = 250,
+  },
+  tutArcher = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/tutorial_lightning.png',
+    width = 400, height = 250,
+  },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_32_sheet.png',

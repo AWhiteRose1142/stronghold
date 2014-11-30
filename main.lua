@@ -29,6 +29,7 @@ require "helpers/crossbolt"
 require "helpers/button"
 require "helpers/manabar"
 require "helpers/floatyText"
+require "helpers/tut_prompt"
 
 --=============================================
 -- Resource types

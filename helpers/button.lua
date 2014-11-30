@@ -18,15 +18,15 @@ function Button:initialize( position, layer, partition, ignoreLayer, text, size 
   self.partition:insertProp( self.prop )
   
   local x, y = unpack( position )
-  local textBox = MOAITextBox.new()
-  textBox:setFont( ResourceManager:get("font") )
-  if size ~= nil then textBox:setTextSize( size ) else textBox:setTextSize( 28 ) end
-  textBox:setRect( x - 50, y - 25, x + 50, y + 25 )
-  textBox:setString( text )
-  textBox:setYFlip( true )
-  textBox:setAlignment( MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY )
-  textBox:setColor( 100, 100, 100, 1 )
-  self.ignoreLayer:insertProp( textBox )
+  self.textBox = MOAITextBox.new()
+  self.textBox:setFont( ResourceManager:get("font") )
+  if size ~= nil then self.textBox:setTextSize( size ) else self.textBox:setTextSize( 28 ) end
+  self.textBox:setRect( x - 50, y - 25, x + 50, y + 25 )
+  self.textBox:setString( text )
+  self.textBox:setYFlip( true )
+  self.textBox:setAlignment( MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY )
+  self.textBox:setColor( 100, 100, 100, 1 )
+  self.ignoreLayer:insertProp( self.textBox )
 end
 
 function Button:setHandler( callback )
@@ -49,4 +49,9 @@ end
 
 function Button:onInactive()
   self.prop:setDeck( self.inactiveDeck )
+end
+
+function Button:destroy()
+  self.layer:removeProp( self.prop )
+  self.ignoreLayer:removeProp( self.textBox )
 end

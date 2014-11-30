@@ -50,10 +50,7 @@ function MainMenu:loadButtons()
   self.buttons.newGame.button = Button:new( { 0, 0 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME", 20 )
   self.buttons.newGame.isClicked = false
   -- Button behavior for when it gets clicked
-  self.buttons.newGame.button:setHandler( function( down )
-      Game:startNewState( "level" )
-    end
-  )
+  self.buttons.newGame.button:setHandler( bind( self, "showTut" ) )
   
 end
 
@@ -68,8 +65,27 @@ function MainMenu:pickProp( down, x, y )
     if item.button.prop == obj then
       item.button:onInput( down, true )
     end
+    if self.fireBallTut ~= nil then
+      if self.fireBallTut.button.prop == obj then
+        self.fireBallTut.button:onInput( down, true )
+      end
+    end
   end
   return nil
+end
+
+function MainMenu:showTut()
+  self.buttons.newGame.button:destroy()
+  self.fireBallTut = TutPrompt:new( 
+    self.layers.user, 
+    self.layers.ignoreLayer,
+    self.layers.background,
+    self.partitions.user, 
+    'tutFireball', 
+    function( )
+      Game:startNewState( "level" )
+    end
+  )
 end
 
 function MainMenu:destroy()
