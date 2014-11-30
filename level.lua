@@ -57,6 +57,7 @@ function Level:initialize( )
   self:loadScene()
   WaveGenerator:startWave()
   self.initialized = true
+  Player.progress.mana = 100
 end
 
 --=============================================================

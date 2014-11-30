@@ -55,6 +55,7 @@ function WaveGenerator:initialize( wave, stage )
   self.stage = stage
   self.timer = nil
   self.isThisWaveOver = false
+  HUD.wave:setString("WAVE: " .. self.wave )
 end
 
 -- Kicks off a new wave

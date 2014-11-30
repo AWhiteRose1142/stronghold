@@ -54,7 +54,7 @@ function Fireball:initialize( position, layer, strength, direction )
 end
 
 function Fireball:update()
-  if self.remove == true or self:getPosition()[2] < Level.GROUND_LEVEL - 5 then 
+  if self.remove == true or self:isOutOfBounds() then 
     self:destroy()
   end
 end
@@ -66,6 +66,13 @@ end
 
 function Fireball:getTransform()
   return self.physics.body.transform
+end
+
+function Fireball:isOutOfBounds()
+  local x, y = unpack( self:getPosition() )
+  if x < -350 or x > 350 then return true end
+  if y < Level.GROUND_LEVEL - 5 or y > 250 then return true end
+  return false
 end
 
 --===========================================

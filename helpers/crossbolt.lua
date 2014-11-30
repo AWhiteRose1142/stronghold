@@ -50,7 +50,7 @@ function Crossbolt:update()
   local x, y = self.physics.body:getPosition()
   local lX, lY = self.physics.body:getLinearVelocity()
   self.physics.body:setTransform( x, y, getRotationFrom( lX, lY ) )
-  if self.remove == true or self:getPosition()[2] < Level.GROUND_LEVEL - 5 then 
+  if self.remove == true or self:isOutOfBounds() then 
     self:destroy() 
   end
 end
@@ -62,6 +62,13 @@ end
 
 function Crossbolt:getTransform()
   return self.physics.body.transform
+end
+
+function Crossbolt:isOutOfBounds()
+  local x, y = unpack( self:getPosition() )
+  if x < -350 or x > 350 then return true end
+  if y < Level.GROUND_LEVEL - 5 or y > 250 then return true end
+  return false
 end
 
 --===========================================

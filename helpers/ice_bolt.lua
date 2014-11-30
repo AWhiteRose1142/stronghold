@@ -49,7 +49,7 @@ function IceBolt:initialize( position, layer )
 end
 
 function IceBolt:update()
-  if self.remove == true or self:getPosition()[2] < Level.GROUND_LEVEL - 5 then 
+  if self.remove == true or self:isOutOfBounds() then 
     self:destroy()
   end
 end
@@ -61,6 +61,13 @@ end
 
 function IceBolt:getTransform()
   return self.physics.body.transform
+end
+
+function IceBolt:isOutOfBounds()
+  local x, y = unpack( self:getPosition() )
+  if x < -350 or x > 350 then return true end
+  if y < Level.GROUND_LEVEL - 5 or y > 400 then return true end
+  return false
 end
 
 --===========================================
