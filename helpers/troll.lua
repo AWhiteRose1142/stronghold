@@ -211,7 +211,8 @@ end
 
 function Troll:destroy()
   SoundMachine:play( "dying" )
-  Player.progress.mana = Player.progress.score + 2
+  Player.progress.mana = Player.progress.mana + 2
+  HUD.manacost:setString("+2")
   FloatyText:new( '+10', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 30

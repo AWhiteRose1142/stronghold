@@ -64,20 +64,20 @@ function WaveGenerator:generateWave()
   local rndm1 = math.random(1, 3)
   local rndm2 = math.random(1, 4)
   
-  for int w = 1, w = self:generateStage() do
+  for w = 1, self:generateStage() do
     rndm1 = math.random(1, 3)
     rndm2 = math.random(1, 4)
     
-    if rndm1 = 1 then
+    if (rndm1 == 1) then
       self.wave.stage[w] = {rndm2, "orc"}
     end
-    if rndm1 = 2 then
+    if (rndm1 == 2) then
       self.wave.stage[w] = {rndm2, "imp"}
     end
-    if rndm1 = 3 then
+    if (rndm1 == 3) then
       self.wave.stage[w] = {rndm2, "goblin"}
     end
-    if rndm1 = 4 then
+    if (rndm1 == 4) then
       self.wave.stage[w] = {rndm2, "troll"}
     end
   end
@@ -87,9 +87,8 @@ end
 
 -- Returns amount of stages current wave will have
 function WaveGenerator:generateStage()
-  self.level = Player.waveNum
   self.stage = 8
-  for int i = 1, i = self.level do
+  for i = 1, Player.waveNum do
     self.stage = self.stage + 2
   end
   return self.stage
