@@ -2,14 +2,14 @@ module( "Player", package.seeall )
 
 function Player:initialize( )
   self.progress = {
-    score = 0,
+    score = 1000,
     mana = 100,
     waveNum = 1,
     walls = 0,
     archers = 0,
     fireBall = true,
     lightning = false,
-    iceBolt = true,
+    iceBolt = false,
   }
   self.updateMana = true
   self.initialized = true

@@ -46,6 +46,7 @@ function UpgradeMenu:initialize( )
   self:setupItems()
   self:setupText()
   self.initialized = true
+  self.activeTut = nil
 end
 
 function UpgradeMenu:update()
@@ -72,6 +73,7 @@ function UpgradeMenu:pickProp( down, x, y )
   local obj = self.partitions.user.propForPoint( self.partitions.user, x, y )
   for key, item in pairs( self.items ) do
     if item.button.prop == obj then
+      if self.activeTut ~= nil and self.activeTut ~= item.type then return nil end
       item.button:onInput( down, true )
       return item.button
     end
@@ -136,6 +138,7 @@ function UpgradeMenu:setupItems()
       if Player.progress.score >= UpgradeMenu.items.archer.cost and Player.progress.walls > Player.progress.archers then
         Player.progress.score = Player.progress.score - UpgradeMenu.items.archer.cost
         Player.progress.archers = Player.progress.archers + 1
+        if Player.progress.archers == 1 then UpgradeMenu:showTut("tutArcher") end
       end
     end
   )
@@ -152,6 +155,7 @@ function UpgradeMenu:setupItems()
         Player.progress.score = Player.progress.score - UpgradeMenu.items.wall.cost
         Player.progress.lightning = true
         UpgradeMenu.items.lightning.icon:setColor( 1, 1, 1, 1 )
+        UpgradeMenu:showTut("tutLightning")
       end
     end
   )
@@ -172,6 +176,7 @@ function UpgradeMenu:setupItems()
         Player.progress.score = Player.progress.score - UpgradeMenu.items.ice.cost
         Player.progress.iceBolt = true
         UpgradeMenu.items.ice.icon:setColor( 1, 1, 1, 1 )
+        UpgradeMenu:showTut("tutIce")
       end
     end
   )
@@ -207,6 +212,19 @@ function UpgradeMenu:setupLayers()
   }
   
   MOAIRenderMgr.setRenderTable( renderTable )
+end
+
+function UpgradeMenu:showTut( tutType )
+  self.items[tutType] = TutPrompt:new(
+    tutType,
+    function() Game:startNewState("upgrademenu") end
+  )
+  self.activeTut = tutType
+end
+
+function UpgradeMenu:hideTut()
+  if self.items[self.activeTut] ~= nil then self.items[self.activeTut]:destroy() end
+  self.activeTut = nil
 end
 
 function UpgradeMenu:makeTextBox( size, rectangle )

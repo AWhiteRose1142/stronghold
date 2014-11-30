@@ -65,22 +65,13 @@ function MainMenu:pickProp( down, x, y )
     if item.button.prop == obj then
       item.button:onInput( down, true )
     end
-    if self.fireBallTut ~= nil then
-      if self.fireBallTut.button.prop == obj then
-        self.fireBallTut.button:onInput( down, true )
-      end
-    end
   end
   return nil
 end
 
 function MainMenu:showTut()
   self.buttons.newGame.button:destroy()
-  self.fireBallTut = TutPrompt:new( 
-    self.layers.user, 
-    self.layers.ignoreLayer,
-    self.layers.background,
-    self.partitions.user, 
+  self.fireBallTut = TutPrompt:new(
     'tutFireball', 
     function( )
       Game:startNewState( "level" )

@@ -38,10 +38,10 @@ function Game:initialize()
   Player:initialize()
   SoundMachine:initialize()
   nextState = "mainmenu"
-  
+  tut = nil
 end
 
-function Game:startNewState( state )
+function Game:startNewState( state, tutEx )
   
   if currentState == "level" then
     Level:destroy()
@@ -51,6 +51,9 @@ function Game:startNewState( state )
   end
   if currentState == "upgrademenu" then
     UpgradeMenu:destroy()
+  end
+  if currentState == "tutprompt" then
+    tut:destroy()
   end
   
   MOAIRenderMgr.clearRenderStack ()
@@ -71,6 +74,9 @@ function Game:startNewState( state )
     SoundMachine:play( "main" )
     UpgradeMenu:initialize()
   end
+  if state == "tutprompt" then
+    tut = tutEx
+  end
   
   currentState = state
   nextState = nil
@@ -86,6 +92,9 @@ function Game:onInput( down, x, y )
   end
   if currentState == "upgrademenu" and UpgradeMenu.initialized then
     UpgradeMenu:onInput( down, x, y )
+  end
+  if currentState == "tutprompt" and tut.initialized then
+    tut:onInput( down, x, y )
   end
 end
 

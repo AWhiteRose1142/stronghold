@@ -93,23 +93,23 @@ local resource_definitions = {
   },
   tutFireball = {
     type = RESOURCE_TYPE_IMAGE,
-    fileName = 'img/tutorial_lightning.png',
-    width = 400, height = 250,
+    fileName = 'img/tutorial_fireball.png',
+    width = 640, height = 360,
   },
   tutLightning = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/tutorial_lightning.png',
-    width = 400, height = 250,
+    width = 640, height = 360,
   },
   tutIce = {
     type = RESOURCE_TYPE_IMAGE,
-    fileName = 'img/tutorial_lightning.png',
-    width = 400, height = 250,
+    fileName = 'img/tutorial_ice.png',
+    width = 640, height = 360,
   },
   tutArcher = {
     type = RESOURCE_TYPE_IMAGE,
     fileName = 'img/tutorial_lightning.png',
-    width = 400, height = 250,
+    width = 640, height = 360,
   },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
