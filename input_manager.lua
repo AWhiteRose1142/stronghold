@@ -9,7 +9,7 @@ function InputManager:initialize ()
 
   if MOAIInputMgr.device.keyboard then
     function onKeyboardEvent ( key, down )
-      print( "key: " .. tostring( key ) .. "down: " .. tostring( down ) )
+      --print( "key: " .. tostring( key ) .. "down: " .. tostring( down ) )
       if key == 49 and down == false then 
         print( "saving & destroying" )
         Level:saveLevel()
@@ -53,9 +53,9 @@ function InputManager:initialize ()
     function onMouseEvent( )
       local mouseDown = MOAIInputMgr.device.mouseLeft:isDown()
       local mx, my = MOAIInputMgr.device.pointer:getLoc()
-      print( "mousedown: " .. tostring( mouseDown ) )
-      print( "mouseX: " .. tostring( mx ) )
-      print( "mouseY: " .. tostring( my ) )
+      --print( "mousedown: " .. tostring( mouseDown ) )
+      --print( "mouseX: " .. tostring( mx ) )
+      --print( "mouseY: " .. tostring( my ) )
       Game:onInput( mouseDown, mx, my )
     end
     

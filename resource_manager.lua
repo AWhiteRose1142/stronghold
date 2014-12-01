@@ -50,7 +50,7 @@ function ResourceManager:load ( name )
     -- our initialization methods
     local resource
     
-    print ( name, resourceDefinition.type )
+    --print ( name, resourceDefinition.type )
     -- we load the resource based on its type
     if ( resourceDefinition.type == RESOURCE_TYPE_IMAGE ) then
       resource = self:loadImage ( resourceDefinition )

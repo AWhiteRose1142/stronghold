@@ -6,7 +6,7 @@ local animationDefinitions = {
   walk = {
     startFrame = 1,
     frameCount = 2,
-    time = 0.2,
+    time = 0.1,
     mode = MOAITimer.LOOP
   },
   attack = {
@@ -30,7 +30,7 @@ function Imp:initialize( position, layer, health )
   self.timer = nil
   self.target = nil
   self.layer = layer
-  self.walkSpeed = 12
+  self.walkSpeed = 25
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'imp' )

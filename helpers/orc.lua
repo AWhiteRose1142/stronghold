@@ -24,7 +24,7 @@ local animationDefinitions = {
 }
 
 function Orc:initialize( position, layer, health )
-  self.health = 6
+  self.health = 11
   self.strength = 5
   self.type = "orc"
   self.timer = nil

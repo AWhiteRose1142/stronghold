@@ -11,9 +11,9 @@ local animationDefinitions = {
   },
 }
 
-function Fireball:initialize( position, layer, strength, direction )
+function Fireball:initialize( position, layer, direction )
   self.health = 6
-  self.strength = strength
+  self.damage = 5.5
   self.type = "fireball"
   self.timer = nil
   self.layer = layer
@@ -106,7 +106,7 @@ function Fireball:onCollide( phase, fixtureA, fixtureB, arbiter )
     if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" or entityB.type == "imp" then
       SoundMachine:play( "explosion" )
       print( "burn baby!" )
-      entityB:damage( 5 )
+      entityB:damage( self.damage )
       self.remove = true
     end
   end

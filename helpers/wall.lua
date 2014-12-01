@@ -117,7 +117,7 @@ function Wall:initializePhysics( position, height )
 end
 
 function onCollide( phase, fixtureA, fixtureB, arbiter )
-  print( "boop! says a wall" )
+  --print( "boop! says a wall" )
 end
 
 function Wall:destroy()

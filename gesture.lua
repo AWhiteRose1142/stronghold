@@ -64,7 +64,7 @@ function Gesture:onMouseDown()
 end
 
 function Gesture:onMouseUp()
-  print( "Gesture mouse up!" )
+  --print( "Gesture mouse up!" )
   if self.line == nil then
     print( "no line registered" )
     return
@@ -79,7 +79,7 @@ function Gesture:onMouseUp()
   -- Geen gesture porberen te tracken als deze niet ver genoeg is.
   newX, newY = Gesture:getMouseLocation( Gesture.layers.active )
   lastX, lastY = unpack( self.line.points[ table.getn( self.line.points ) - 1 ] )
-  print( "lastPos: " .. lastX .. " " .. lastY .. " newPos: " .. newX .. " " .. newY .. " distance: " .. distance( { lastX, lastY }, { newX, newY } ) )
+  --print( "lastPos: " .. lastX .. " " .. lastY .. " newPos: " .. newX .. " " .. newY .. " distance: " .. distance( { lastX, lastY }, { newX, newY } ) )
   if 
     table.getn( Gesture.gestureTable ) < 1 and 
     distance( { lastX, lastY }, { newX, newY } ) < 20 
@@ -117,13 +117,13 @@ function Gesture:determineCombo( )
   end
   
   if Player.progress.fireBall and Player.progress.mana >= 15 and Gesture:checkFireball() then
-    print( "casting fireball" )
+    --print( "casting fireball" )
     Player.progress.mana = Player.progress.mana - 15
     HUD.manacost:setString("-15")
     direction = normalize( mouseX - startX, mouseY - startY )
-    Fireball:new( { startX, startY }, Level.layers.active, 10, direction )
+    Fireball:new( { startX, startY }, Level.layers.active, direction )
   elseif Player.progress.iceBolt and Player.progress.mana >= 50 and Gesture:checkIceBolt() then
-    print( "raining ice" )
+    --print( "raining ice" )
     HUD.manacost:setString("-50")
     Player.progress.mana = Player.progress.mana - 50
     for i = 1, 16 do

@@ -50,13 +50,14 @@ function Level:initialize( )
   
   -- This is mostly for debugging purposes.
   InputManager:initialize()
-  WaveGenerator:initialize( Player.progress.waveNum, 1 )
+  WaveGenerator:initialize( )
   
   self:loadBackground()
   self:setupWaveStart()
   self:loadScene()
   WaveGenerator:startWave()
   self.initialized = true
+  self.endStage = false
   Player.progress.mana = 100
 end
 
@@ -66,8 +67,16 @@ end
 
 function Level:update()
   
-  if WaveGenerator.isThisWaveOver == true and Level:getEnemyCount() <= 0 then
-    Game:startNewState( "upgrademenu" )
+  if WaveGenerator.isThisWaveOver == true and Level:getEnemyCount() <= 0 and self.endStage == false then
+    local endCountDown = MOAITimer.new()
+    endCountDown:setMode( MOAITimer.NORMAL )
+    endCountDown:setSpan( 2 )
+    endCountDown:setListener( 
+      MOAITimer.EVENT_TIMER_END_SPAN, 
+      function() Game:startNewState( "upgrademenu" ) end 
+    )
+    endCountDown:start()
+    self.endStage = true
     return
   end
   
@@ -457,7 +466,7 @@ function Level:getEnemyCount()
   local num = 0
   for i = 1, table.getn( self.entities ) do
     local t = self.entities[i].type
-    if t == "orc" or t == "footman" or t == "goblin" then num = num + 1 end
+    if t == "orc" or t == "footman" or t == "goblin" or t == "imp" or t == "troll" then num = num + 1 end
   end
   return num
 end

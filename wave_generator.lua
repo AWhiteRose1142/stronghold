@@ -1,5 +1,11 @@
 module( "WaveGenerator", package.seeall )
 
+enemies = {
+  [1] = "imp",
+  [2] = "orc",
+  [3] = "goblin"
+}
+
 waves = {
   wave1 = {
     stage1 = { 2, "orc" },
@@ -50,73 +56,61 @@ waves = {
 
 SPAWN_POSITION = { 350, -135 }
 
-function WaveGenerator:initialize( wave, stage )
-  self.wave = wave
-  self.stage = stage
+function WaveGenerator:initialize( )
+  --self.wave = wave
+  self.stageCounter = 1
+  self:generateWave( Player.progress.waveNum )
   self.timer = nil
   self.isThisWaveOver = false
-  HUD.wave:setString("WAVE: " .. self.wave )
+  HUD.wave:setString("WAVE: " .. Player.progress.waveNum )
 end
 
 -- returns an array suited for generating enemies
-function WaveGenerator:generateWave()
-  self.wave = {}
-  local rndm1 = math.random(1, 3)
-  local rndm2 = math.random(1, 4)
+function WaveGenerator:generateWave( waveNum )
+  self.generatedWave = {}
   
-  for w = 1, self:generateStage() do
-    rndm1 = math.random(1, 3)
-    rndm2 = math.random(1, 4)
-    
-    if (rndm1 == 1) then
-      self.wave.stage[w] = {rndm2, "orc"}
-    end
-    if (rndm1 == 2) then
-      self.wave.stage[w] = {rndm2, "imp"}
-    end
-    if (rndm1 == 3) then
-      self.wave.stage[w] = {rndm2, "goblin"}
-    end
-    if (rndm1 == 4) then
-      self.wave.stage[w] = {rndm2, "troll"}
-    end
-  end
+  -- calculate the number of stages
+  local stages = 6 + ( waveNum * 2 )
   
-  return self.wave
-end
-
--- Returns amount of stages current wave will have
-function WaveGenerator:generateStage()
-  self.stage = 8
-  for i = 1, Player.waveNum do
-    self.stage = self.stage + 2
+  for i = 1, stages do
+    -- selects the monster type
+    local monsterType = math.floor( math.random(1, table.getn(self.enemies) ) )
+    -- selects the spawn delay
+    local delay = ( math.random(5, 40) / 10 )
+    -- Insert the monsterType & spawn delay
+    table.insert( self.generatedWave, { delay, self.enemies[monsterType] } )
+    print( "stage " .. i .. " spawns " .. self.enemies[monsterType] .. " after " .. delay .. " seconds" )
   end
-  return self.stage
 end
 
 -- Kicks off a new wave
 function WaveGenerator:startWave()
-  if self.waves["wave" .. self.wave] == nil then
+  --[[if self.waves["wave" .. self.wave] == nil then
     print( "there's no wave for that index D: Make one, you lazy bastard!" )
     return
-  end
+  end]]--
   self.timer = MOAITimer.new()
   self.timer:setMode( MOAITimer.NORMAL )
-  self.timer:setSpan( self.waves["wave" .. self.wave]["stage" .. self.stage][1] )
+  --self.timer:setSpan( self.waves["wave" .. self.wave]["stage" .. self.stage][1] )
+  self.timer:setSpan( self.generatedWave[1][1] )
   self.timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, bind( self, "doStage" ) )
   self.timer:start()
 end
 
--- Sets up for the next wave
-function WaveGenerator:setupNextWave()
-  self.wave = self.wave + 1
-  self.stage = 1
-  Player.progress.waveNum = self.wave
-end
-
 -- Executes a stage
 function WaveGenerator:doStage( )
-  local stage = self.waves["wave" .. self.wave]["stage" .. self.stage]
+  if self.generatedWave[self.stageCounter + 1] == nil then
+    print("spawning is over")
+    self:setupNextWave()
+    self.isThisWaveOver = true
+    return
+  end
+  
+  self:spawn( self.generatedWave[self.stageCounter][2] )
+  self.stageCounter = self.stageCounter + 1
+  self:prepNextStage()
+  
+  --[[local stage = self.waves["wave" .. self.wave]["stage" .. self.stage]
   for i = 2, table.getn( stage ) do
     self:spawn( stage[i] )
   end
@@ -128,13 +122,21 @@ function WaveGenerator:doStage( )
     --Game:startNewState( "upgrademenu" )
   else
     self:nextStage()
-  end
+  end]]--
 end
 
-function WaveGenerator:nextStage()
+-- Sets up for the next wave
+function WaveGenerator:setupNextWave()
+  --self.wave = self.wave + 1
+  Player.progress.waveNum = Player.progress.waveNum + 1
+  self.stageCounter = 1
+  --Player.progress.waveNum = self.wave
+end
+
+function WaveGenerator:prepNextStage()
   self.timer = MOAITimer.new()
   self.timer:setMode( MOAITimer.NORMAL )
-  self.timer:setSpan( self.waves["wave" .. self.wave]["stage" .. self.stage][1] )
+  self.timer:setSpan( self.generatedWave[self.stageCounter][1] )
   self.timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, bind( self, "doStage" ) )
   self.timer:start()
 end
