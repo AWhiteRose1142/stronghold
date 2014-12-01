@@ -3,7 +3,8 @@ module( "WaveGenerator", package.seeall )
 enemies = {
   [1] = "imp",
   [2] = "orc",
-  [3] = "goblin"
+  [3] = "goblin",
+  [4] = "troll"
 }
 
 waves = {

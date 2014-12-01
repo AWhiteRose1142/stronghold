@@ -216,7 +216,6 @@ function Imp:destroy()
   if Player.progress.mana > 97 then
     Player.progress.mana = 100
     HUD.manacost:setString("max")
-  end
   else
     Player.progress.mana = Player.progress.mana + 3
     HUD.manacost:setString("+3")

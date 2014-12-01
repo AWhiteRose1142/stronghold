@@ -30,6 +30,7 @@ function Level:initialize( )
     goblins = {},
     orcs = {},
     imps = {},
+    trolls = {},
   }
   -- For all entities that belong to the player
   self.playerEntities = {

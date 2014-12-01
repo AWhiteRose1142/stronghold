@@ -216,7 +216,6 @@ function Orc:destroy()
   if Player.progress.mana > 95 then
     Player.progress.mana = 100
     HUD.manacost:setString("max")
-  end
   else
     Player.progress.mana = Player.progress.mana + 5
     HUD.manacost:setString("+5")

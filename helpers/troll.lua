@@ -5,18 +5,18 @@ Troll = class('troll')
 local animationDefinitions = {
   walk = {
     startFrame = 1,
-    frameCount = 4,
-    time = 0.2,
-    mode = MOAITimer.LOOP
-  },
-  attack = {
-    startFrame = 5,
     frameCount = 3,
     time = 0.2,
     mode = MOAITimer.LOOP
   },
+  attack = {
+    startFrame = 4,
+    frameCount = 2,
+    time = 0.2,
+    mode = MOAITimer.LOOP
+  },
   electrocute = {
-    startFrame = 8,
+    startFrame = 6,
     frameCount = 2,
     time = 0.1,
     mode = MOAITimer.LOOP
@@ -24,13 +24,13 @@ local animationDefinitions = {
 }
 
 function Troll:initialize( position, layer, health )
-  self.health = 64
-  self.strength = 15
+  self.health = 20
+  self.strength = 18
   self.type = "troll"
   self.timer = nil
   self.target = nil
   self.layer = layer
-  self.walkSpeed = 8
+  self.walkSpeed = 30
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'troll' )
@@ -62,7 +62,7 @@ function Troll:initialize( position, layer, health )
   --self:startAnimation( "electrocute" )
   self:move( -1 )
   table.insert( Level.entities, self )
-  table.insert( Level.enemyEntities.orcs, self )
+  table.insert( Level.enemyEntities.trolls, self )
 end
 
 function Troll:update()
@@ -72,7 +72,7 @@ function Troll:update()
 end
 
 function Troll:slow()
-  self.walkSpeed = 4
+  self.walkSpeed = 15
   if self.taget == nil and self.health > 0 then self:move( -1 ) end
   local timer = MOAITimer.new()
   timer:setMode( MOAITimer.NORMAL )
@@ -85,7 +85,7 @@ function Troll:slow()
 end
 
 function Troll:restoreSpeed()
-  self.walkSpeed = 8
+  self.walkSpeed = 30
   if self.taget == nil and self.health > 0 then self:move( -1 ) end
 end
 
@@ -211,15 +211,14 @@ end
 
 function Troll:destroy()
   SoundMachine:play( "dying" )
-  if Player.progress.mana > 85 then
+  if Player.progress.mana > 75 then
     Player.progress.mana = 100
     HUD.manacost:setString("max")
-  end
   else
-    Player.progress.mana = Player.progress.mana + 15
-    HUD.manacost:setString("+15")
+    Player.progress.mana = Player.progress.mana + 25
+    HUD.manacost:setString("+25")
   end
-  FloatyText:new( '+10', self.layer, self:getPosition() )
+  FloatyText:new( '+20', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
   Player.progress.score = Player.progress.score + 30
   print( "destroying the troll" )
