@@ -73,7 +73,7 @@ function Level:update()
   
   if self.playerEntities.tower[1].health <= 0 or self.playerEntities.sorcerer[1].health <= 0 then
     if self.gameOverTimer ~= nil then return end
-    local gameOver = HUD:newTextBox( 70, { 0, 0, SCREENRES_X, SCREENRES_Y } )
+    local gameOver = HUD:newTextBox( 70, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT } )
     gameOver:setAlignment( MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY )
     gameOver:setColor( 1, 0, .2, 1 )
     gameOver:setString( "GAME OVER" )

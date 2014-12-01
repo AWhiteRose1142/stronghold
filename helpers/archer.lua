@@ -8,16 +8,16 @@ Archer = class('archer')
 
 local animationDefinitions = {
   stand = {
-    startFrame = 1,
+    startFrame = 4,
     frameCount = 1,
-    time = 0.2,
+    time = 0.1,
     mode = MOAITimer.NORMAL
   },
   attack = {
-    startFrame = 2,
+    startFrame = 1,
     frameCount = 4,
-    time = 0.6667,
-    mode = MOAITimer.LOOP
+    time = 0.5,
+    mode = MOAITimer.NORMAL
   },
 }
 
@@ -83,17 +83,19 @@ end
 --===========================================
 
 function Archer:startAttack( )
+  self:startAnimation( "stand" )
   self.timer = MOAITimer.new()
   self.timer:setMode( MOAITimer.LOOP )
   self.timer:setSpan( 2 )
   self.timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, bind( self, "shootArrow" ) )
-  self:startAnimation( "attack" )
+  
   self.timer:start()
 end
 
 function Archer:shootArrow( )
   if Level.initialized == false then return end
   print("archer fires arrow")
+  self:startAnimation( "attack" )
   table.insert( Level.entities, Arrow:new( 
       self:getPosition(), 
       self.layer, 
