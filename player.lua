@@ -1,10 +1,25 @@
 module( "Player", package.seeall )
 
+saved = {
+  --[[{
+    score = 9001,
+    mana = 100,
+    waveNum = 10,
+    unlockedWave = 12,
+    walls = 2,
+    archers = 2,
+    fireBall = true,
+    lightning = true,
+    iceBolt = true,
+  }]]--
+}
+
 function Player:initialize( )
   self.progress = {
     score = 0,
     mana = 100,
     waveNum = 1,
+    unlockedWave = 1,
     walls = 0,
     archers = 0,
     fireBall = true,

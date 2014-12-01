@@ -77,6 +77,10 @@ function Level:update()
     )
     endCountDown:start()
     self.endStage = true
+    if Player.progress.waveNum > Player.progress.unlockedWave then 
+      Player.progress.unlockedWave = Player.progress.waveNum
+      table.insert( Player.saved, Player.progress )
+    end
     return
   end
   

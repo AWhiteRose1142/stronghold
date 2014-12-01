@@ -30,7 +30,7 @@ function Orc:initialize( position, layer, health )
   self.timer = nil
   self.target = nil
   self.layer = layer
-  self.walkSpeed = 12
+  self.walkSpeed = 17
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'orc' )

@@ -30,7 +30,7 @@ function Goblin:initialize( position, layer, health )
   self.target = nil
   self.layer = layer
   self.range = 130
-  self.walkSpeed = 15
+  self.walkSpeed = 20
   
   -- Height 1 = top - bottom, 2 = top, mid, bottom - 3 = top, mid, mid, bottom
   self.deck = ResourceManager:get( 'goblin' )

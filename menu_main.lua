@@ -56,17 +56,17 @@ function MainMenu:loadButtons()
   self.buttons = {}
   
   self.buttons.newGame = {}
-  self.buttons.newGame.button = Button:new( { 0, -100 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME", 20 )
+  self.buttons.newGame.button = Button:new( { -100, -100 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME", 20 )
   self.buttons.newGame.isClicked = false
   -- Button behavior for when it gets clicked
   self.buttons.newGame.button:setHandler( bind( self, "showTut" ) )
   
-  --[[self.buttons.loadGame = {}
+  self.buttons.loadGame = {}
   self.buttons.loadGame.button = Button:new( { 100, -100 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "LOAD GAME", 20 )
   self.buttons.loadGame.isClicked = false
   -- Button behavior for when it gets clicked
   self.buttons.loadGame.button:setHandler( function() Game:startNewState("loadmenu") end )
-  ]]--
+  
 end
 
 function MainMenu:onInput( down, x, y )

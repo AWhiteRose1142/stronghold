@@ -108,7 +108,7 @@ local resource_definitions = {
   },
   tutArcher = {
     type = RESOURCE_TYPE_IMAGE,
-    fileName = 'img/tutorial_lightning.png',
+    fileName = 'img/tutorial_archer.png',
     width = 640, height = 360,
   },
   logo = {

@@ -52,6 +52,9 @@ function Game:startNewState( state, tutEx )
   if currentState == "upgrademenu" then
     UpgradeMenu:destroy()
   end
+  if currentState == "loadmenu" then
+    LoadMenu:destroy()
+  end
   if currentState == "tutprompt" then
     tut:destroy()
   end
@@ -74,6 +77,9 @@ function Game:startNewState( state, tutEx )
     SoundMachine:play( "main" )
     UpgradeMenu:initialize()
   end
+  if state == "loadmenu" then
+    LoadMenu:initialize()
+  end
   if state == "tutprompt" then
     tut = tutEx
   end
@@ -92,6 +98,9 @@ function Game:onInput( down, x, y )
   end
   if currentState == "upgrademenu" and UpgradeMenu.initialized then
     UpgradeMenu:onInput( down, x, y )
+  end
+  if currentState == "loadmenu" and LoadMenu.initialized then
+    LoadMenu:onInput( down, x, y )
   end
   if currentState == "tutprompt" and tut.initialized then
     tut:onInput( down, x, y )

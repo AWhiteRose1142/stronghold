@@ -49,7 +49,7 @@ end
 
 function HUD:update()
   self.manaBar:update()
-  local scoreString = ( "SCORE: " .. Player.progress.score )
+  local scoreString = ( "GOLD: " .. Player.progress.score )
   self.score:setString( scoreString )
   self.manacurrent:setString ( tostring(Player.progress.mana) )
 end
