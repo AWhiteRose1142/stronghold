@@ -152,7 +152,7 @@ function UpgradeMenu:setupItems()
     function()
       print( "lightning button!" )
       if Player.progress.score >= UpgradeMenu.items.wall.cost and Player.progress.lightning == false then
-        Player.progress.score = Player.progress.score - UpgradeMenu.items.wall.cost
+        Player.progress.score = Player.progress.score - UpgradeMenu.items.lightning.cost
         Player.progress.lightning = true
         UpgradeMenu.items.lightning.icon:setColor( 1, 1, 1, 1 )
         UpgradeMenu:showTut("tutLightning")
