@@ -40,7 +40,7 @@ function IceBolt:initialize( position, layer )
   self:initializePhysics( position )
     
   -- Code for testing
-  self.physics.body:setLinearVelocity( 0, -100 + math.random( -10, 10 ) )
+  self.physics.body:setLinearVelocity( 0, -200 + math.random( -10, 10 ) )
   table.insert( Level.entities, self )
   -- Waarom toevoegen aan de objects?
   --table.insert( Level.objects, self )
