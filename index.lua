@@ -111,6 +111,11 @@ local resource_definitions = {
     fileName = 'img/tutorial_lightning.png',
     width = 640, height = 360,
   },
+  logo = {
+    type = RESOURCE_TYPE_IMAGE,
+    fileName = 'img/logo.png',
+    width = 128, height = 64,
+  },
   archer = {
     type = RESOURCE_TYPE_TILED_IMAGE,
     fileName = 'img/archer_32_sheet.png',

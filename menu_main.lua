@@ -33,25 +33,40 @@ end
 
 function MainMenu:loadBackground()
   self.backgroundProps = {}
-  local backgroundDeck = ResourceManager:get( 'upgradeBackground' )
+  --local backgroundDeck = ResourceManager:get( 'upgradeBackground' )
+  local logoDeck = ResourceManager:get( 'logo' )
   
   -- Make the prop
-  local backgroundProp = MOAIProp2D.new()
+  --[[local backgroundProp = MOAIProp2D.new()
   backgroundProp:setDeck( backgroundDeck )
   backgroundProp:setScl( 2.9, 2.9 )
   self.layers.background:insertProp( backgroundProp )
   table.insert( self.backgroundProps, backgroundProp )
+  ]]--
+  
+  local logoProp = MOAIProp2D.new()
+  logoProp:setDeck( logoDeck )
+  logoProp:setScl( 3, 3 )
+  logoProp:setLoc( 0, 50 )
+  self.layers.background:insertProp( logoProp )
+  table.insert( self.backgroundProps, logoProp )
 end
 
 function MainMenu:loadButtons()
   self.buttons = {}
   
   self.buttons.newGame = {}
-  self.buttons.newGame.button = Button:new( { 0, 0 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME", 20 )
+  self.buttons.newGame.button = Button:new( { 0, -100 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "NEW GAME", 20 )
   self.buttons.newGame.isClicked = false
   -- Button behavior for when it gets clicked
   self.buttons.newGame.button:setHandler( bind( self, "showTut" ) )
   
+  --[[self.buttons.loadGame = {}
+  self.buttons.loadGame.button = Button:new( { 100, -100 }, self.layers.user, self.partitions.user, self.layers.ignoreLayer, "LOAD GAME", 20 )
+  self.buttons.loadGame.isClicked = false
+  -- Button behavior for when it gets clicked
+  self.buttons.loadGame.button:setHandler( function() Game:startNewState("loadmenu") end )
+  ]]--
 end
 
 function MainMenu:onInput( down, x, y )
