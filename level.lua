@@ -45,7 +45,7 @@ function Level:initialize( )
   self:setupLayers()
   
   HUD:initialize( )
-  PhysicsManager:initialize( Level.layers.active )
+  PhysicsManager:initialize( --[[Level.layers.active]] )
   Gesture:initialize( self.layers, self.partitions )
   
   -- This is mostly for debugging purposes.

@@ -39,7 +39,7 @@ function Archer:initialize( position, layer, partition )
   -- Make the prop
   self.prop = MOAIProp2D.new()
   self.prop:setDeck( self.deck )
-  self.prop:setRot( (self.aim / 2) )
+  --self.prop:setRot( (self.aim / 2) )
   layer:insertProp( self.prop )
   
   -- Initialize animations
@@ -62,7 +62,7 @@ function Archer:initialize( position, layer, partition )
 end
 
 function Archer:update()
-  self.prop:setRot( self.aim )
+  --self.prop:setRot( self.aim )
   if self.health <= 0 then
     print( "archer health low, destroying" )
     self:destroy()
