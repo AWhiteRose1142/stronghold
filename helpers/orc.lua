@@ -85,7 +85,7 @@ function Orc:slow()
 end
 
 function Orc:restoreSpeed()
-  self.walkSpeed = 15
+  self.walkSpeed = 17
   if self.taget == nil and self.health > 0 then self:move( -1 ) end
 end
 

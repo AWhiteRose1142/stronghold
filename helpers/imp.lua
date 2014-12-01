@@ -85,7 +85,7 @@ function Imp:slow()
 end
 
 function Imp:restoreSpeed()
-  self.walkSpeed = 15
+  self.walkSpeed = 25
   if self.taget == nil and self.health > 0 then self:move( -1 ) end
 end
 

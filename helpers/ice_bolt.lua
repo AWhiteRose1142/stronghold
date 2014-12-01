@@ -98,8 +98,8 @@ end
 function IceBolt:onCollide( phase, fixtureA, fixtureB, arbiter )
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "orc" or entityB.type == "goblin" or entityB.type == "imp" then
-      print( "burn baby!" )
+    if entityB.type == "orc" or entityB.type == "goblin" or entityB.type == "imp" or entityB.type == "troll" then
+      --print( "burn baby!" )
       entityB:slow()
       self.remove = true
     end

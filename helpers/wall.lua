@@ -74,7 +74,8 @@ function Wall:damage( damage )
   self.health = ( self.health - damage )
   
   if self.health <= 0 then
-    print( "this wall is destroyed" )
+    Player.progress.score = Player.progress.score - 10
+    Player.progress.walls = Player.progress.walls - 1
   end
 end
 

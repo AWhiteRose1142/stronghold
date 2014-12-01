@@ -74,7 +74,7 @@ function Arrow:onCollide( phase, fixtureA, fixtureB, arbiter )
   self.physics.body:setLinearVelocity(0, 0)
   local entityB = Level:getEntityFromFixture( fixtureB )
   if entityB ~= nil then
-    if entityB.type == "orc" or entityB.type == "footman" or entityB.type == "goblin" or entityB.type == "imp" then
+    if entityB.type == "orc" or entityB.type == "troll" or entityB.type == "goblin" or entityB.type == "imp" then
       --print( "headshot!" )
       entityB:damage( self.damage )
       self.remove = true

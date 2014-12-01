@@ -105,7 +105,7 @@ function Gesture:determineCombo( )
   local mouseX, mouseY = Gesture:getMouseLocation( self.layers.active )
   local n = table.getn( Gesture.gestureTable )
   
-  if Player.progress.lightning and Player.progress.mana >= 60 and Gesture:checkLightning()then
+  if Player.progress.lightning and Player.progress.mana >= 60 and Gesture:checkLightning() then
     Player.progress.mana = Player.progress.mana - 60
     HUD.manacost:setString("-60")
     Level:spawnBolts( { mouseX, mouseY } )
@@ -124,8 +124,8 @@ function Gesture:determineCombo( )
     Fireball:new( { startX, startY }, Level.layers.active, direction )
   elseif Player.progress.iceBolt and Player.progress.mana >= 50 and Gesture:checkIceBolt() then
     --print( "raining ice" )
-    HUD.manacost:setString("-50")
-    Player.progress.mana = Player.progress.mana - 50
+    HUD.manacost:setString("-35")
+    Player.progress.mana = Player.progress.mana - 35
     for i = 1, 16 do
       x = mouseX + math.random( -48, 48 )
       IceBolt:new( { x, 260 }, Level.layers.active )
