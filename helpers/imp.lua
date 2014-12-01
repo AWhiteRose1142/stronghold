@@ -213,8 +213,14 @@ function Imp:destroy()
   SoundMachine:play( "dying" )
   FloatyText:new( '+5', self.layer, self:getPosition() )
   -- Ergens nog een sterfanimatie voor elkaar krijgen.
-  Player.progress.mana = Player.progress.mana + 1
-  HUD.manacost:setString("+1")
+  if Player.progress.mana > 97 then
+    Player.progress.mana = 100
+    HUD.manacost:setString("max")
+  end
+  else
+    Player.progress.mana = Player.progress.mana + 3
+    HUD.manacost:setString("+3")
+  end
   Player.progress.score = Player.progress.score + 5
   print( "destroying an Imp" )
   if self.timer then self.timer:stop() end
